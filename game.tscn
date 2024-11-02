@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmlkin1702tk0"]
+
+[ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_hh5ye"]
+[ext_resource type="Script" path="res://Player.gd" id="2_v40p8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1i2cq"]
+size = Vector2(124.978, 124.911)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s8174"]
+size = Vector2(127, 126)
+
+[node name="Game" type="Node2D"]
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="Block" type="StaticBody2D" parent="World"]
+position = Vector2(-28, 129)
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Block"]
+position = Vector2(0.374983, 0.590908)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_1i2cq")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Block"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_hh5ye")
+
+[node name="Block2" type="StaticBody2D" parent="World"]
+position = Vector2(37, 129)
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Block2"]
+position = Vector2(0.374983, 0.590908)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_1i2cq")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Block2"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_hh5ye")
+
+[node name="Block3" type="StaticBody2D" parent="World"]
+position = Vector2(-95, 129)
+scale = Vector2(0.5, 0.5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Block3"]
+position = Vector2(0.374983, 0.590908)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("RectangleShape2D_1i2cq")
+
+[node name="Sprite2D" type="Sprite2D" parent="World/Block3"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_hh5ye")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+script = ExtResource("2_v40p8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(0.5, 1)
+shape = SubResource("RectangleShape2D_s8174")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("1_hh5ye")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
