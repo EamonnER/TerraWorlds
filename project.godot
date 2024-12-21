@@ -15,10 +15,20 @@ run/main_scene="res://game.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GlobalVariables="*res://scripts/global_variables.gd"
+
 [dotnet]
 
 project/assembly_name="TerraWorlds"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gaea/plugin.cfg")
+enabled=PackedStringArray()
+
+[importer_defaults]
+
+animation_library={
+"animation/fps": 60.0
+}
