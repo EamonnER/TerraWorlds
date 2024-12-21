@@ -25,8 +25,8 @@ func get_spawn_position() -> Vector2i:
 	
 	for y in range(-TOP_OF_MAP, TOP_OF_MAP):
 		if get_tile_at_position(Vector2i(x, y)):
-			return Vector2i(x, y-1)
-	return Vector2i(x, TOP_OF_MAP)
+			return Vector2i(x, y-1) * GlobalVariables.TILE_SIZE
+	return Vector2i(x, TOP_OF_MAP) * GlobalVariables.TILE_SIZE
 
 func get_tile_at_position(vector: Vector2i) -> TileData:
 	return foreground.get_cell_tile_data(vector)
