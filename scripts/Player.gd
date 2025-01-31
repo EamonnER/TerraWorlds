@@ -2,9 +2,9 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const ACCELERATION = 5000
-const DECELERATION = 800
-const TERMINAL_VELOCITY = 5000
+const ACCELERATION = 5000.0
+const DECELERATION = 800.0
+const TERMINAL_VELOCITY = 5000.0
 const JUMP_VELOCITY = 300.0
 
 var world: Node2D
@@ -13,7 +13,6 @@ var world: Node2D
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func update_up_direction():
-	
 	var coords: Vector2 = self.global_position
 	# If in right side of map
 	if coords.x > 0:
@@ -101,14 +100,30 @@ func add_velocity(direction: Vector2, magnitude: float):
 	var magnitude_as_vector = relative_direction * magnitude
 	velocity += magnitude_as_vector
 
+func rotate_player(delta):
+	if up_direction == Vector2.UP:
+		# rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
+		rotation = 0
+	elif up_direction == Vector2.LEFT:
+		rotation = 3*PI/2
+		#rotation = rotate_toward(rotation, 3*PI/2, ROTATION_SPEED*delta)
+	elif up_direction == Vector2.DOWN:
+		rotation = PI
+		#rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
+	else:  # Right
+		rotation = PI/2
+		#rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
+	
 func _physics_process(delta):
+	var previous_up_direction = up_direction
 	update_up_direction()
+	if previous_up_direction != up_direction:
+		rotate_player(delta)
 
 	# Add gravity to the velocity if the body is not on the floor.
 	if not is_on_floor():
 		var down_velocity = gravity*delta
 		add_velocity(Vector2.DOWN, down_velocity)
-
 
 	# Handle jump.
 	if Input.is_action_just_pressed("game_jump") and is_on_floor():
