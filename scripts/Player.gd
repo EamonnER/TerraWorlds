@@ -101,18 +101,18 @@ func add_velocity(direction: Vector2, magnitude: float):
 	velocity += magnitude_as_vector
 
 func rotate_player(delta):
+	var new_rotation = 0
 	if up_direction == Vector2.UP:
-		# rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
-		rotation = 0
+		new_rotation = 0
 	elif up_direction == Vector2.LEFT:
-		rotation = 3*PI/2
-		#rotation = rotate_toward(rotation, 3*PI/2, ROTATION_SPEED*delta)
+		new_rotation = 3*PI/2
 	elif up_direction == Vector2.DOWN:
-		rotation = PI
-		#rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
+		new_rotation = PI
 	else:  # Right
-		rotation = PI/2
-		#rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
+		new_rotation = PI/2
+	
+	rotation = new_rotation
+	#$Camera.rotation = new_rotation
 	
 func _physics_process(delta):
 	var previous_up_direction = up_direction
