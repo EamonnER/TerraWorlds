@@ -2,9 +2,10 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const ACCELERATION = 100
-const DECELERATION = 20
-const JUMP_VELOCITY = -400.0
+const ACCELERATION = 5000
+const DECELERATION = 800
+const TERMINAL_VELOCITY = 5000
+const JUMP_VELOCITY = 300.0
 
 var world: Node2D
 
@@ -12,6 +13,7 @@ var world: Node2D
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 func update_up_direction():
+	
 	var coords: Vector2 = self.global_position
 	# If in right side of map
 	if coords.x > 0:
@@ -57,39 +59,63 @@ func send_to_spawn():
 		self.global_position = spawn_point
 
 func jump():
-	velocity -= up_direction * JUMP_VELOCITY
+	velocity = up_direction * JUMP_VELOCITY
 
-func move(direction: float):
+func move_horizontal(direction: float, delta: float):
 	# Compute the right direction (perpendicular to up_direction)
 	var right = up_direction.orthogonal()
 	
 	# Project the velocity onto the right direction to get the left-right component
 	var right_velocity = velocity.project(right)
 	
-	if direction == 0:
+	if not direction:
 		# Transition sideways velocity towards 0
-		right_velocity = right_velocity.move_toward(Vector2.ZERO, DECELERATION)
+		right_velocity = right_velocity.move_toward(Vector2.ZERO, DECELERATION*delta)
 	else:
 		# Transition sideways velocity towards max speed
-		right_velocity = right_velocity.move_toward(right * SPEED * direction * -1, ACCELERATION)
+		right_velocity = right_velocity.move_toward(right * SPEED * direction * -1, ACCELERATION*delta)
 		
 	# Update velocity & keep verticle velocity
 	velocity = velocity.project(up_direction) + right_velocity
 
+func rotate_vector_relative(vector: Vector2) -> Vector2:
+	# Rotate the input direction to align it with the up_direction
+	vector = vector.normalized()
+	if up_direction == Vector2.UP:  # Up
+		return vector
+	elif up_direction == Vector2.DOWN:  # Down
+		return vector.rotated(PI)
+	elif up_direction == Vector2.RIGHT:  # Right (90 degrees clockwise)
+		return vector.rotated(PI/2)
+	else:  # Left (90 degrees anti-clockwise)
+		return vector.rotated(-PI/2)
+
+func get_relative_velocity(direction: Vector2) -> float:
+	var relative_direction = rotate_vector_relative(direction.normalized())
+	var projected_velocity = velocity * relative_direction
+	
+	return velocity.x if velocity.x else velocity.y
+
+func add_velocity(direction: Vector2, magnitude: float):
+	var relative_direction = rotate_vector_relative(direction.normalized())
+	var magnitude_as_vector = relative_direction * magnitude
+	velocity += magnitude_as_vector
+
 func _physics_process(delta):
 	update_up_direction()
-		
-	# Add the gravity.
+
+	# Add gravity to the velocity if the body is not on the floor.
 	if not is_on_floor():
-		velocity -= up_direction * gravity * delta
+		var down_velocity = gravity*delta
+		add_velocity(Vector2.DOWN, down_velocity)
+
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("game_jump") and is_on_floor():
 		jump()
 		
 	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction = Input.get_axis("ui_left", "ui_right")
-	move(direction)
+	var direction = Input.get_axis("game_left", "game_right")
+	move_horizontal(direction, delta)
 
 	move_and_slide()
