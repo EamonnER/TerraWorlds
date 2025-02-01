@@ -3,7 +3,7 @@ extends Node2D
 
 @onready var foreground: TileMapLayer = $Foreground
 
-const WORLD_SIZE: int = 100  # Total width / height of world (should be even)
+const WORLD_SIZE: int = 300  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 3  # Total width / height of playable / explorable area
 
 func generate_new_world():
@@ -13,15 +13,20 @@ func generate_new_world():
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	
-	# Generates a list of vectors from (-50, -50) to (50, 50)
 	const HALF_WORLD = WORLD_SIZE / 2
-	var tile_positions = []
+	var tile_positions = Dictionary()
+	
+	# Build completely full world
 	for x in range(-HALF_WORLD, HALF_WORLD):
 		for y in range(-HALF_WORLD, HALF_WORLD):
-			if noise.get_noise_2d(x, y) > 0.1:
-				tile_positions.append(Vector2i(x, y))
+			tile_positions[Vector2i(x, y)] = null
 	
-	foreground.set_cells_terrain_connect(tile_positions, 0, 0)
+	# Remove tiles for cave systems
+	for position in tile_positions.keys():
+		if noise.get_noise_2d(position.x, position.y) > 0.2:
+			tile_positions.erase(position)
+	
+	foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
 
 func get_spawn_position() -> Vector2i:
 	# Iterates from top of map down until it finds a tile
