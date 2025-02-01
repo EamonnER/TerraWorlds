@@ -9,12 +9,17 @@ const MAP_SIZE: int = WORLD_SIZE * 3  # Total width / height of playable / explo
 func generate_new_world():
 	foreground.clear()
 	
+	var noise = FastNoiseLite.new()
+	noise.seed = randi()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	
 	# Generates a list of vectors from (-50, -50) to (50, 50)
 	const HALF_WORLD = WORLD_SIZE / 2
 	var tile_positions = []
 	for x in range(-HALF_WORLD, HALF_WORLD):
 		for y in range(-HALF_WORLD, HALF_WORLD):
-			tile_positions.append(Vector2i(x, y))
+			if noise.get_noise_2d(x, y) > 0.1:
+				tile_positions.append(Vector2i(x, y))
 	
 	foreground.set_cells_terrain_connect(tile_positions, 0, 0)
 
@@ -30,7 +35,6 @@ func get_spawn_position() -> Vector2i:
 
 func get_tile_at_position(vector: Vector2i) -> TileData:
 	return foreground.get_cell_tile_data(vector)
-
 
 func place_tile(vector: Vector2i, terrain_id: int):
 	foreground.set_cell(vector, terrain_id)

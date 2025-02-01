@@ -2,12 +2,11 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const ACCELERATION = 5000.0
-const DECELERATION = 800.0
-const TERMINAL_VELOCITY = 5000.0
-const JUMP_VELOCITY = 300.0
-
-var world: Node2D
+const ACCELERATION = 400.0
+const DECELERATION = 80.0
+const TERMINAL_VELOCITY = 500.0
+const JUMP_VELOCITY = 400.0
+var debug_mode = false
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -52,34 +51,8 @@ func update_up_direction():
 	up_direction = Vector2.DOWN
 	return
 
-func send_to_spawn():
-	if is_instance_valid(world):  # Null check
-		var spawn_point = world.get_spawn_position()
-		self.global_position = spawn_point
-
-func jump():
-	velocity = up_direction * JUMP_VELOCITY
-
-func move_horizontal(direction: float, delta: float):
-	# Compute the right direction (perpendicular to up_direction)
-	var right = up_direction.orthogonal()
-	
-	# Project the velocity onto the right direction to get the left-right component
-	var right_velocity = velocity.project(right)
-	
-	if not direction:
-		# Transition sideways velocity towards 0
-		right_velocity = right_velocity.move_toward(Vector2.ZERO, DECELERATION*delta)
-	else:
-		# Transition sideways velocity towards max speed
-		right_velocity = right_velocity.move_toward(right * SPEED * direction * -1, ACCELERATION*delta)
-		
-	# Update velocity & keep verticle velocity
-	velocity = velocity.project(up_direction) + right_velocity
-
-func rotate_vector_relative(vector: Vector2) -> Vector2:
+func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 	# Rotate the input direction to align it with the up_direction
-	vector = vector.normalized()
 	if up_direction == Vector2.UP:  # Up
 		return vector
 	elif up_direction == Vector2.DOWN:  # Down
@@ -89,48 +62,80 @@ func rotate_vector_relative(vector: Vector2) -> Vector2:
 	else:  # Left (90 degrees anti-clockwise)
 		return vector.rotated(-PI/2)
 
-func get_relative_velocity(direction: Vector2) -> float:
-	var relative_direction = rotate_vector_relative(direction.normalized())
-	var projected_velocity = velocity * relative_direction
-	
-	return velocity.x if velocity.x else velocity.y
-
-func add_velocity(direction: Vector2, magnitude: float):
-	var relative_direction = rotate_vector_relative(direction.normalized())
-	var magnitude_as_vector = relative_direction * magnitude
-	velocity += magnitude_as_vector
-
 func rotate_player(delta):
 	var new_rotation = 0
-	if up_direction == Vector2.UP:
-		new_rotation = 0
-	elif up_direction == Vector2.LEFT:
-		new_rotation = 3*PI/2
-	elif up_direction == Vector2.DOWN:
-		new_rotation = PI
-	else:  # Right
-		new_rotation = PI/2
+	
+	match up_direction:
+		Vector2.RIGHT:
+			new_rotation = PI/2
+		Vector2.DOWN:
+			new_rotation = PI
+		Vector2.LEFT:
+			new_rotation = 3*PI/2
+		_:
+			pass
 	
 	rotation = new_rotation
-	#$Camera.rotation = new_rotation
+
+func get_relative_velocity() -> Vector2:
+	return rotate_vector_relative_to_up_direction(get_velocity())
+
+func set_relative_velocity(new_velocity: Vector2) -> void:
+	match up_direction:
+		Vector2.RIGHT:
+			new_velocity = new_velocity.rotated(PI/2)
+		Vector2.DOWN:
+			new_velocity = new_velocity.rotated(PI)
+		Vector2.LEFT:
+			new_velocity = new_velocity.rotated(3*PI/2)
+		_:
+			pass
 	
+	set_velocity(new_velocity)
+
+func set_relative_horizontal_speed(speed: float):
+	var current_velocity = get_relative_velocity()
+	set_relative_velocity(Vector2(speed, current_velocity.y))
+
+func set_relative_vertical_speed(speed: float):
+	var current_velocity = get_relative_velocity()
+	set_relative_velocity(Vector2(current_velocity.x, speed))
+
 func _physics_process(delta):
+	if Input.is_action_just_pressed("game_debug_toggle"):
+		debug_mode = not debug_mode
+		print("Debug mode: ", debug_mode)
+		if debug_mode == true:
+			motion_mode = MotionMode.MOTION_MODE_FLOATING
+			$Collision.set_deferred("disabled", true)
+		else:
+			motion_mode = MotionMode.MOTION_MODE_GROUNDED
+			$Collision.set_deferred("disabled", false)
+	
 	var previous_up_direction = up_direction
 	update_up_direction()
 	if previous_up_direction != up_direction:
 		rotate_player(delta)
-
-	# Add gravity to the velocity if the body is not on the floor.
-	if not is_on_floor():
-		var down_velocity = gravity*delta
-		add_velocity(Vector2.DOWN, down_velocity)
-
-	# Handle jump.
-	if Input.is_action_just_pressed("game_jump") and is_on_floor():
-		jump()
-		
-	# Get the input direction and handle the movement/deceleration.
-	var direction = Input.get_axis("game_left", "game_right")
-	move_horizontal(direction, delta)
-
+	
+	var new_velocity = get_relative_velocity()
+	print(new_velocity)
+	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
+		# Add gravity to the velocity if the body is not on the floor
+		if not is_on_floor():
+			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
+		elif Input.is_action_just_pressed("game_jump"):  # Handle jump
+			new_velocity.y = -JUMP_VELOCITY
+			
+		# Handle movement inputs
+		var horizontal_direction = Input.get_axis("game_left", "game_right")
+		var vertical_direction = Input.get_axis("game_down", "game_up")
+		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+	
+	else:
+		var horizontal_direction =  Input.get_axis("game_left", "game_right")
+		var vertical_direction = Input.get_axis("game_up", "game_down")
+		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction, ACCELERATION*delta)
+	
+	set_relative_velocity(new_velocity)
 	move_and_slide()
