@@ -118,7 +118,6 @@ func _physics_process(delta):
 		rotate_player(delta)
 	
 	var new_velocity = get_relative_velocity()
-	print(new_velocity)
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		# Add gravity to the velocity if the body is not on the floor
 		if not is_on_floor():
