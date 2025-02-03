@@ -4,14 +4,15 @@ extends CharacterBody2D
 const SPEED = 300.0
 const ACCELERATION = 400.0
 const DECELERATION = 80.0
-const TERMINAL_VELOCITY = 500.0
+const TERMINAL_VELOCITY = 1000.0
 const JUMP_VELOCITY = 400.0
+const ROTATION_SPEED = 10 * PI/4
 var debug_mode = false
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-func update_up_direction():
+func update_rotation(delta):
 	var coords: Vector2 = self.global_position
 	# If in right side of map
 	if coords.x > 0:
@@ -20,17 +21,21 @@ func update_up_direction():
 			# If in right segment of map
 			if coords.x > abs(coords.y):
 				up_direction = Vector2.RIGHT
+				rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
 				return
 			# Else, in top segment
 			up_direction = Vector2.UP
+			rotation = 0
 			return
 		# If in bottom right
 		# If in right segment of map
 		elif coords.x > coords.y:
 			up_direction = Vector2.RIGHT
+			rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
 			return
 		# Else, in bottom segment
 		up_direction = Vector2.DOWN
+		rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
 		return
 	# If in left side of map
 	# If in top left
@@ -38,60 +43,41 @@ func update_up_direction():
 		# If in left segment
 		if coords.x < coords.y:
 			up_direction = Vector2.LEFT
+			rotation = rotate_toward(rotation, -PI/2, ROTATION_SPEED*delta)
 			return
 		# Else, in top segment
 		up_direction = Vector2.UP
+		rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
 		return
 	# If in bottom left
 	# If in left segment
 	if abs(coords.x) > coords.y:
-		up_direction = Vector2.LEFT
+		Vector2.LEFT
+		rotation = rotate_toward(rotation, -PI/2, ROTATION_SPEED*delta)
 		return
 	# Else, in bottom segment
 	up_direction = Vector2.DOWN
+	rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
 	return
 
 func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 	# Rotate the input direction to align it with the up_direction
-	if up_direction == Vector2.UP:  # Up
-		return vector
-	elif up_direction == Vector2.DOWN:  # Down
-		return vector.rotated(PI)
-	elif up_direction == Vector2.RIGHT:  # Right (90 degrees clockwise)
-		return vector.rotated(PI/2)
-	else:  # Left (90 degrees anti-clockwise)
-		return vector.rotated(-PI/2)
-
-func rotate_player(delta):
-	var new_rotation = 0
-	
 	match up_direction:
 		Vector2.RIGHT:
-			new_rotation = PI/2
+			return vector.rotated(PI/2)
 		Vector2.DOWN:
-			new_rotation = PI
+			return vector.rotated(PI)
 		Vector2.LEFT:
-			new_rotation = 3*PI/2
+			return vector.rotated(-PI/2)
 		_:
-			pass
-	
-	rotation = new_rotation
+			return vector
 
 func get_relative_velocity() -> Vector2:
-	return rotate_vector_relative_to_up_direction(get_velocity())
-
+	var rotated_velocity = rotate_vector_relative_to_up_direction(get_velocity())
+	return rotated_velocity if up_direction in [Vector2.UP, Vector2.DOWN] else -rotated_velocity 
+		
 func set_relative_velocity(new_velocity: Vector2) -> void:
-	match up_direction:
-		Vector2.RIGHT:
-			new_velocity = new_velocity.rotated(PI/2)
-		Vector2.DOWN:
-			new_velocity = new_velocity.rotated(PI)
-		Vector2.LEFT:
-			new_velocity = new_velocity.rotated(3*PI/2)
-		_:
-			pass
-	
-	set_velocity(new_velocity)
+	set_velocity(rotate_vector_relative_to_up_direction(new_velocity))
 
 func set_relative_horizontal_speed(speed: float):
 	var current_velocity = get_relative_velocity()
@@ -113,14 +99,11 @@ func _physics_process(delta):
 			$Collision.set_deferred("disabled", false)
 	
 	var previous_up_direction = up_direction
-	update_up_direction()
-	if previous_up_direction != up_direction:
-		rotate_player(delta)
+	update_rotation(delta)
 	
 	var new_velocity = get_relative_velocity()
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
-		# Add gravity to the velocity if the body is not on the floor
-		if not is_on_floor():
+		if not is_on_floor():  # Add gravity
 			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
 		elif Input.is_action_just_pressed("game_jump"):  # Handle jump
 			new_velocity.y = -JUMP_VELOCITY
