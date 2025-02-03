@@ -25,7 +25,7 @@ func update_rotation(delta):
 				return
 			# Else, in top segment
 			up_direction = Vector2.UP
-			rotation = 0
+			rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
 			return
 		# If in bottom right
 		# If in right segment of map
