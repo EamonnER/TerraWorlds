@@ -3,15 +3,11 @@ extends Node2D
 
 @onready var foreground: TileMapLayer = $Foreground
 
-const WORLD_SIZE: int = 300  # Total width / height of world (should be even)
+const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 3  # Total width / height of playable / explorable area
 
 func generate_new_world():
 	foreground.clear()
-	
-	var noise = FastNoiseLite.new()
-	noise.seed = randi()
-	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	
 	const HALF_WORLD = WORLD_SIZE / 2
 	var tile_positions = Dictionary()
@@ -21,10 +17,25 @@ func generate_new_world():
 		for y in range(-HALF_WORLD, HALF_WORLD):
 			tile_positions[Vector2i(x, y)] = null
 	
+	# Apply heightmap using radial distance
+	var noise = FastNoiseLite.new()
+	noise.seed = randi()
+	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	const MAX_DEPTH = HALF_WORLD/4
+	for x in range(WORLD_SIZE):
+		var noise_value = abs(noise.get_noise_2d(x, 0))
+		var depth = int(noise_value * MAX_DEPTH)
+		print(depth)
+		for y in range(depth):
+			tile_positions.erase(Vector2i(x, -HALF_WORLD+y))
+	
 	# Remove tiles for cave systems
-	for position in tile_positions.keys():
-		if noise.get_noise_2d(position.x, position.y) > 0.2:
-			tile_positions.erase(position)
+	noise = FastNoiseLite.new()
+	noise.seed = randi()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	#for position in tile_positions.keys():
+		#if noise.get_noise_2d(position.x, position.y) > 0.2:
+			#tile_positions.erase(position)
 	
 	foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
 
