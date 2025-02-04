@@ -25,9 +25,8 @@ func generate_new_world():
 	for x in range(WORLD_SIZE):
 		var noise_value = abs(noise.get_noise_2d(x, 0))
 		var depth = int(noise_value * MAX_DEPTH)
-		print(depth)
 		for y in range(depth):
-			tile_positions.erase(Vector2i(x, -HALF_WORLD+y))
+			tile_positions.erase(Vector2i(x-HALF_WORLD, -HALF_WORLD+y))
 	
 	# Remove tiles for cave systems
 	noise = FastNoiseLite.new()
