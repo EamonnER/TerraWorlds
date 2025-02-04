@@ -116,8 +116,8 @@ func _physics_process(delta):
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
 		var vertical_direction = Input.get_axis("game_up", "game_down")
-		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
-		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction, ACCELERATION*delta)
+		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
+		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)
 	
 	set_relative_velocity(new_velocity)
 	move_and_slide()
