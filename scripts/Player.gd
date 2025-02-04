@@ -113,12 +113,10 @@ func _physics_process(delta):
 		var vertical_direction = Input.get_axis("game_down", "game_up")
 		
 		# Apply acceleration or decelleration
-		if sign(horizontal_direction) != sign(new_velocity.x):
-			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
-			print("DECELERATING")
-		else:
+		if sign(horizontal_direction) == sign(new_velocity.x):
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
-			print("ACCELERATING")
+		else:
+			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
 	
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
