@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const ACCELERATION = 400.0
-const DECELERATION = 80.0
+const DECELERATION = 800.0
 const TERMINAL_VELOCITY = 1000.0
 const JUMP_VELOCITY = 400.0
 const ROTATION_SPEED = 10 * PI/4
@@ -111,7 +111,14 @@ func _physics_process(delta):
 		# Handle movement inputs
 		var horizontal_direction = Input.get_axis("game_left", "game_right")
 		var vertical_direction = Input.get_axis("game_down", "game_up")
-		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+		
+		# Apply acceleration or decelleration
+		if sign(horizontal_direction) != sign(new_velocity.x):
+			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
+			print("DECELERATING")
+		else:
+			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+			print("ACCELERATING")
 	
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
