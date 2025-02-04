@@ -22,11 +22,32 @@ func generate_new_world():
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	const MAX_DEPTH = HALF_WORLD/4
-	for x in range(WORLD_SIZE):
+	for x in range(WORLD_SIZE*4):
 		var noise_value = abs(noise.get_noise_2d(x, 0))
 		var depth = int(noise_value * MAX_DEPTH)
-		for y in range(depth):
-			tile_positions.erase(Vector2i(x-HALF_WORLD, -HALF_WORLD+y))
+		
+		# Top side
+		if x <= WORLD_SIZE:
+			for y in range(depth):
+				tile_positions.erase(Vector2i(HALF_WORLD-x, -HALF_WORLD+y))
+		
+		# Left side
+		elif x <= WORLD_SIZE * 2:
+			x -= WORLD_SIZE
+			for y in range(depth):
+				tile_positions.erase(Vector2i(-HALF_WORLD+y, x-HALF_WORLD))
+		
+		# Bottom side
+		elif x <= WORLD_SIZE * 3:
+			x -= WORLD_SIZE*2
+			for y in range(depth):
+				tile_positions.erase(Vector2i(x-HALF_WORLD, HALF_WORLD-y))
+		
+		# Right side
+		else:
+			x -= WORLD_SIZE*3
+			for y in range(depth):
+				tile_positions.erase(Vector2i(HALF_WORLD-y, HALF_WORLD-x))
 	
 	# Remove tiles for cave systems
 	noise = FastNoiseLite.new()
