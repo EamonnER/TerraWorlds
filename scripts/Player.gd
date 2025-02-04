@@ -101,6 +101,10 @@ func _physics_process(delta):
 	var previous_up_direction = up_direction
 	update_rotation(delta)
 	
+	# Draw player on minimap
+	$Camera.get_node("Overlay/Minimap").draw_player(get_position())
+	
+	# Movement
 	var new_velocity = get_relative_velocity()
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		if not is_on_floor():  # Add gravity
