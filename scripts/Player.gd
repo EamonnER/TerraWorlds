@@ -52,7 +52,7 @@ func update_rotation(delta):
 	# If in bottom left
 	# If in left segment
 	if abs(coords.x) > coords.y:
-		Vector2.LEFT
+		up_direction = Vector2.LEFT
 		rotation = rotate_toward(rotation, -PI/2, ROTATION_SPEED*delta)
 		return
 	# Else, in bottom segment
@@ -98,7 +98,6 @@ func _physics_process(delta):
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			$Collision.set_deferred("disabled", false)
 	
-	var previous_up_direction = up_direction
 	update_rotation(delta)
 	
 	# Draw player on minimap
