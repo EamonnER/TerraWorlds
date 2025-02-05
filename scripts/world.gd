@@ -53,9 +53,9 @@ func generate_new_world():
 	noise = FastNoiseLite.new()
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-	for position in tile_positions.keys():
-		if noise.get_noise_2d(position.x, position.y) > 0.2:
-			tile_positions.erase(position)
+	for pos in tile_positions.keys():
+		if noise.get_noise_2d(pos.x, pos.y) > 0.2:
+			tile_positions.erase(pos)
 	
 	foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
 
