@@ -19,6 +19,13 @@ config/icon="res://icon.svg"
 
 GlobalVariables="*res://scripts/global_variables.gd"
 
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=720
+window/size/mode=2
+window/size/borderless=true
+
 [dotnet]
 
 project/assembly_name="TerraWorlds"
@@ -109,3 +116,7 @@ game_debug_toggle={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":92,"physical_keycode":0,"key_label":0,"unicode":92,"location":0,"echo":false,"script":null)
 ]
 }
+
+[physics]
+
+2d/default_gravity=1200.0
