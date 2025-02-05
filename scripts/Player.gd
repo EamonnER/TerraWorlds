@@ -2,6 +2,24 @@ extends "res://scripts/entity.gd"
 
 var debug_mode = false
 
+func handle_primary_action_input(mouse_pos: Vector2):
+	# Only function is to remove tiles at mouse pos ATM
+	
+	# TODO I dislike implimenting this by directly referencing the world. 
+	# Player should not have direct access to the world object. 
+	var world = get_node("/root/Game/World")  
+	var tile_coords = world.local_to_map(mouse_pos)
+	world.remove_tile(Vector2i(tile_coords))
+
+func handle_secondary_action_input(mouse_pos: Vector2):
+	# Only function is to place tiles at mouse pos ATM
+	
+	# TODO I dislike implimenting this by directly referencing the world. 
+	# Player should not have direct access to the world object. 
+	var world = get_node("/root/Game/World")  
+	var tile_coords = world.local_to_map(mouse_pos)
+	world.place_tile(Vector2i(tile_coords), 0)
+
 func _physics_process(delta):
 	if Input.is_action_just_pressed("game_debug_toggle"):
 		debug_mode = not debug_mode
@@ -14,6 +32,8 @@ func _physics_process(delta):
 			$Collision.set_deferred("disabled", false)
 	
 	update_rotation(delta)
+	
+	var mouse_pos = get_global_mouse_position()
 	
 	# Draw player on minimap
 	$Camera.get_node("Overlay/Minimap").draw_player(get_position())
@@ -41,6 +61,13 @@ func _physics_process(delta):
 		var vertical_direction = Input.get_axis("game_up", "game_down")
 		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
 		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)
+	
+	# Primary action input (LMB)
+	if Input.is_action_just_pressed("game_primary_action"):
+		handle_primary_action_input(mouse_pos)
+	# Secondary action input (RMB)
+	if Input.is_action_just_pressed("game_secondary_action"):
+		handle_secondary_action_input(mouse_pos)
 	
 	set_relative_velocity(new_velocity)
 	move_and_slide()

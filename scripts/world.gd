@@ -6,6 +6,9 @@ extends Node2D
 const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 3  # Total width / height of playable / explorable area
 
+func local_to_map(local_position: Vector2) -> Vector2i:
+	return $Foreground.local_to_map(local_position)
+
 func generate_new_world():
 	foreground.clear()
 	
@@ -73,7 +76,7 @@ func get_tile_at_position(vector: Vector2i) -> TileData:
 	return foreground.get_cell_tile_data(vector)
 
 func place_tile(vector: Vector2i, terrain_id: int):
-	foreground.set_cell(vector, terrain_id)
+	foreground.set_cell(vector, terrain_id, Vector2i(0, 0))
 
 func remove_tile(vector: Vector2i):
 	foreground.set_cell(vector, -1)
