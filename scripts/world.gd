@@ -76,7 +76,7 @@ func get_tile_at_position(vector: Vector2i) -> TileData:
 	return foreground.get_cell_tile_data(vector)
 
 func place_tile(vector: Vector2i, terrain_id: int):
-	foreground.set_cell(vector, terrain_id, Vector2i(0, 0))
-
+	foreground.set_cells_terrain_connect([vector], 0, terrain_id, false)
+	
 func remove_tile(vector: Vector2i):
-	foreground.set_cell(vector, -1)
+	foreground.set_cells_terrain_connect([vector], 0, -1, false)
