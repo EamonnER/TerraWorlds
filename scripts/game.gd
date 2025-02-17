@@ -6,5 +6,5 @@ func _ready() -> void:
 
 	$Player.position = $World.get_spawn_position()
 	
-	$Player.get_node("Camera/Overlay/Minimap").world_size = $World.WORLD_SIZE
-	$Player.get_node("Camera/Overlay/Minimap").draw($World.foreground)
+	$Player.get_node("CanvasLayer/HUD/Minimap").world_size = $World.WORLD_SIZE
+	$Player.get_node("CanvasLayer/HUD/Minimap").draw($World.foreground)

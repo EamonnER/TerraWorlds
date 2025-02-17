@@ -14,42 +14,82 @@ position = Vector2(-16, 48)
 script = ExtResource("1_1c8fd")
 
 [node name="Collision" type="CollisionShape2D" parent="."]
-position = Vector2(16, -48)
 shape = SubResource("RectangleShape2D_1b3qp")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-position = Vector2(16, -48)
 scale = Vector2(0.25, 0.75)
 texture = ExtResource("1_wpkrl")
 
 [node name="Camera" type="Camera2D" parent="."]
-position = Vector2(16, -48)
 ignore_rotation = false
 
-[node name="Background" type="TextureRect" parent="Camera"]
+[node name="Background" type="TextureRect" parent="."]
 visibility_layer = 2
 z_index = -1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -160.0
-offset_top = -96.0
-offset_right = 160.0
-offset_bottom = 96.0
+anchors_preset = -1
+anchor_left = 0.439759
+anchor_top = 0.458042
+anchor_right = 0.565802
+anchor_bottom = 0.673427
+offset_left = -626.0
+offset_top = -414.0
+offset_right = 454.0
+offset_bottom = 226.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.21162, 1.21162)
+size_flags_horizontal = 4
 texture = ExtResource("4_gdbrx")
 script = ExtResource("4_bijut")
 
-[node name="Overlay" type="CanvasLayer" parent="Camera"]
+[node name="Bg1" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(30, 17)
+scale = Vector2(3.93969, 3.93969)
+texture = ExtResource("4_gdbrx")
 
-[node name="Minimap" type="TextureRect" parent="Camera/Overlay"]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_top = 49.0
+offset_right = -7.0
+offset_bottom = 49.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Health" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -51.0
+offset_top = -112.0
+offset_right = 1.0
+offset_bottom = -89.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2.44276, 2.44276)
+size_flags_horizontal = 2
+size_flags_vertical = 8
+text = "Health"
+
+[node name="Minimap" type="TextureRect" parent="CanvasLayer/HUD"]
+layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_top = 10.0
-offset_right = -10.0
+offset_left = -308.0
+offset_top = -34.0
+offset_right = -8.0
+offset_bottom = 266.0
 grow_horizontal = 0
 script = ExtResource("3_irwx0")

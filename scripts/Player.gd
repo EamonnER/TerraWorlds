@@ -36,7 +36,7 @@ func _physics_process(delta):
 	var mouse_pos = get_global_mouse_position()
 	
 	# Draw player on minimap
-	$Camera.get_node("Overlay/Minimap").draw_player(get_position())
+	$CanvasLayer.get_node("HUD/Minimap").draw_player(get_position())
 	
 	# Movement
 	var new_velocity = get_relative_velocity()
