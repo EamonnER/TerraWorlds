@@ -8,8 +8,9 @@ const TERMINAL_VELOCITY = 8000.0
 const JUMP_VELOCITY = 400.0
 const ROTATION_SPEED = 10 * PI/4
 
-# Get the gravity from the project settings to be synced with RigidBody nodes.
+# Gravity accelleration
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var rotation_updated = false  # True if up_direction has just been changed in the current frame
 
 func update_rotation(delta):
 	var coords: Vector2 = self.global_position
@@ -85,3 +86,11 @@ func set_relative_horizontal_speed(speed: float):
 func set_relative_vertical_speed(speed: float):
 	var current_velocity = get_relative_velocity()
 	set_relative_velocity(Vector2(current_velocity.x, speed))
+
+func _physics_process(delta: float) -> void:
+	var previous_up_direction = up_direction
+	update_rotation(delta)
+	if previous_up_direction != up_direction:
+		rotation_updated = true
+	else:
+		rotation_updated = false

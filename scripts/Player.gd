@@ -21,6 +21,8 @@ func handle_secondary_action_input(mouse_pos: Vector2):
 	world.place_tile(Vector2i(tile_coords), 0)
 
 func _physics_process(delta):
+	super._physics_process(delta)  # Runs parent physics first
+	
 	if Input.is_action_just_pressed("game_debug_toggle"):
 		debug_mode = not debug_mode
 		print("Debug mode: ", debug_mode)
@@ -31,12 +33,10 @@ func _physics_process(delta):
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			$Collision.set_deferred("disabled", false)
 	
-	update_rotation(delta)
-	
 	var mouse_pos = get_global_mouse_position()
 	
 	# Draw player on minimap
-	$CanvasLayer.get_node("HUD/Minimap").draw_player(get_position())
+	$CanvasLayer/HUD/Minimap.draw_player(get_position())
 	
 	# Movement
 	var new_velocity = get_relative_velocity()
