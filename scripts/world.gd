@@ -6,6 +6,7 @@ extends Node2D
 const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 3  # Total width / height of playable / explorable area
 
+
 func local_to_map(local_position: Vector2) -> Vector2i:
 	return $Foreground.local_to_map(local_position)
 
@@ -56,8 +57,15 @@ func generate_new_world():
 	noise = FastNoiseLite.new()
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-	for pos in tile_positions.keys():
-		if noise.get_noise_2d(pos.x, pos.y) > 0.2:
+	var is_cave_tile = func (vector: Vector2i) -> bool:
+		const cave_offset = 20
+		return true if (abs(vector.x) < HALF_WORLD - cave_offset and 
+						abs(vector.y) < HALF_WORLD - cave_offset) \
+					else false
+		
+	var cave_tile_positions = tile_positions.keys().filter(is_cave_tile)
+	for pos in cave_tile_positions:
+		if (noise.get_noise_2d(pos.x, pos.y) > 0.2):
 			tile_positions.erase(pos)
 	
 	foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
