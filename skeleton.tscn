@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://fh4d5raueq8t"]
+
+[ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_2l8po"]
+[ext_resource type="Script" path="res://scripts/skeleton.gd" id="1_w0fah"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a85lc"]
+radius = 493.434
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ikqwv"]
+size = Vector2(128, 328)
+
+[node name="skeleton" type="CharacterBody2D"]
+script = ExtResource("1_w0fah")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 1.99999)
+scale = Vector2(1, 2.5625)
+texture = ExtResource("1_2l8po")
+
+[node name="detection_area" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
+shape = SubResource("CircleShape2D_a85lc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_ikqwv")
+
+[connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]

@@ -8,6 +8,9 @@ const TERMINAL_VELOCITY = 8000.0
 const JUMP_VELOCITY = 400.0
 const ROTATION_SPEED = 10 * PI/4
 
+var targeting_actor = null
+var is_following = null
+
 # Gravity accelleration
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var rotation_updated = false  # True if up_direction has just been changed in the current frame
