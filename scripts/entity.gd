@@ -94,3 +94,16 @@ func _physics_process(delta: float) -> void:
 		rotation_updated = true
 	else:
 		rotation_updated = false
+	
+	var new_velocity = get_relative_velocity()
+	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
+		if not is_on_floor():  # Add gravity
+			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
+
+		if rotation_updated == true:
+			new_velocity.x = SPEED * 2.5 * sign(new_velocity.x)
+		
+	else:
+		pass
+	
+	set_relative_velocity(new_velocity)

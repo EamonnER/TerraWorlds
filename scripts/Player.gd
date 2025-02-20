@@ -42,10 +42,9 @@ func _physics_process(delta):
 	# Movement
 	var new_velocity = get_relative_velocity()
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
-	
-		if not is_on_floor():  # Add gravity
-			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
-		elif Input.is_action_just_pressed("game_jump"):  # Handle jump
+		
+		# Jump
+		if is_on_floor() and Input.is_action_just_pressed("game_jump"): 
 			new_velocity.y = -JUMP_VELOCITY
 			
 		# Handle movement inputs
@@ -57,12 +56,7 @@ func _physics_process(delta):
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
 		else:
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
-		
-		if rotation_updated == true:
-			print("Is Rotating")
-			new_velocity.x = SPEED * 2.5 * sign(new_velocity.x)
-		
-		print("New Velocity: ", new_velocity)
+
 	# Debug Movement
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
@@ -70,8 +64,6 @@ func _physics_process(delta):
 		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
 		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)
 	
-	# Update rotation
-
 	# Primary action input (LMB)
 	if Input.is_action_just_pressed("game_primary_action"):
 		handle_primary_action_input(mouse_pos)
