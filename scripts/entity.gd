@@ -17,50 +17,29 @@ var rotation_updated = false  # True if up_direction has just been changed in th
 
 func update_rotation(delta):
 	var coords: Vector2 = self.global_position
-	# If in right side of map
-	if coords.x > 0:
-		# If top right
-		if coords.y < 0:
-			# If in right segment of map
-			if coords.x > abs(coords.y):
-				up_direction = Vector2.RIGHT
-				rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
-				return
-			# Else, in top segment
-			up_direction = Vector2.UP
-			rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
-			return
-		# If in bottom right
-		# If in right segment of map
-		elif coords.x > coords.y:
-			up_direction = Vector2.RIGHT
-			rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
-			return
-		# Else, in bottom segment
-		up_direction = Vector2.DOWN
-		rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
-		return
-	# If in left side of map
-	# If in top left
-	elif coords.y < 0:
-		# If in left segment
-		if coords.x < coords.y:
-			up_direction = Vector2.LEFT
-			rotation = rotate_toward(rotation, -PI/2, ROTATION_SPEED*delta)
-			return
-		# Else, in top segment
+	
+	# Checks player position relative to two lines; y=x and y=-x
+	# l1 = (y=x), l2 = (y=-x)
+	# Remember that y is negative when it goes upward
+	var above_l1 = true if -coords.y > coords.x else false
+	var above_l2 = true if -coords.y > -coords.x else false
+	if above_l1 and above_l2:  # Top quadrant
 		up_direction = Vector2.UP
 		rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
 		return
-	# If in bottom left
-	# If in left segment
-	if abs(coords.x) > coords.y:
-		up_direction = Vector2.LEFT
-		rotation = rotate_toward(rotation, -PI/2, ROTATION_SPEED*delta)
+	elif not above_l1 and above_l2:  # Right quadrant
+		up_direction = Vector2.RIGHT
+		rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
 		return
-	# Else, in bottom segment
-	up_direction = Vector2.DOWN
-	rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
+	elif not above_l1 and not above_l2:  # Bottom quadrant
+		up_direction = Vector2.DOWN
+		rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
+		return
+	elif above_l1 and not above_l2:
+		up_direction = Vector2.LEFT
+		rotation = rotate_toward(rotation, PI*3/2, ROTATION_SPEED*delta)
+		return
+	
 	return
 
 func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
@@ -97,3 +76,16 @@ func _physics_process(delta: float) -> void:
 		rotation_updated = true
 	else:
 		rotation_updated = false
+	
+	var new_velocity = get_relative_velocity()
+	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
+		if not is_on_floor():  # Add gravity
+			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
+		
+		if rotation_updated:
+			new_velocity.x = SPEED * 2.5 * sign(new_velocity.x)
+		
+	else:
+		pass
+	
+	set_relative_velocity(new_velocity)
