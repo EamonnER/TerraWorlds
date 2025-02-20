@@ -56,7 +56,7 @@ func _physics_process(delta):
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
 		else:
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
-
+		
 	# Debug Movement
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
