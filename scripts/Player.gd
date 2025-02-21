@@ -3,20 +3,22 @@ class_name Player
 
 var debug_mode = false
 
-func handle_primary_action_input(mouse_pos: Vector2):
+func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
 	
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
+	var mouse_pos = get_global_mouse_position()
 	var world = get_node("/root/Game/World")  
 	var tile_coords = world.local_to_map(mouse_pos)
 	world.remove_tile(Vector2i(tile_coords))
 
-func handle_secondary_action_input(mouse_pos: Vector2):
+func handle_secondary_action_input():
 	# Only function is to place tiles at mouse pos ATM
 	
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
+	var mouse_pos = get_global_mouse_position()
 	var world = get_node("/root/Game/World")  
 	var tile_coords = world.local_to_map(mouse_pos)
 	world.place_tile(Vector2i(tile_coords), 0)
@@ -32,8 +34,6 @@ func _process(delta: float) -> void:
 		else:
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
-	
-	var mouse_pos = get_global_mouse_position()
 	
 	# Draw player on minimap
 	$CanvasLayer/HUD/Minimap.draw_player(get_position())
@@ -57,9 +57,11 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("game_jump"): 
 		jump()
 	
+	# Mouse actions
+	var mouse_pos = get_global_mouse_position()
 	# Primary action input (LMB)
 	if Input.is_action_just_pressed("game_primary_action"):
-		handle_primary_action_input(mouse_pos)
+		handle_primary_action_input()
 	# Secondary action input (RMB)
 	if Input.is_action_just_pressed("game_secondary_action"):
-		handle_secondary_action_input(mouse_pos)
+		handle_secondary_action_input()
