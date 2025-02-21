@@ -45,7 +45,6 @@ func _process(delta: float) -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		# Apply acceleration or decelleration
 		if sign(horizontal_direction) == sign(new_velocity.x):
-			
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
 		else:
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)

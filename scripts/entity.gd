@@ -86,7 +86,6 @@ func _apply_gravity(delta: float) -> void:
 
 func jump() -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and is_on_floor(): 
-		print("AAA")
 		set_relative_vertical_speed(-JUMP_VELOCITY)
 
 func _physics_process(delta: float) -> void:
