@@ -89,8 +89,6 @@ func jump() -> void:
 		set_relative_vertical_speed(-JUMP_VELOCITY)
 
 func _physics_process(delta: float) -> void:
-	var previous_up_direction = up_direction
-	
 	if is_rotating:
 		_rotate_entity(delta)
 	
