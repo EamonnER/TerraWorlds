@@ -87,9 +87,11 @@ func _rotate_entity(delta: float) -> void:
 
 func _apply_gravity(delta: float) -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and not is_on_floor():
-		var old_velocity = get_velocity()
-		var new_veloctiy = old_velocity.move_toward(TERMINAL_VELOCITY*gravity_vector, gravity*delta)
-		set_velocity(new_veloctiy)
+		var old_vertical_velocity = get_relative_velocity().y
+		var target_vertical_veloctiy = TERMINAL_VELOCITY
+		set_relative_vertical_speed(
+			move_toward(old_vertical_velocity, target_vertical_veloctiy, gravity*delta)
+		)
 
 func jump() -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and is_on_floor(): 
