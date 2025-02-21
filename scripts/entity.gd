@@ -10,6 +10,7 @@ const ROTATION_SPEED = 10 * PI/4
 
 # Gravity accelleration
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+var gravity_vector = ProjectSettings.get_setting("physics/2d/default_gravity_vector")
 var is_rotating = false  # True if up_direction has just been changed in the current frame
 
 func update_rotation():
@@ -23,16 +24,21 @@ func update_rotation():
 	var above_l2 = true if -coords.y > -coords.x else false
 	if above_l1 and above_l2:  # Top quadrant
 		up_direction = Vector2.UP
+		gravity_vector = Vector2.DOWN
 	elif not above_l1 and above_l2:  # Right quadrant
 		up_direction = Vector2.RIGHT
+		gravity_vector = Vector2.LEFT
 	elif not above_l1 and not above_l2:  # Bottom quadrant
 		up_direction = Vector2.DOWN
+		gravity_vector = Vector2.UP
 	elif above_l1 and not above_l2:
 		up_direction = Vector2.LEFT
+		gravity_vector = Vector2.RIGHT
 	
 	if old_up_direction != up_direction:
 		is_rotating = true
 		_on_rotate()
+
 
 func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 	# Rotate the input direction to align it with the up_direction
@@ -81,8 +87,9 @@ func _rotate_entity(delta: float) -> void:
 
 func _apply_gravity(delta: float) -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and not is_on_floor():
-		var old_velocity = get_relative_velocity().y
-		set_relative_vertical_speed(move_toward(old_velocity, TERMINAL_VELOCITY, gravity*delta))
+		var old_velocity = get_velocity()
+		var new_veloctiy = old_velocity.move_toward(TERMINAL_VELOCITY*gravity_vector, gravity*delta)
+		set_velocity(new_veloctiy)
 
 func jump() -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and is_on_floor(): 
