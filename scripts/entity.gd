@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 
-const SPEED = 300.0
+const SPEED = 100.0
 const ACCELERATION = 1000.0
 const DECELERATION = 1500.0
 const TERMINAL_VELOCITY = 8000.0
@@ -80,12 +80,13 @@ func _physics_process(delta: float) -> void:
 	var new_velocity = get_relative_velocity()
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		if not is_on_floor():  # Add gravity
+			
 			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
 		
 		if rotation_updated:
-			new_velocity.x = SPEED * 2.5 * sign(new_velocity.x)
+			new_velocity.x = SPEED * 7.5 * sign(new_velocity.x)
 		
 	else:
 		pass
-	
+
 	set_relative_velocity(new_velocity)

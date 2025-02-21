@@ -1,5 +1,7 @@
 extends "res://scripts/entity.gd"
 
+const SPEED_MODIFIER = 3
+
 var debug_mode = false
 
 
@@ -53,16 +55,16 @@ func _physics_process(delta):
 		
 		# Apply acceleration or decelleration
 		if sign(horizontal_direction) == sign(new_velocity.x):
-			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+			new_velocity.x = move_toward(new_velocity.x, (SPEED*SPEED_MODIFIER)*horizontal_direction, ACCELERATION*delta)
 		else:
-			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
+			new_velocity.x = move_toward(new_velocity.x, (SPEED*SPEED_MODIFIER)*horizontal_direction, DECELERATION*delta)
 		
 	# Debug Movement
 	else:
 		var horizontal_direction =  Input.get_axis("game_left", "game_right")
 		var vertical_direction = Input.get_axis("game_up", "game_down")
-		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
-		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)
+		new_velocity.x = move_toward(new_velocity.x, (SPEED*SPEED_MODIFIER)*horizontal_direction*10, ACCELERATION*delta*10)
+		new_velocity.y = move_toward(new_velocity.y, (SPEED*SPEED_MODIFIER)*vertical_direction*10, ACCELERATION*delta*10)
 	
 	# Primary action input (LMB)
 	if Input.is_action_just_pressed("game_primary_action"):

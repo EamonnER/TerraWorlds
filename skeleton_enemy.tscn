@@ -7,27 +7,33 @@
 radius = 493.434
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ikqwv"]
-size = Vector2(79.5, 161)
+size = Vector2(64.2927, 158.466)
 
 [node name="skeleton_enemy" type="CharacterBody2D"]
+scale = Vector2(2.28809, 2.28809)
 script = ExtResource("1_w0fah")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.341176, 1, 1)
 position = Vector2(-1.90735e-06, -7.62939e-06)
-scale = Vector2(0.617188, 1.25781)
+scale = Vector2(0.151915, 0.380853)
 texture = ExtResource("1_2l8po")
 
 [node name="detection_area" type="Area2D" parent="."]
-position = Vector2(11, 68)
+position = Vector2(6, 38)
+scale = Vector2(0.556955, 0.556955)
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 position = Vector2(-11, -68)
+scale = Vector2(0.519849, 0.519849)
 shape = SubResource("CircleShape2D_a85lc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0.25, 0)
+position = Vector2(-0.218523, -0.237263)
+rotation = -3.14159
+scale = Vector2(0.305898, 0.305898)
 shape = SubResource("RectangleShape2D_ikqwv")
 
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
