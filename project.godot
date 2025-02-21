@@ -23,8 +23,6 @@ GlobalVariables="*res://scripts/global_variables.gd"
 
 window/size/viewport_width=1080
 window/size/viewport_height=720
-window/size/mode=2
-window/size/borderless=true
 
 [dotnet]
 
@@ -128,6 +126,18 @@ game_secondary_action={
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":4,"axis_value":1.0,"script":null)
 ]
 }
+
+[layer_names]
+
+2d_physics/layer_1="Gravity Boundry"
+2d_physics/layer_2="Ground"
+2d_physics/layer_3="Liquids"
+2d_physics/layer_4="Foreground Objects"
+2d_physics/layer_5="Interactable Background"
+2d_physics/layer_6="Unteractable Background"
+2d_physics/layer_7="Entities"
+2d_physics/layer_8="Projectiles"
+2d_physics/layer_9="Particles"
 
 [physics]
 
