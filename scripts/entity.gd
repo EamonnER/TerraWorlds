@@ -65,7 +65,7 @@ func set_relative_vertical_speed(speed: float):
 	set_relative_velocity(Vector2(current_velocity.x, speed))
 
 func _on_rotate() -> void:
-	set_relative_horizontal_speed(SPEED * 2.5 * sign(get_relative_velocity().x))
+	set_relative_horizontal_speed(SPEED * 7.5  * sign(get_relative_velocity().x))
 
 func _rotate_entity(delta: float) -> void:
 	var old_rotation = rotation
@@ -93,9 +93,6 @@ func _physics_process(delta: float) -> void:
 		if not is_on_floor():  # Add gravity
 			
 			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
-		
-		if rotation_updated:
-			new_velocity.x = SPEED * 7.5 * sign(new_velocity.x)
 		
 	else:
 		pass

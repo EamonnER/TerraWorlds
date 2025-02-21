@@ -11,6 +11,8 @@ size = Vector2(64.2927, 158.466)
 
 [node name="skeleton_enemy" type="CharacterBody2D"]
 scale = Vector2(2.28809, 2.28809)
+collision_layer = 64
+collision_mask = 135
 script = ExtResource("1_w0fah")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -22,8 +24,8 @@ texture = ExtResource("1_2l8po")
 [node name="detection_area" type="Area2D" parent="."]
 position = Vector2(6, 38)
 scale = Vector2(0.556955, 0.556955)
-collision_layer = 2
-collision_mask = 2
+collision_layer = 64
+collision_mask = 64
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 position = Vector2(-11, -68)
