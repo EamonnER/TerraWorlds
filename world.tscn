@@ -79,6 +79,7 @@ texture = ExtResource("2_28q0k")
 2:2/0/terrains_peering_bit/left_side = 0
 2:2/0/terrains_peering_bit/top_side = 0
 3:2/0 = 0
+3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:2/0 = 0
 5:2/0 = 0
 0:3/0 = 0
@@ -101,6 +102,7 @@ texture = ExtResource("2_28q0k")
 2:3/0/terrains_peering_bit/bottom_side = 1
 2:3/0/terrains_peering_bit/left_side = 1
 3:3/0 = 0
+3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:3/0 = 0
 5:3/0 = 0
 6:3/0 = 0
@@ -155,7 +157,8 @@ texture = ExtResource("2_28q0k")
 4:5/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_1t5jm"]
-physics_layer_0/collision_layer = 1
+physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 2
 terrain_set_0/mode = 2
 terrain_set_0/terrain_0/name = "Dirt"
 terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
@@ -173,3 +176,11 @@ tile_set = SubResource("TileSet_1t5jm")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_kgesb")
+
+[node name="GravityThresholdArea" type="Area2D" parent="."]
+collision_mask = 448
+
+[node name="GravityThresholdCollision" type="CollisionPolygon2D" parent="GravityThresholdArea"]
+polygon = PackedVector2Array(11, 11, 11, -12, -11, -12, -11, 11)
+
+[connection signal="body_exited" from="GravityThresholdArea" to="." method="_on_gravity_threshold_area_body_exited"]

@@ -1,7 +1,7 @@
 extends "res://scripts/entity.gd"
+class_name Player
 
 var debug_mode = false
-
 
 func handle_primary_action_input(mouse_pos: Vector2):
 	# Only function is to remove tiles at mouse pos ATM
@@ -29,10 +29,10 @@ func _physics_process(delta):
 		print("Debug mode: ", debug_mode)
 		if debug_mode == true:
 			motion_mode = MotionMode.MOTION_MODE_FLOATING
-			$Collision.set_deferred("disabled", true)
+			set_collision_mask_value(2, false)
 		else:
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
-			$Collision.set_deferred("disabled", false)
+			set_collision_mask_value(2, true)
 	
 	var mouse_pos = get_global_mouse_position()
 	

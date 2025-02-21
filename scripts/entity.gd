@@ -1,5 +1,5 @@
 extends CharacterBody2D
-
+class_name Entity
 
 const SPEED = 300.0
 const ACCELERATION = 1000.0
@@ -10,10 +10,11 @@ const ROTATION_SPEED = 10 * PI/4
 
 # Gravity accelleration
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var rotation_updated = false  # True if up_direction has just been changed in the current frame
+var is_rotating = false  # True if up_direction has just been changed in the current frame
 
-func update_rotation(delta):
+func update_rotation():
 	var coords: Vector2 = self.global_position
+	var old_up_direction = up_direction
 	
 	# Checks player position relative to two lines; y=x and y=-x
 	# l1 = (y=x), l2 = (y=-x)
@@ -22,22 +23,16 @@ func update_rotation(delta):
 	var above_l2 = true if -coords.y > -coords.x else false
 	if above_l1 and above_l2:  # Top quadrant
 		up_direction = Vector2.UP
-		rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
-		return
 	elif not above_l1 and above_l2:  # Right quadrant
 		up_direction = Vector2.RIGHT
-		rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
-		return
 	elif not above_l1 and not above_l2:  # Bottom quadrant
 		up_direction = Vector2.DOWN
-		rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
-		return
 	elif above_l1 and not above_l2:
 		up_direction = Vector2.LEFT
-		rotation = rotate_toward(rotation, PI*3/2, ROTATION_SPEED*delta)
-		return
 	
-	return
+	if old_up_direction != up_direction:
+		is_rotating = true
+		_on_rotate()
 
 func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 	# Rotate the input direction to align it with the up_direction
@@ -66,21 +61,34 @@ func set_relative_vertical_speed(speed: float):
 	var current_velocity = get_relative_velocity()
 	set_relative_velocity(Vector2(current_velocity.x, speed))
 
+func _on_rotate() -> void:
+	set_relative_horizontal_speed(SPEED * 2.5 * sign(get_relative_velocity().x))
+
+func _rotate_entity(delta: float) -> void:
+	var old_rotation = rotation
+	match up_direction:
+		Vector2.RIGHT:
+			rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
+		Vector2.DOWN:
+			rotation = rotate_toward(rotation, PI, ROTATION_SPEED*delta)
+		Vector2.LEFT:
+			rotation = rotate_toward(rotation, 3*PI/2, ROTATION_SPEED*delta)
+		_:
+			rotation = rotate_toward(rotation, 0, ROTATION_SPEED*delta)
+	
+	if old_rotation == rotation:
+		is_rotating = false
+
 func _physics_process(delta: float) -> void:
 	var previous_up_direction = up_direction
-	update_rotation(delta)
-	if previous_up_direction != up_direction:
-		rotation_updated = true
-	else:
-		rotation_updated = false
+	
+	if is_rotating:
+		_rotate_entity(delta)
 	
 	var new_velocity = get_relative_velocity()
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		if not is_on_floor():  # Add gravity
 			new_velocity.y = move_toward(new_velocity.y, TERMINAL_VELOCITY, gravity*delta)
-		
-		if rotation_updated:
-			new_velocity.x = SPEED * 2.5 * sign(new_velocity.x)
 		
 	else:
 		pass
