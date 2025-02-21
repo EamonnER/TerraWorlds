@@ -96,3 +96,9 @@ offset_right = -17.0
 offset_bottom = 266.0
 grow_horizontal = 0
 script = ExtResource("3_irwx0")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2(0, 38)
+rotation = -1.56668
+target_position = Vector2(0.0904694, 21.9998)
+collision_mask = 3

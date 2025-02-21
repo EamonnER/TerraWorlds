@@ -3,10 +3,16 @@ extends "res://scripts/entity.gd"
 # SPEED_MODIFIER * SPEED is the final entity speed.
 const SPEED_MODIFIER = 1
 
+
+@export var step_height: float = 16  # Adjust based on tile size
+@export var step_check_distance: float = 10  # How far in front to check
+
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
 	pass
+	
+
 
 
 func _on_detection_area_body_entered(body: Node2D) -> void:
@@ -23,9 +29,10 @@ func _on_detection_area_body_exited(body: Node2D) -> void:
 	is_following = false
 	
 	pass # Replace with function body.
+	
 
-func _physics_process(delta: float) -> void:
-	super._physics_process(delta)  # Runs parent physics first
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
 	
 	# Experiemental Logic for enemy following player.
 	# temp is a temporary variable to calculate the direction the enemy should move in.
@@ -37,12 +44,6 @@ func _physics_process(delta: float) -> void:
 		#print(temp)
 	if is_following:
 		new_velocity.x = move_toward(new_velocity.x, SPEED*SPEED_MODIFIER*sign(temp.x), ACCELERATION*delta)
-		
-	set_relative_velocity(new_velocity)
-	move_and_slide()
-		
 	
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	
+	set_relative_velocity(new_velocity)
