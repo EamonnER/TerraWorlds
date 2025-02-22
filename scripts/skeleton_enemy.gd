@@ -45,5 +45,6 @@ func _process(delta: float) -> void:
 	if is_following:
 		new_velocity.x = move_toward(new_velocity.x, SPEED*SPEED_MODIFIER*sign(temp.x), ACCELERATION*delta)
 	
-	
+
+	step_up()
 	set_relative_velocity(new_velocity)

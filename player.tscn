@@ -3,11 +3,13 @@
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_1c8fd"]
 [ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_wpkrl"]
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="3_irwx0"]
-[ext_resource type="Script" path="res://scripts/background.gd" id="4_bijut"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/BG1.png" id="4_gdbrx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1b3qp"]
-size = Vector2(32, 96)
+size = Vector2(26, 59)
+
+[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_kcdwc"]
+length = 27.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 64
@@ -15,41 +17,29 @@ collision_mask = 79
 script = ExtResource("1_1c8fd")
 
 [node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+scale = Vector2(0.738444, 0.840499)
 shape = SubResource("RectangleShape2D_1b3qp")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.75)
+scale = Vector2(0.14964, 0.392588)
 texture = ExtResource("1_wpkrl")
 
 [node name="Camera" type="Camera2D" parent="."]
 ignore_rotation = false
+zoom = Vector2(1.515, 1.515)
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -367.0
-offset_top = -244.0
-offset_right = -327.0
-offset_bottom = -204.0
 
-[node name="Background" type="TextureRect" parent="Control"]
-visibility_layer = 2
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
 z_index = -1
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -3.5
-anchor_top = -1.9
-anchor_right = 21.659
-anchor_bottom = 14.102
-offset_left = -32.0
-offset_top = -34.0
-offset_right = -147.36
-offset_bottom = -85.08
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(1.21162, 1.21162)
+texture_filter = 1
+texture_repeat = 2
+position = Vector2(-1, 1.52588e-05)
+scale = Vector2(4.62978, 4.62978)
 texture = ExtResource("4_gdbrx")
-script = ExtResource("4_bijut")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -97,8 +87,25 @@ offset_bottom = 266.0
 grow_horizontal = 0
 script = ExtResource("3_irwx0")
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
-position = Vector2(0, 38)
+[node name="StepUpChecker" type="Node2D" parent="."]
+position = Vector2(0, -15)
+
+[node name="StepCheck" type="RayCast2D" parent="StepUpChecker"]
+unique_name_in_owner = true
+position = Vector2(-1, 33)
 rotation = -1.56668
-target_position = Vector2(0.0904694, 21.9998)
+target_position = Vector2(0.0699787, 16.9999)
 collision_mask = 3
+
+[node name="WallCheck" type="RayCast2D" parent="StepUpChecker"]
+unique_name_in_owner = true
+position = Vector2(-1, 19)
+rotation = -1.56668
+target_position = Vector2(0.0699782, 16.9999)
+collision_mask = 3
+
+[node name="AutoStepUp" type="CollisionShape2D" parent="."]
+position = Vector2(0, 25)
+shape = SubResource("SeparationRayShape2D_kcdwc")
+disabled = true
+debug_color = Color(0.919505, 6.21849e-05, 0.698273, 0.42)

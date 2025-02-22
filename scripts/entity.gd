@@ -36,6 +36,23 @@ func update_rotation():
 	if old_up_direction != up_direction:
 		is_rotating = true
 		_on_rotate()
+		
+func step_up():
+	if not is_on_floor():
+		return
+
+	if %StepCheck.is_colliding() and !(%WallCheck.is_colliding()):
+		smooth_step_up()
+	else:
+		$AutoStepUp.disabled = true
+
+func smooth_step_up():
+	$AutoStepUp.disabled = false
+	velocity.y = -20  # Adjust this value to make the step-up feel right
+	await get_tree().create_timer(0.1).timeout  # Short delay before re-enabling normal movement
+	$AutoStepUp.disabled = true
+
+
 
 func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 	# Rotate the input direction to align it with the up_direction

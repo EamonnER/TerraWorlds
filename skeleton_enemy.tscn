@@ -1,13 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://lucuo5egh5mi"]
+[gd_scene load_steps=6 format=3 uid="uid://da28w14misw1x"]
 
 [ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_2l8po"]
 [ext_resource type="Script" path="res://scripts/skeleton_enemy.gd" id="1_w0fah"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a85lc"]
-radius = 493.434
+radius = 749.15
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ikqwv"]
-size = Vector2(64.2927, 158.466)
+size = Vector2(66.1052, 158.466)
+
+[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_ta5ri"]
+length = 27.0
 
 [node name="skeleton_enemy" type="CharacterBody2D"]
 scale = Vector2(2.28809, 2.28809)
@@ -18,25 +21,50 @@ script = ExtResource("1_w0fah")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 0.341176, 1, 1)
 position = Vector2(-1.90735e-06, -7.62939e-06)
-scale = Vector2(0.151915, 0.380853)
+scale = Vector2(0.0685092, 0.164463)
 texture = ExtResource("1_2l8po")
 
 [node name="detection_area" type="Area2D" parent="."]
 position = Vector2(6, 38)
-scale = Vector2(0.556955, 0.556955)
+scale = Vector2(1.00022, 1.00022)
 collision_layer = 64
 collision_mask = 64
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
-position = Vector2(-11, -68)
-scale = Vector2(0.519849, 0.519849)
+position = Vector2(-6.43566, -37.9918)
+scale = Vector2(0.175563, 0.175563)
 shape = SubResource("CircleShape2D_a85lc")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.218523, -0.237263)
+position = Vector2(-0.0960565, -0.237263)
 rotation = -3.14159
-scale = Vector2(0.305898, 0.305898)
+scale = Vector2(0.135133, 0.135133)
 shape = SubResource("RectangleShape2D_ikqwv")
+
+[node name="StepUpChecker" type="Node2D" parent="."]
+position = Vector2(8.9407e-08, -2.62227)
+scale = Vector2(0.429423, 0.348387)
+
+[node name="StepCheck" type="RayCast2D" parent="StepUpChecker"]
+unique_name_in_owner = true
+position = Vector2(-1, 33)
+rotation = -1.56668
+target_position = Vector2(0.0699787, 16.9999)
+collision_mask = 3
+
+[node name="WallCheck" type="RayCast2D" parent="StepUpChecker"]
+unique_name_in_owner = true
+position = Vector2(-1.01775, 16.3083)
+rotation = -1.56668
+target_position = Vector2(0.0699782, 16.9999)
+collision_mask = 3
+
+[node name="AutoStepUp" type="CollisionShape2D" parent="."]
+position = Vector2(0, 10.4891)
+scale = Vector2(0.599714, 0.494196)
+shape = SubResource("SeparationRayShape2D_ta5ri")
+disabled = true
+debug_color = Color(0.919505, 6.21849e-05, 0.698273, 0.42)
 
 [connection signal="body_entered" from="detection_area" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="detection_area" to="." method="_on_detection_area_body_exited"]
