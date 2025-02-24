@@ -7,6 +7,9 @@ class_name World
 const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
 
+const DIRT_ID: Vector2i = Vector2i(0, 0)
+const STONE_ID: Vector2i = Vector2i(0, 1)
+
 @onready var gravity_threshold_collision: CollisionPolygon2D = $GravityThresholdArea/GravityThresholdCollision
 
 
@@ -20,28 +23,35 @@ func generate_new_world():
 	foreground.clear()
 	
 	const HALF_WORLD = WORLD_SIZE / 2
-	var tile_positions = Dictionary()
+	const CAVE_OFFSET = 20
+	var terrain_to_pos = Dictionary()
+	terrain_to_pos[DIRT_ID] = Dictionary()
+	terrain_to_pos[STONE_ID] = Dictionary()
 	
-	# Build completely full world
-	for x in range(-HALF_WORLD, HALF_WORLD):
-		for y in range(-HALF_WORLD, HALF_WORLD):
-			tile_positions[Vector2i(x, y)] = null
+	_build_base_world(terrain_to_pos, CAVE_OFFSET)
 	
-	_add_surface_heightmap(tile_positions)
 	
-	_add_caves(tile_positions)
 	
-	foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
+	_add_surface_heightmap(terrain_to_pos)
+	
+	_add_caves(terrain_to_pos, CAVE_OFFSET)
+	
+	for terrain_id in terrain_to_pos.keys():
+		foreground.set_cells_terrain_connect(terrain_to_pos[terrain_id].keys(), terrain_id.x, terrain_id.y)
+	
+	#foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
 	
 	_draw_gravity_collision()
 
-func _add_surface_heightmap(tile_positions: Dictionary) -> void:
+func _add_surface_heightmap(terrain_to_pos: Dictionary) -> void:
 	# Apply heightmap using radial distance
 	var noise = FastNoiseLite.new()
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 	const HALF_WORLD = WORLD_SIZE/2
 	const MAX_DEPTH = HALF_WORLD/4
+	
+	var positions_to_erase = []
 	for x in range(WORLD_SIZE*4):
 		var noise_value = abs(noise.get_noise_2d(x, 0))
 		var depth = int(noise_value * MAX_DEPTH)
@@ -49,44 +59,65 @@ func _add_surface_heightmap(tile_positions: Dictionary) -> void:
 		# Top side
 		if x <= WORLD_SIZE:
 			for y in range(depth):
-				tile_positions.erase(Vector2i(HALF_WORLD-x, -HALF_WORLD+y))
+				positions_to_erase.append(Vector2i(HALF_WORLD-x, -HALF_WORLD+y))
 		
 		# Left side
 		elif x <= WORLD_SIZE * 2:
 			x -= WORLD_SIZE
 			for y in range(depth):
-				tile_positions.erase(Vector2i(-HALF_WORLD+y, x-HALF_WORLD))
+				positions_to_erase.append(Vector2i(-HALF_WORLD+y, x-HALF_WORLD))
 		
 		# Bottom side
 		elif x <= WORLD_SIZE * 3:
 			x -= WORLD_SIZE*2
 			for y in range(depth):
-				tile_positions.erase(Vector2i(x-HALF_WORLD, HALF_WORLD-y))
+				positions_to_erase.append(Vector2i(x-HALF_WORLD, HALF_WORLD-y))
 		
 		# Right side
 		else:
 			x -= WORLD_SIZE*3
 			for y in range(depth):
-				tile_positions.erase(Vector2i(HALF_WORLD-y, HALF_WORLD-x))
+				positions_to_erase.append(Vector2i(HALF_WORLD-y, HALF_WORLD-x))
+	
+	_erase_tiles(terrain_to_pos, positions_to_erase)
 
-func _add_caves(tile_positions: Dictionary) -> void:
+func _add_caves(terrain_to_pos: Dictionary, cave_offset: int) -> void:
 	# Remove tiles for cave systems
 	var noise = FastNoiseLite.new()
 	noise.seed = randi()
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	var is_cave_tile = func (vector: Vector2i) -> bool:
-		const cave_offset = 20
 		return true if (abs(vector.x) < WORLD_SIZE/2 - cave_offset and 
-						abs(vector.y) < WORLD_SIZE/2 - cave_offset) \
+						abs(vector.y) < WORLD_SIZE/2 - cave_offset and 
+						noise.get_noise_2d(vector.x, vector.y) > 0.2) \
 					else false
-		
-	var cave_tile_positions = tile_positions.keys().filter(is_cave_tile)
-	for pos in cave_tile_positions:
-		if (noise.get_noise_2d(pos.x, pos.y) > 0.2):
-			tile_positions.erase(pos)
+	
+	var cave_tile_positions = []
+	for terrain_id in terrain_to_pos.keys():
+		cave_tile_positions += terrain_to_pos[terrain_id].keys().filter(is_cave_tile)
+	_erase_tiles(terrain_to_pos, cave_tile_positions)
+
+func _build_base_world(terrain_to_pos: Dictionary, cave_offset: int) -> void:
+	const HALF_WORLD = WORLD_SIZE/2
+	var cave_threshold = (HALF_WORLD) - cave_offset
+	
+	for x in range(-HALF_WORLD, HALF_WORLD):
+		for y in range(-HALF_WORLD, HALF_WORLD):
+			# Below line y = -HALF_WORLD+cave_offset;
+			# Left of line x = HALF_WORLD-cave_offset;
+			# Above line y = HALF_WORLD-cave_offset;
+			# Right of line x = -HALF_WORLD+cave_offset
+			if (y > -HALF_WORLD+cave_offset) and \
+				(x < HALF_WORLD-cave_offset) and \
+				(y < HALF_WORLD-cave_offset) and \
+				(x > -HALF_WORLD+cave_offset):
+				terrain_to_pos[STONE_ID][Vector2i(x, y)] = null
+			else:
+				terrain_to_pos[DIRT_ID][Vector2i(x, y)] = null
+				
 
 func _draw_gravity_collision() -> void:
-	var width = 5.0
+	var width = 1.0
 	var points = [
 		map_to_local(Vector2(-MAP_SIZE/2, -MAP_SIZE/2)),  # Top left corner
 		map_to_local(Vector2(-MAP_SIZE/2, (-MAP_SIZE/2)+width)),  # Below top left corner
@@ -107,6 +138,12 @@ func _draw_gravity_collision() -> void:
 	]
 
 	gravity_threshold_collision.set_polygon(PackedVector2Array(points))
+
+func _erase_tiles(terrain_to_pos: Dictionary, positions: Array) -> void:
+	for pos in positions:
+		for terrain_id in terrain_to_pos.keys():
+			terrain_to_pos[terrain_id].erase(pos)
+		
 
 func get_spawn_position() -> Vector2i:
 	# Iterates from top of map down until it finds a tile
