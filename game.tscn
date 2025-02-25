@@ -18,6 +18,7 @@ script = ExtResource("1_1l5x6")
 [node name="Player" parent="World" instance=ExtResource("3_s6re8")]
 
 [node name="Camera" type="Camera2D" parent="."]
+ignore_rotation = false
 script = ExtResource("4_7nbgk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -69,7 +70,7 @@ script = ExtResource("5_ap3o4")
 
 [node name="Background" type="Parallax2D" parent="."]
 show_behind_parent = true
-scale = Vector2(30, 30)
+scale = Vector2(10, 10)
 scroll_scale = Vector2(0.2, 0.2)
 
 [node name="Sky" type="Sprite2D" parent="Background"]
