@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0nlpiohiv678"
-path="res://.godot/imported/BG1.png-f1dd219485ae8c84530d3301270570d3.ctex"
+path="res://.godot/imported/sky.png-587ac3b39845f8f285647b7c06302939.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tilesets/BG1.png"
-dest_files=["res://.godot/imported/BG1.png-f1dd219485ae8c84530d3301270570d3.ctex"]
+source_file="res://assets/tilesets/sky.png"
+dest_files=["res://.godot/imported/sky.png-587ac3b39845f8f285647b7c06302939.ctex"]
 
 [params]
 

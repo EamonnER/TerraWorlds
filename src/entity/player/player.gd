@@ -1,4 +1,4 @@
-extends "res://scripts/entity.gd"
+extends Entity
 class_name Player
 
 var debug_mode = false
@@ -9,7 +9,6 @@ func handle_primary_action_input():
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
 	var mouse_pos = get_global_mouse_position()
-	var world = get_node("/root/Game/World")  
 	var tile_coords = world.local_to_map(mouse_pos)
 	world.remove_tile(Vector2i(tile_coords))
 
@@ -18,10 +17,12 @@ func handle_secondary_action_input():
 	
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()
-	var world = get_node("/root/Game/World")  
+	var mouse_pos = get_global_mouse_position()  
 	var tile_coords = world.local_to_map(mouse_pos)
 	world.place_tile(Vector2i(tile_coords), 0)
+
+func _ready() -> void:
+	health = 100.0
 
 # Handling inputs
 func _process(delta: float) -> void:
@@ -34,9 +35,6 @@ func _process(delta: float) -> void:
 		else:
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
-	
-	# Draw player on minimap
-	$CanvasLayer/HUD/Minimap.draw_player(get_position())
 	
 	# Left / right / up / down inputs
 	var new_velocity = get_relative_velocity()
