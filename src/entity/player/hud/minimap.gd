@@ -58,5 +58,5 @@ func draw_player(pos: Vector2):
 	texture = ImageTexture.create_from_image(img)
 
 func _process(delta: float) -> void:
-	if player:
+	if player and is_instance_valid(player):  # Ensure player is not freed
 		draw_player(player.get_position())

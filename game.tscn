@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://src/game.gd" id="1_1l5x6"]
 [ext_resource type="PackedScene" uid="uid://dcawu5ccdv1ty" path="res://src/entity/player/player.tscn" id="3_s6re8"]
-[ext_resource type="Script" path="res://src/entity/player/camera.gd" id="4_qqgmn"]
+[ext_resource type="PackedScene" uid="uid://c8ysvg8r8v5oc" path="res://src/entity/camera.tscn" id="4_f2yvq"]
 [ext_resource type="Script" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
@@ -22,15 +22,13 @@ script = ExtResource("1_1l5x6")
 [node name="Players" type="Node2D" parent="World"]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="World"]
-_spawnable_scenes = PackedStringArray("res://scripts/mp/multiplayer_player.tscn")
 spawn_path = NodePath("../Players")
 spawn_limit = 2
 
 [node name="Player" parent="World" instance=ExtResource("3_s6re8")]
 
-[node name="Camera" type="Camera2D" parent="."]
-ignore_rotation = false
-script = ExtResource("4_qqgmn")
+[node name="Camera" parent="." instance=ExtResource("4_f2yvq")]
+follow_speed = null
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

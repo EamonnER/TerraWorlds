@@ -42,26 +42,35 @@ func _join_game(ip, port) -> void:
 # Adds player instance to the world.
 func _add_player_to_world(id: int) -> void:
 	print("Player %s joined the game!" % id)
-	rpc_id(id, "change_scene_for_clients", current_scene)  # Tell new client to change scene
+	if id != 1:
+		rpc_id(id, "change_scene_for_clients", current_scene)  # Tell new client to change scene
 	
 	await get_tree().create_timer(0.5).timeout  # Ensure scene switch completes
-	_remove_singleplayer_player()
 	
 	# Ensure _players_spawn_node exists before proceeding
 	if not _players_spawn_node or not is_instance_valid(_players_spawn_node):
 		print("Players node not found, trying to get it...")
 		await get_tree().process_frame  # Wait a frame for the scene to load
-		_players_spawn_node = get_tree().get_current_scene().get_node("World/Players")
+		_players_spawn_node = get_tree().get_current_scene().get_node_or_null("World/Players")
 	
 	if not _players_spawn_node:
 		print("Error: Players node STILL not found! Cannot add player.")
 		return
 	
+	_remove_singleplayer_player()
+
 	var player_to_add = multiplayer_actor.instantiate()
 	player_to_add.entity_id = id
 	player_to_add.name = str(id)
 	
+	var player_camera = preload("res://src/entity/camera.tscn").instantiate()
+	
+	if id == multiplayer.get_unique_id():
+		player_camera.set_target(player_to_add)  # Attach camera to player
+		print("Adding Camera")
+		
 	_players_spawn_node.add_child(player_to_add, true)
+	_players_spawn_node.add_child(player_camera, true)
 
 	
 # Deletes player instance from the world.
@@ -71,8 +80,12 @@ func _disconnect(id: int) -> void:
 func _remove_singleplayer_player():
 	print("Removing Singleplayer Actor.")
 	var player_to_remove = get_tree().get_current_scene().get_node("World/Player")
+	var camera_to_remove = get_tree().get_current_scene().get_node("Camera")
+	
 	if player_to_remove:
 		player_to_remove.queue_free()
+	if camera_to_remove:
+		camera_to_remove.queue_free()
 
 @rpc("authority", "reliable")
 func change_scene_for_clients(scene_path: String) -> void:

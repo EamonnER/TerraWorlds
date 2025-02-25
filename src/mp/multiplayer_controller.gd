@@ -1,32 +1,71 @@
-extends CharacterBody2D
+extends Entity
+class_name MP_Player
 
-
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-
+var debug_mode = false
 
 @export var entity_id := 1:
 	set(id):
 		entity_id = id
 
+func handle_primary_action_input():
+	# Only function is to remove tiles at mouse pos ATM
+	
+	# TODO I dislike implimenting this by directly referencing the world. 
+	# Player should not have direct access to the world object. 
+	#var mouse_pos = get_global_mouse_position()
+	#var tile_coords = world.local_to_map(mouse_pos)
+	#world.remove_tile(Vector2i(tile_coords))
+	pass
 
+func handle_secondary_action_input():
+	# Only function is to place tiles at mouse pos ATM
+	
+	# TODO I dislike implimenting this by directly referencing the world. 
+	# Player should not have direct access to the world object. 
+	#var mouse_pos = get_global_mouse_position()  
+	#var tile_coords = world.local_to_map(mouse_pos)
+	#world.place_tile(Vector2i(tile_coords), 0)
+	pass
 
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
+func _ready() -> void:
+	health = 100.0
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction := Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-
-	move_and_slide()
+# Handling inputs
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("game_debug_toggle"):
+		debug_mode = not debug_mode
+		print("Debug mode: ", debug_mode)
+		if debug_mode == true:
+			motion_mode = MotionMode.MOTION_MODE_FLOATING
+			set_collision_mask_value(2, false)
+		else:
+			motion_mode = MotionMode.MOTION_MODE_GROUNDED
+			set_collision_mask_value(2, true)
+	
+	# Left / right / up / down inputs
+	var new_velocity = get_relative_velocity()
+	var horizontal_direction = Input.get_axis("game_left", "game_right")
+	var vertical_direction = Input.get_axis("game_up", "game_down")
+	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
+		# Apply acceleration or decelleration
+		if sign(horizontal_direction) == sign(new_velocity.x):
+			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+		else:
+			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
+	else:  # Debug Movement
+		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
+		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)
+	set_relative_velocity(new_velocity)
+	
+	# Jump
+	if Input.is_action_just_pressed("game_jump"): 
+		jump()
+	
+	# Mouse actions
+	var mouse_pos = get_global_mouse_position()
+	# Primary action input (LMB)
+	if Input.is_action_just_pressed("game_primary_action"):
+		handle_primary_action_input()
+	# Secondary action input (RMB)
+	if Input.is_action_just_pressed("game_secondary_action"):
+		handle_secondary_action_input()

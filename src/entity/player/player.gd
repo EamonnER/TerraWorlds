@@ -3,6 +3,10 @@ class_name Player
 
 var debug_mode = false
 
+@export var entity_id := 1:
+	set(id):
+		entity_id = id
+
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
 	

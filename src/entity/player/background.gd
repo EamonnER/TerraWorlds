@@ -11,7 +11,7 @@ func set_target(new_player: Player):
 	player = new_player
 
 func _process(delta: float) -> void:
-	if player and player.is_rotating:
+	if player and is_instance_valid(player) and player.is_rotating:
 		# set_rotation(-player.get_rotation())
 		pass
 	

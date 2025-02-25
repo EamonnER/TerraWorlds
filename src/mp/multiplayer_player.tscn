@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://8xmpx7tr5fpq"]
 
-[ext_resource type="Script" path="res://src/mp/multiplayer_controller.gd" id="1_ql6gb"]
+[ext_resource type="Script" path="res://src/entity/player/player.gd" id="1_k5wi0"]
 [ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="2_d5do5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_147vu"]
 size = Vector2(32, 96)
 
 [node name="MultiplayerPlayer" type="CharacterBody2D"]
-script = ExtResource("1_ql6gb")
+script = ExtResource("1_k5wi0")
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_147vu")
@@ -15,6 +15,3 @@ shape = SubResource("RectangleShape2D_147vu")
 [node name="Sprite" type="Sprite2D" parent="."]
 scale = Vector2(0.25, 0.75)
 texture = ExtResource("2_d5do5")
-
-[node name="Camera" type="Camera2D" parent="."]
-ignore_rotation = false
