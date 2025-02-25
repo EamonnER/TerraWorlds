@@ -8,10 +8,12 @@ const TERMINAL_VELOCITY = 8000.0
 const JUMP_VELOCITY = 400.0
 const ROTATION_SPEED = 10 * PI/4
 
-# Gravity accelleration
+# Gravity attributes
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var gravity_vector = ProjectSettings.get_setting("physics/2d/default_gravity_vector")
 var is_rotating = false  # True if up_direction has just been changed in the current frame
+
+var health: float = 100.0
 
 func update_rotation():
 	var coords: Vector2 = self.global_position

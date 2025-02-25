@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=11 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_1l5x6"]
 [ext_resource type="PackedScene" uid="uid://dcawu5ccdv1ty" path="res://player.tscn" id="3_s6re8"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="4_7nbgk"]
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="5_iee2e"]
+[ext_resource type="Script" path="res://scripts/health.gd" id="6_4awlf"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/sky.png" id="8_f8m72"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://world.tscn" id="8_gxbsa"]
 [ext_resource type="Texture2D" uid="uid://cdmxpgxq4ll3t" path="res://assets/tilesets/far.png" id="9_1swuo"]
@@ -55,6 +56,7 @@ scale = Vector2(2.44276, 2.44276)
 size_flags_horizontal = 2
 size_flags_vertical = 8
 text = "Health"
+script = ExtResource("6_4awlf")
 
 [node name="Minimap" type="TextureRect" parent="CanvasLayer/HUD"]
 layout_mode = 1

@@ -23,6 +23,9 @@ func handle_secondary_action_input():
 	var tile_coords = world.local_to_map(mouse_pos)
 	world.place_tile(Vector2i(tile_coords), 0)
 
+func _ready() -> void:
+	health = 100.0
+
 # Handling inputs
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("game_debug_toggle"):
