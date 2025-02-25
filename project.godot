@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GlobalVariables="*res://scripts/global_variables.gd"
-MultiplayerManager="*res://scripts/mp/multiplayer_manager.gd"
+GlobalVariables="*res://src/global_variables.gd"
+MultiplayerManager="*res://src/mp/multiplayer_manager.gd"
 
 [display]
 

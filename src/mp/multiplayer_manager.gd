@@ -1,6 +1,6 @@
 extends Node
 
-var multiplayer_actor = preload("res://scripts/mp/multiplayer_player.tscn")
+var multiplayer_actor = preload("res://src/mp/multiplayer_player.tscn")
 var _players_spawn_node
 var current_scene
 
@@ -9,7 +9,7 @@ func _become_host(port: int) -> void:
 	_create_world()
 	await get_tree().create_timer(0.1).timeout
 		
-	_players_spawn_node = get_tree().get_current_scene().get_node("Players")
+	_players_spawn_node = get_tree().get_current_scene().get_node("World/Players")
 
 	var server_peer = ENetMultiplayerPeer.new()
 	server_peer.create_server(port)
@@ -51,7 +51,7 @@ func _add_player_to_world(id: int) -> void:
 	if not _players_spawn_node or not is_instance_valid(_players_spawn_node):
 		print("Players node not found, trying to get it...")
 		await get_tree().process_frame  # Wait a frame for the scene to load
-		_players_spawn_node = get_tree().get_current_scene().get_node_or_null("Players")
+		_players_spawn_node = get_tree().get_current_scene().get_node("World/Players")
 	
 	if not _players_spawn_node:
 		print("Error: Players node STILL not found! Cannot add player.")
@@ -70,7 +70,7 @@ func _disconnect(id: int) -> void:
 	
 func _remove_singleplayer_player():
 	print("Removing Singleplayer Actor.")
-	var player_to_remove = get_tree().get_current_scene().get_node("Player")
+	var player_to_remove = get_tree().get_current_scene().get_node("World/Player")
 	if player_to_remove:
 		player_to_remove.queue_free()
 

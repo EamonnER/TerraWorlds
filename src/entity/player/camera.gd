@@ -9,7 +9,7 @@ func _ready():
 
 func _process(delta):
 	if player:
-		set_position(get_position().lerp(player.global_position, follow_speed * delta))
+		set_position(get_position().lerp(player.get_position(), follow_speed * delta))
 		
 		if player.is_rotating:
 			set_rotation(player.get_rotation())
