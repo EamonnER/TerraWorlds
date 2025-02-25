@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=13 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" path="res://src/game.gd" id="1_1l5x6"]
 [ext_resource type="PackedScene" uid="uid://dcawu5ccdv1ty" path="res://src/entity/player/player.tscn" id="3_s6re8"]
@@ -6,12 +6,15 @@
 [ext_resource type="Script" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
+[ext_resource type="Script" path="res://src/entity/player/background.gd" id="8_ct475"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/sky.png" id="8_f8m72"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
 [ext_resource type="Texture2D" uid="uid://cdmxpgxq4ll3t" path="res://assets/tilesets/far.png" id="9_1swuo"]
 [ext_resource type="Texture2D" uid="uid://mcxks7o08vmh" path="res://assets/tilesets/near.png" id="10_lej60"]
+[ext_resource type="Texture2D" uid="uid://bm15jgq11yte4" path="res://assets/night.png" id="11_vo0r7"]
 
 [node name="Game" type="Node2D"]
+texture_filter = 1
 script = ExtResource("1_1l5x6")
 
 [node name="World" parent="." instance=ExtResource("8_gxbsa")]
@@ -72,16 +75,20 @@ script = ExtResource("5_ap3o4")
 
 [node name="Background" type="Parallax2D" parent="."]
 show_behind_parent = true
-scale = Vector2(5, 5)
 scroll_scale = Vector2(0.2, 0.2)
-repeat_size = Vector2(320, 192)
-repeat_times = 8
+script = ExtResource("8_ct475")
 
 [node name="Sky" type="Sprite2D" parent="Background"]
+visible = false
 texture = ExtResource("8_f8m72")
 
 [node name="Far" type="Sprite2D" parent="Background"]
+visible = false
 texture = ExtResource("9_1swuo")
 
 [node name="Near" type="Sprite2D" parent="Background"]
+visible = false
 texture = ExtResource("10_lej60")
+
+[node name="Night" type="Sprite2D" parent="Background"]
+texture = ExtResource("11_vo0r7")

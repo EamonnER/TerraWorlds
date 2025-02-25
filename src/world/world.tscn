@@ -168,6 +168,7 @@ sources/0 = SubResource("TileSetAtlasSource_rn0e2")
 [sub_resource type="Environment" id="Environment_kgesb"]
 
 [node name="World" type="Node2D"]
+texture_filter = 1
 script = ExtResource("1_36xlx")
 
 [node name="Foreground" type="TileMapLayer" parent="."]
