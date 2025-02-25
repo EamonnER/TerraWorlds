@@ -7,8 +7,9 @@ extends Node2D
 
 func _ready() -> void:
 	world.generate_new_world()
-
-	player.position = $World.get_spawn_position()
+	
+	player.set_world(world)
+	player.position = world.get_spawn_position()
 	player.update_rotation()
 	
 	if player.is_multiplayer_authority():  # Only follow the local player

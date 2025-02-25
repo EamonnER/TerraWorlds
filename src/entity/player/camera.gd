@@ -1,6 +1,6 @@
 extends Camera2D
 
-@export var follow_speed: float = 5.0
+@export var follow_speed: float = 10.0
 
 var player: Player = null
 

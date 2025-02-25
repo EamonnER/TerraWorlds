@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://ffx1hqubsivi"]
 
-[ext_resource type="Script" path="res://scripts/world.gd" id="1_36xlx"]
+[ext_resource type="Script" path="res://src/world/world.gd" id="1_36xlx"]
 [ext_resource type="Texture2D" uid="uid://c2chqt3jp4iwd" path="res://assets/tilesets/Tileset.png" id="2_28q0k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rn0e2"]
