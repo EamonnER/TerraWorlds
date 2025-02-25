@@ -2,7 +2,8 @@ extends Node2D
 
 @onready var player: Player = $World/Player
 @onready var world: World = $World
-@onready var camera = $Camera
+@onready var camera: Camera2D = $Camera
+@onready var hud: Control = $CanvasLayer/HUD
 
 func _ready() -> void:
 	world.generate_new_world()
@@ -12,6 +13,7 @@ func _ready() -> void:
 	
 	if player.is_multiplayer_authority():  # Only follow the local player
 		camera.set_target(player)
+		hud.set_target(player)
 	
-	player.get_node("CanvasLayer/HUD/Minimap").world_size = world.WORLD_SIZE
-	player.get_node("CanvasLayer/HUD/Minimap").draw(world.foreground)
+	hud.get_node("Minimap").world_size = world.WORLD_SIZE
+	hud.get_node("Minimap").draw(world.foreground)

@@ -35,9 +35,6 @@ func _process(delta: float) -> void:
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
 	
-	# Draw player on minimap
-	$CanvasLayer/HUD/Minimap.draw_player(get_position())
-	
 	# Left / right / up / down inputs
 	var new_velocity = get_relative_velocity()
 	var horizontal_direction = Input.get_axis("game_left", "game_right")

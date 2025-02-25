@@ -4,6 +4,8 @@ extends TextureRect
 #@export var player_texture: ImageTexture
 @export var player_texture_size: Vector2 = Vector2(20, 20)
 
+var player: Player = null
+
 var foreground: TileMapLayer
 var world_size: int
 var world_map: Image
@@ -53,3 +55,14 @@ func draw_player(pos: Vector2):
 					img.set_pixel(px, py, colour)
 	
 	texture = ImageTexture.create_from_image(img)
+
+func set_target(new_player: Player):
+	if not new_player.is_multiplayer_authority():
+		queue_free()
+		return
+
+	player = new_player
+
+func _process(delta: float) -> void:
+	if player:
+		draw_player(player.get_position())
