@@ -21,9 +21,6 @@ shape = SubResource("RectangleShape2D_1b3qp")
 scale = Vector2(0.25, 0.75)
 texture = ExtResource("1_wpkrl")
 
-[node name="Camera" type="Camera2D" parent="."]
-ignore_rotation = false
-
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
