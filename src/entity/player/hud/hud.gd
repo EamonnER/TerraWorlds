@@ -1,0 +1,13 @@
+extends Control
+
+@onready var health = $Health
+@onready var minimap = $Minimap
+
+func set_target(new_player: Player):
+	if not new_player.is_multiplayer_authority():
+		minimap.queue_free()
+		health.queue_free()
+		return
+
+	health.player = new_player
+	minimap.player = new_player

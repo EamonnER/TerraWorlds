@@ -1,8 +1,11 @@
 extends TextureRect
+class_name Minimap
 
 @export var minimap_size: Vector2 = Vector2(300, 300)
 #@export var player_texture: ImageTexture
 @export var player_texture_size: Vector2 = Vector2(20, 20)
+
+var player: Player
 
 var foreground: TileMapLayer
 var world_size: int
@@ -53,3 +56,7 @@ func draw_player(pos: Vector2):
 					img.set_pixel(px, py, colour)
 	
 	texture = ImageTexture.create_from_image(img)
+
+func _process(delta: float) -> void:
+	if player:
+		draw_player(player.get_position())
