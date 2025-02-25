@@ -8,6 +8,7 @@ const TERMINAL_VELOCITY = 8000.0
 const JUMP_VELOCITY = 400.0
 const ROTATION_SPEED = 10 * PI/4
 
+
 # Gravity accelleration
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var gravity_vector = ProjectSettings.get_setting("physics/2d/default_gravity_vector")

@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://2mayrwltw625"]
+
+[ext_resource type="Script" path="res://scripts/menu.gd" id="1_eqnup"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_eqnup")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Singleplayer" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Singleplayer"
+
+[node name="Host" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Host Game"
+
+[node name="Join" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Join Game"
+
+[node name="Options" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="Quit" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Singleplayer" to="." method="_on_singleplayer_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Host" to="." method="_on_host_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Join" to="." method="_on_join_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

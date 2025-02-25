@@ -10,3 +10,10 @@ script = ExtResource("1_1l5x6")
 [node name="World" parent="." instance=ExtResource("8_gxbsa")]
 
 [node name="Player" parent="." instance=ExtResource("3_s6re8")]
+
+[node name="Players" type="Node2D" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scripts/mp/multiplayer_player.tscn")
+spawn_path = NodePath("../Players")
+spawn_limit = 2
