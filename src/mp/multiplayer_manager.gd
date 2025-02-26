@@ -8,18 +8,18 @@ func _become_host(port: int) -> void:
 	print("Starting Host Session...")
 	_create_world()
 	await get_tree().create_timer(0.1).timeout
-		
 	_players_spawn_node = get_tree().get_current_scene().get_node("World/Players")
 
 	var server_peer = ENetMultiplayerPeer.new()
 	server_peer.create_server(port)
 	
 	multiplayer.multiplayer_peer = server_peer
-	multiplayer.peer_connected.connect(_add_player_to_world)
+	multiplayer.peer_connected.connect(_on_player_connected)
 	multiplayer.peer_disconnected.connect(_disconnect)
 	
-	
 	rpc("change_scene_for_clients", "res://game.tscn")
+	
+	_remove_singleplayer_player()
 	_add_player_to_world(1)
 
 
@@ -29,48 +29,67 @@ func _create_world() -> void:
 	get_tree().change_scene_to_file("res://game.tscn")
 	current_scene = "res://game.tscn"
 
+func _on_player_connected(id: int) -> void:
+	print("Player %s connected!" % id)
+
+	# Send the current scene path to the client
+	rpc_id(id, "change_scene_for_clients", current_scene)
+	await get_tree().create_timer(0.5).timeout  # Ensure scene switch completes
+
+	# Tell the new client to add the host player (ID 1)
+	rpc_id(id, "_add_player_to_world", 1)
+
+	# Tell the new client to add all other connected players (except itself)
+	for peer_id in multiplayer.get_peers():
+		if peer_id != id:  
+			rpc_id(id, "_add_player_to_world", peer_id)
+
+	# Finally, tell the client to add itself
+	rpc_id(id, "_add_player_to_world", id)
+
+	
 # Connecting to a session.
 func _join_game(ip, port) -> void:
 	print("Connecting to Host...")
 	
 	var client_peer = ENetMultiplayerPeer.new()
 	client_peer.create_client(ip, port)
-	
 	multiplayer.multiplayer_peer = client_peer	
+	await multiplayer.connected_to_server
 	
+	print("Connected! My unique ID is %s" % multiplayer.get_unique_id())
+
 
 # Adds player instance to the world.
+@rpc("any_peer", "reliable")
 func _add_player_to_world(id: int) -> void:
-	print("Player %s joined the game!" % id)
-	if id != 1:
-		rpc_id(id, "change_scene_for_clients", current_scene)  # Tell new client to change scene
-	
-	await get_tree().create_timer(0.5).timeout  # Ensure scene switch completes
-	
-	# Ensure _players_spawn_node exists before proceeding
+	print("Player %s is spawning!" % id)
+
+	await get_tree().process_frame  # Wait a frame for the scene to load
+
 	if not _players_spawn_node or not is_instance_valid(_players_spawn_node):
-		print("Players node not found, trying to get it...")
-		await get_tree().process_frame  # Wait a frame for the scene to load
 		_players_spawn_node = get_tree().get_current_scene().get_node_or_null("World/Players")
-	
+
 	if not _players_spawn_node:
 		print("Error: Players node STILL not found! Cannot add player.")
 		return
-	
-	_remove_singleplayer_player()
+
+	# Prevent duplicate players
+	if _players_spawn_node.has_node(str(id)):
+		print("Player %s already exists! Skipping..." % id)
+		return
 
 	var player_to_add = multiplayer_actor.instantiate()
 	player_to_add.entity_id = id
 	player_to_add.name = str(id)
-	
+
 	var player_camera = preload("res://src/entity/camera.tscn").instantiate()
-	
-	if id == multiplayer.get_unique_id():
-		player_camera.set_target(player_to_add)  # Attach camera to player
-		print("Adding Camera")
-		
+	player_camera.set_target(player_to_add)  # Attach camera to player
+
 	_players_spawn_node.add_child(player_to_add, true)
 	_players_spawn_node.add_child(player_camera, true)
+
+	print("Player %s spawned successfully!" % id)
 
 	
 # Deletes player instance from the world.
@@ -79,6 +98,7 @@ func _disconnect(id: int) -> void:
 	
 func _remove_singleplayer_player():
 	print("Removing Singleplayer Actor.")
+	print("Multiplayer ID: %s" % multiplayer.get_unique_id() )
 	var player_to_remove = get_tree().get_current_scene().get_node("World/Player")
 	var camera_to_remove = get_tree().get_current_scene().get_node("Camera")
 	
@@ -92,3 +112,12 @@ func change_scene_for_clients(scene_path: String) -> void:
 	if get_tree().current_scene.scene_file_path != scene_path:
 		print("Switching to scene:", scene_path)
 		get_tree().change_scene_to_file(scene_path)
+		await get_tree().create_timer(0.1).timeout
+
+		_remove_singleplayer_player()  # Remove singleplayer player after the scene change
+		
+		_players_spawn_node = get_tree().get_current_scene().get_node_or_null("World/Players")
+
+		if _players_spawn_node:
+			print("Scene changed. Requesting player spawn...")
+			rpc("_add_player_to_world", multiplayer.get_unique_id())  # Ensure player spawns

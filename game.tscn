@@ -28,7 +28,6 @@ spawn_limit = 2
 [node name="Player" parent="World" instance=ExtResource("3_s6re8")]
 
 [node name="Camera" parent="." instance=ExtResource("4_f2yvq")]
-follow_speed = null
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

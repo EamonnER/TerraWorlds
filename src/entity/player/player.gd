@@ -9,22 +9,22 @@ var debug_mode = false
 
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
-	
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.remove_tile(Vector2i(tile_coords))
+	#var mouse_pos = get_global_mouse_position()
+	#var tile_coords = world.local_to_map(mouse_pos)
+	#world.remove_tile(Vector2i(tile_coords))
+	pass
 
 func handle_secondary_action_input():
 	# Only function is to place tiles at mouse pos ATM
-	
 	# TODO I dislike implimenting this by directly referencing the world. 
 	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()  
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.place_tile(Vector2i(tile_coords), 0)
-
+	#var mouse_pos = get_global_mouse_position()  
+	#var tile_coords = world.local_to_map(mouse_pos)
+	#world.place_tile(Vector2i(tile_coords), 0)
+	pass
+	
 func _ready() -> void:
 	health = 100.0
 
