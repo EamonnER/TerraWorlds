@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnrb5wdjhgfv7"]
+
+[ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_y5ebg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y46e4"]
+size = Vector2(66, 66)
+
+[node name="DroppedItem" type="Node2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_y5ebg")
+
+[node name="PickupArea" type="Area2D" parent="."]
+
+[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea"]
+shape = SubResource("RectangleShape2D_y46e4")

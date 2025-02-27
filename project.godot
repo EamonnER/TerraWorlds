@@ -138,6 +138,7 @@ game_secondary_action={
 2d_physics/layer_7="Entities"
 2d_physics/layer_8="Projectiles"
 2d_physics/layer_9="Particles"
+2d_physics/layer_10="Dropped Item"
 
 [physics]
 
