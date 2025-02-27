@@ -1,4 +1,4 @@
-extends Node2D
+extends TextureRect
 class_name InventorySlot
 
 var item: InventoryItem  # This is essentually a fancy Sprite2D
@@ -27,3 +27,6 @@ func set_quantity(new_quantity: int) -> void:
 	quantity = new_quantity
 	if quantity < 0:
 		quantity = 0
+
+func _ready() -> void:
+	texture = load("res://icon.svg")
