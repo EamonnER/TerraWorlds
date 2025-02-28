@@ -20,3 +20,4 @@ func _ready() -> void:
 	
 	hud.get_node("Minimap").world_size = world.WORLD_SIZE
 	hud.get_node("Minimap").draw(world.foreground)
+	

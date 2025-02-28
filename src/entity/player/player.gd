@@ -5,8 +5,7 @@ var debug_mode = false
 var inventory: Inventory
 
 func pickup_item(item: Item) -> bool:
-	var inventory_item = item.to_inventory_item()
-	return inventory.add_item(inventory_item)
+	return inventory.add_item(item)
 
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
@@ -38,6 +37,7 @@ func _process(delta: float) -> void:
 			motion_mode = MotionMode.MOTION_MODE_FLOATING
 			set_collision_mask_value(2, false)
 		else:
+			world.spawn_item()
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
 	
