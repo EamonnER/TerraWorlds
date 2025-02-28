@@ -3,7 +3,6 @@ extends Node2D
 class_name World
 
 @onready var foreground: TileMapLayer = $Foreground
-@onready var item_scene = preload("res://src/item/item.tscn")
 
 const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
@@ -170,7 +169,7 @@ func _on_gravity_threshold_area_body_exited(body: Node2D) -> void:
 		body.update_rotation()
 
 func spawn_item() -> void:
-	var item = item_scene.instantiate()
+	var item = StickItem.new()
 	var dropped_item = item.to_dropped_item()
 	add_child(dropped_item)
 	dropped_item.position = get_spawn_position() + Vector2i(40, 0)

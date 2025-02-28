@@ -2,6 +2,7 @@ extends TextureRect
 class_name InventorySlot
 
 @export var quantity: int = 0
+@export var item_name: String
 
 @onready var quantity_label: Label = $Quantity
 
@@ -13,8 +14,8 @@ func set_item(new_item: Item, new_quantity: int) -> void:
 	var inventory_item = new_item.to_inventory_item()
 	add_child(inventory_item)
 	inventory_item.set_position(get_size()/2)
-	inventory_item.set_scale(Vector2(0.7, 0.7))
 	quantity = max(new_quantity, 0)
+	item_name = inventory_item.item.item_name
 	_update_label()
 
 func increment_quantity(amount: int) -> void:
@@ -48,6 +49,7 @@ func delete_item() -> void:
 			remove_child(child)
 			child.queue_free()
 			quantity = 0
+	item_name = ""
 	_update_label()
 
 func pop_item() -> Item:
