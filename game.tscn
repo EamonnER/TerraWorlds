@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
-[ext_resource type="PackedScene" uid="uid://c8w68wmnu80ky" path="res://src/inventory/Inventory.tscn" id="6_n78m7"]
+[ext_resource type="PackedScene" uid="uid://c8w68wmnu80ky" path="res://src/inventory/inventory.tscn" id="6_n78m7"]
 [ext_resource type="Script" path="res://src/entity/player/background.gd" id="8_ct475"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/sky.png" id="8_f8m72"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
