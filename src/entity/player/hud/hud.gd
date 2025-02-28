@@ -13,5 +13,4 @@ func set_target(new_player: Player):
 
 	health.player = new_player
 	minimap.player = new_player
-	inventory.player = new_player
 	new_player.inventory = inventory

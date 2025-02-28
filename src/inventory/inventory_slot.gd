@@ -1,15 +1,15 @@
 extends TextureRect
 class_name InventorySlot
 
-var item: InventoryItem  # This is essentually a fancy Sprite2D
+var inventory_item: InventoryItem  # This is essentually a fancy Sprite2D
 var quantity: int
 
-func set_item(new_item: InventoryItem, new_quantity: int) -> void:
-	if new_item.item_id == item.item_id:
+func set_item(new_item: Item, new_quantity: int) -> void:
+	if new_item.id == inventory_item.item.id:
 		increment_quantity(new_quantity)
 		return
-	item = new_item
-	quantity = new_quantity if new_quantity > 0 else null
+	inventory_item = new_item.to_inventory_item()
+	quantity = max(new_quantity, 0)
 
 func increment_quantity(amount: int) -> void:
 	quantity += amount
@@ -17,11 +17,11 @@ func increment_quantity(amount: int) -> void:
 func decrement_quantity(amount: int) -> void:
 	quantity -= amount
 	if quantity < 0:
-		item = null
+		inventory_item = null
 		quantity = 0
 
-func get_item() -> InventoryItem:
-	return item
+func get_item() -> Item:
+	return inventory_item.item
 	
 func get_quantity() -> int:
 	return quantity

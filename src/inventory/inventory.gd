@@ -42,11 +42,11 @@ func show_inventory() -> void:
 func toggle_inventory() -> void:
 	hide_inventory() if is_open else show_inventory()
 
-func add_item(item: InventoryItem, quantity: int = 1) -> bool:
+func add_item(item: Item, quantity: int = 1) -> bool:
 	# Returns true if successful; false otherwise
 	for slot in get_children():
-		if (slot.get_item() == null) or \
-				(item.is_stackable and slot.get_item().id == item.id):
+		var current_slot_item = slot.get_item()
+		if (current_slot_item == null) or (item.is_stackable and current_slot_item.id == item.id):
 			slot.set_item(item, quantity)
 			return true
 	return false

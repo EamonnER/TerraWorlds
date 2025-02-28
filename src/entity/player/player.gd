@@ -4,6 +4,10 @@ class_name Player
 var debug_mode = false
 var inventory: Inventory
 
+func pickup_item(item: Item) -> bool:
+	var inventory_item = item.to_inventory_item()
+	return inventory.add_item(inventory_item)
+
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
 	
