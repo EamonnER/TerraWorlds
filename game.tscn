@@ -44,7 +44,16 @@ size_flags_vertical = 4
 script = ExtResource("5_iee2e")
 
 [node name="Inventory" parent="CanvasLayer/HUD" instance=ExtResource("6_n78m7")]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.014
+anchor_top = -0.057
+anchor_right = 0.014
+anchor_bottom = -0.057
+offset_left = -0.120001
+offset_top = 0.0400009
+offset_right = -0.120001
+offset_bottom = 0.0400009
 columns = 9
 
 [node name="Health" type="Label" parent="CanvasLayer/HUD"]

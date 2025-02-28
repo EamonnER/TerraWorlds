@@ -4,5 +4,8 @@
 [ext_resource type="Script" path="res://src/inventory/inventory_slot.gd" id="2_ypagu"]
 
 [node name="InventorySlot" type="TextureRect"]
+self_modulate = Color(1, 1, 1, 0.72549)
+offset_right = 128.0
+offset_bottom = 128.0
 texture = ExtResource("1_ao32y")
 script = ExtResource("2_ypagu")

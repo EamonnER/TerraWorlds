@@ -27,6 +27,3 @@ func set_quantity(new_quantity: int) -> void:
 	quantity = new_quantity
 	if quantity < 0:
 		quantity = 0
-
-func _ready() -> void:
-	texture = load("res://icon.svg")

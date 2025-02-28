@@ -3,4 +3,5 @@
 [ext_resource type="Script" path="res://src/inventory/inventory.gd" id="1_dlhv8"]
 
 [node name="Inventory" type="GridContainer"]
+scale = Vector2(0.4, 0.4)
 script = ExtResource("1_dlhv8")
