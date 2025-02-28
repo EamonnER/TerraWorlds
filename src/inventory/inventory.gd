@@ -46,7 +46,8 @@ func toggle_inventory() -> void:
 func add_item(item: InventoryItem, quantity: int = 1) -> bool:
 	# Returns true if successful; false otherwise
 	for slot in get_children():
-		if slot.get_item() == null or slot.get_item().get_id() == item.get_id():
+		if (slot.get_item() == null) or \
+				(item.is_stackable and slot.get_item().id == item.id):
 			slot.set_item(item, quantity)
 			return true
 	return false
