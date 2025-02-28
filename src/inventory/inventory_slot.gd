@@ -2,7 +2,7 @@ extends TextureRect
 class_name InventorySlot
 
 @export var quantity: int = 0
-@export var item_name: String
+@export var item_name: String = ""
 
 @onready var quantity_label: Label = $Quantity
 
@@ -62,3 +62,11 @@ func _update_label() -> void:
 		quantity_label.set_text(str(quantity))
 		return
 	quantity_label.set_text("")
+
+func _ready():
+	self.mouse_filter = Control.MOUSE_FILTER_STOP
+	self.gui_input.connect(_on_gui_input)
+
+func _on_gui_input(event):
+	if event is InputEventMouseButton and event.pressed:
+		delete_item()
