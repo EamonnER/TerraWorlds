@@ -3,7 +3,7 @@ extends Node2D
 class_name World
 
 @onready var foreground: TileMapLayer = $Foreground
-@onready var item_scene = preload("res://src/item/Item.tscn")
+@onready var item_scene = preload("res://src/item/item.tscn")
 
 const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
