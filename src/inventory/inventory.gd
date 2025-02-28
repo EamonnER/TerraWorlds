@@ -11,7 +11,6 @@ enum SLOT_TYPE {
 var rows = 4
 var slots: Dictionary
 var is_open: bool = false
-var player: Player
 
 func _ready() -> void:
 	columns = 9

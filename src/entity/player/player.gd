@@ -2,6 +2,7 @@ extends Entity
 class_name Player
 
 var debug_mode = false
+var inventory: Inventory
 
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
