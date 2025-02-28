@@ -2,10 +2,10 @@ extends Node
 class_name Item
 
 var dropped_item_scene = preload("res://src/item/dropped_item.tscn")
-var dropped_item_sprite = preload("res://icon.svg")
+var dropped_item_sprite = preload("res://assets/missing-texture.png")
 
 var inventory_item_scene = preload("res://src/item/inventory_item.tscn")
-var inventory_item_sprite = preload("res://icon.svg")
+var inventory_item_sprite = preload("res://assets/missing-texture.png")
 
 var id: int = 0
 var item_name: String = "Item"
