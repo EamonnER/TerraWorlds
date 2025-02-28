@@ -5,12 +5,19 @@ class_name InventorySlot
 @export var item_name: String = ""
 
 @onready var quantity_label: Label = $Quantity
+@onready var this_scene = preload("res://src/inventory/inventory_slot.tscn")
+
+var is_following_cursor: bool = false
 
 func set_item(new_item: Item, new_quantity: int) -> void:
+	if new_item == null or new_quantity == 0:
+		return
+	
 	var current_item = get_item()
 	if current_item and new_item.id == current_item.id:
 		increment_quantity(new_quantity)
 		return
+		
 	var inventory_item = new_item.to_inventory_item()
 	add_child(inventory_item)
 	inventory_item.set_position(get_size()/2)
@@ -52,12 +59,15 @@ func delete_item() -> void:
 	item_name = ""
 	_update_label()
 
-func pop_item() -> Item:
+func pop_item() -> Array:
 	var item = get_item()
+	var old_quantity = get_quantity()
 	delete_item()
-	return item
+	return [item, old_quantity]
 
 func _update_label() -> void:
+	if quantity_label == null:
+		return
 	if quantity > 0:
 		quantity_label.set_text(str(quantity))
 		return
@@ -68,5 +78,14 @@ func _ready():
 	self.gui_input.connect(_on_gui_input)
 
 func _on_gui_input(event):
-	if event is InputEventMouseButton and event.pressed:
-		delete_item()
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var following_inventory_slot: InventorySlot = this_scene.instantiate()
+		following_inventory_slot.set_texture(null)
+		var current_item = pop_item()
+		following_inventory_slot.set_item(current_item[0], current_item[1])
+		following_inventory_slot.is_following_cursor = true
+		get_parent().add_child(following_inventory_slot)
+
+func _process(delta: float) -> void:
+	if is_following_cursor:
+		set_global_position(get_viewport().get_mouse_position())
