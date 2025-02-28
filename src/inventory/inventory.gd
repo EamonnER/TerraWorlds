@@ -11,6 +11,7 @@ enum SLOT_TYPE {
 var rows = 4
 var slots: Dictionary
 var is_open: bool = false
+var player: Player
 
 func _ready() -> void:
 	columns = 9
@@ -41,6 +42,14 @@ func show_inventory() -> void:
 
 func toggle_inventory() -> void:
 	hide_inventory() if is_open else show_inventory()
+
+func add_item(item: InventoryItem, quantity: int = 1) -> bool:
+	# Returns true if successful; false otherwise
+	for slot in get_children():
+		if slot.get_item() == null or slot.get_item().get_id() == item.get_id():
+			slot.set_item(item, quantity)
+			return true
+	return false
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("game_open_inventory"):

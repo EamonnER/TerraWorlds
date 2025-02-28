@@ -5,6 +5,9 @@ var item: InventoryItem  # This is essentually a fancy Sprite2D
 var quantity: int
 
 func set_item(new_item: InventoryItem, new_quantity: int) -> void:
+	if new_item.item_id == item.item_id:
+		increment_quantity(new_quantity)
+		return
 	item = new_item
 	quantity = new_quantity if new_quantity > 0 else null
 
