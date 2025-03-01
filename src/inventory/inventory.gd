@@ -3,24 +3,32 @@ class_name Inventory
 
 enum SLOT_TYPE {
 	INVENTORY_HOTBAR,
-	INVENTORY
+	INVENTORY,
+	HELD
 }
 
 @onready var inventory_slot_scene = preload("res://src/inventory/inventory_slot.tscn")
+@onready var held_inventory_slot = $HeldInventorySlot
 
 var rows = 4
 var slots: Dictionary
 var is_open: bool = false
 
 func _ready() -> void:
+	held_inventory_slot.texture = null
+	#held_inventory_slot.ignore_theme_sizes = true  # Prevents automatic sizing
+	held_inventory_slot.size_flags_stretch_ratio = 0  # Stops it from taking grid space
+	
 	columns = 9
 	
 	slots[SLOT_TYPE.INVENTORY_HOTBAR] = []
 	slots[SLOT_TYPE.INVENTORY] = []
+	slots[SLOT_TYPE.HELD] = [held_inventory_slot]
 	
 	for i in range(columns * rows):
 		var slot: InventorySlot = inventory_slot_scene.instantiate()
 		add_child(slot)
+		slot.add_to_group("inventory_slots")
 		
 		if i < columns:
 			slots[SLOT_TYPE.INVENTORY_HOTBAR].append(slot)
@@ -45,6 +53,8 @@ func toggle_inventory() -> void:
 func add_item(item: Item, quantity: int = 1) -> bool:
 	# Returns true if successful; false otherwise
 	for slot in get_children():
+		if slot == held_inventory_slot:
+			continue
 		var current_slot_item = slot.get_item()
 		if (current_slot_item == null) or (item.is_stackable and current_slot_item.id == item.id):
 			slot.set_item(item, quantity)
@@ -52,5 +62,7 @@ func add_item(item: Item, quantity: int = 1) -> bool:
 	return false
 
 func _process(delta: float) -> void:
+	held_inventory_slot.set_global_position(get_global_mouse_position() - (held_inventory_slot.get_size()/4))
 	if Input.is_action_just_pressed("game_open_inventory"):
 		toggle_inventory()
+	#print(held_inventory_slot.get_item())

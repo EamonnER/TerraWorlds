@@ -7,7 +7,7 @@ class_name InventorySlot
 @onready var quantity_label: Label = $Quantity
 @onready var this_scene = preload("res://src/inventory/inventory_slot.tscn")
 
-var is_following_cursor: bool = false
+@onready var parent_inventory = get_parent()
 
 func set_item(new_item: Item, new_quantity: int) -> void:
 	if new_item == null or new_quantity == 0:
@@ -65,6 +65,10 @@ func pop_item() -> Array:
 	delete_item()
 	return [item, old_quantity]
 
+func transfer_item_to(slot: InventorySlot) -> void:
+	var item = pop_item()
+	slot.set_item(item[0], item[1])
+
 func _update_label() -> void:
 	if quantity_label == null:
 		return
@@ -73,19 +77,23 @@ func _update_label() -> void:
 		return
 	quantity_label.set_text("")
 
-func _ready():
+func _ready() -> void:
 	self.mouse_filter = Control.MOUSE_FILTER_STOP
 	self.gui_input.connect(_on_gui_input)
 
-func _on_gui_input(event):
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var following_inventory_slot: InventorySlot = this_scene.instantiate()
-		following_inventory_slot.set_texture(null)
-		var current_item = pop_item()
-		following_inventory_slot.set_item(current_item[0], current_item[1])
-		following_inventory_slot.is_following_cursor = true
-		get_parent().add_child(following_inventory_slot)
+func get_slot_under_cursor() -> InventorySlot:
+		var mouse_position = get_viewport().get_mouse_position()
+		for slot: InventorySlot in get_tree().get_nodes_in_group("inventory_slots"):
+			if Rect2(slot.get_position(), slot.get_size()).has_point(mouse_position):
+				return slot  # Return the first slot found under the cursor
+		return null  # No slot found
 
-func _process(delta: float) -> void:
-	if is_following_cursor:
-		set_global_position(get_viewport().get_mouse_position())
+func is_empty() -> bool:
+	return false if get_item() is Item else true
+
+func _on_gui_input(event) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if parent_inventory.held_inventory_slot.is_empty():
+			transfer_item_to(parent_inventory.held_inventory_slot)
+		else:
+			parent_inventory.held_inventory_slot.transfer_item_to(self)
