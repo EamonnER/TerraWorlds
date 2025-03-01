@@ -7,7 +7,7 @@ var player: Player = null
 func _ready():
 	make_current()
 
-func _process(delta):
+func _physics_process(delta: float) -> void:
 	if player:
 		set_position(get_position().lerp(player.global_position, follow_speed * delta))
 		

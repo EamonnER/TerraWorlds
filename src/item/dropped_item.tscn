@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://bnrb5wdjhgfv7"]
+
+[ext_resource type="Script" path="res://src/item/dropped_item.gd" id="1_etopm"]
+[ext_resource type="Texture2D" uid="uid://b0lsyi7yplcin" path="res://assets/missing-texture.png" id="2_t83l8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tqjbq"]
+radius = 40.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1hw4u"]
+size = Vector2(32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wh564"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_t83l8")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="DroppedItem" type="CharacterBody2D"]
+collision_layer = 512
+collision_mask = 583
+script = ExtResource("1_etopm")
+
+[node name="PickupArea" type="Area2D" parent="."]
+collision_layer = 512
+collision_mask = 64
+
+[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea"]
+shape = SubResource("CircleShape2D_tqjbq")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1hw4u")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_wh564")
+
+[connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]

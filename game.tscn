@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=14 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" path="res://src/game.gd" id="1_1l5x6"]
 [ext_resource type="PackedScene" uid="uid://dcawu5ccdv1ty" path="res://src/entity/player/player.tscn" id="3_s6re8"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
+[ext_resource type="PackedScene" uid="uid://c8w68wmnu80ky" path="res://src/inventory/inventory.tscn" id="6_n78m7"]
 [ext_resource type="Script" path="res://src/entity/player/background.gd" id="8_ct475"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/sky.png" id="8_f8m72"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
@@ -23,6 +24,7 @@ script = ExtResource("1_1l5x6")
 
 [node name="Camera" type="Camera2D" parent="."]
 ignore_rotation = false
+process_callback = 0
 script = ExtResource("4_qqgmn")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -41,6 +43,14 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("5_iee2e")
+
+[node name="Inventory" parent="CanvasLayer/HUD" instance=ExtResource("6_n78m7")]
+layout_mode = 1
+offset_left = 15.0
+offset_top = -41.0
+offset_right = 15.0
+offset_bottom = -41.0
+columns = 9
 
 [node name="Health" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 1
