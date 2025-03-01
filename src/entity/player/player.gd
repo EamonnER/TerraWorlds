@@ -43,9 +43,13 @@ func _process(delta: float) -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		# Apply acceleration or decelleration
 		if sign(horizontal_direction) == sign(new_velocity.x):
-			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
+			if Input.is_action_pressed("sprint"):
+				new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*SPRINT_MOD, ACCELERATION*delta)
+			else:
+				new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, ACCELERATION*delta)
 		else:
 			new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction, DECELERATION*delta)
+			
 	else:  # Debug Movement
 		new_velocity.x = move_toward(new_velocity.x, SPEED*horizontal_direction*10, ACCELERATION*delta*10)
 		new_velocity.y = move_toward(new_velocity.y, SPEED*vertical_direction*10, ACCELERATION*delta*10)

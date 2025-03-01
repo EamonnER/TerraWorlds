@@ -4,7 +4,7 @@ class_name World
 
 @onready var foreground: TileMapLayer = $Foreground
 
-const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
+const WORLD_SIZE: int = 100  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
 
 const DIRT_ID: Vector2i = Vector2i(0, 0)
