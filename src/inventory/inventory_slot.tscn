@@ -9,7 +9,7 @@ font = ExtResource("3_2rfmu")
 font_size = 8
 
 [node name="InventorySlot" type="TextureRect"]
-self_modulate = Color(1, 1, 1, 0.72549)
+self_modulate = Color(1, 1, 1, 0.439216)
 offset_right = 128.0
 offset_bottom = 128.0
 texture = ExtResource("1_rjqqo")

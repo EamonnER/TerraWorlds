@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnp0chuwvqkf3"
-path="res://.godot/imported/stick.png-4638c81f350d99184c4e26258d36fc06.ctex"
+uid="uid://bxbbixuwa24u1"
+path="res://.godot/imported/tile007.png-4329e999b40184c533b5276958d9cf98.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/stick.png"
-dest_files=["res://.godot/imported/stick.png-4638c81f350d99184c4e26258d36fc06.ctex"]
+source_file="res://assets/items/potion/tile007.png"
+dest_files=["res://.godot/imported/tile007.png-4329e999b40184c533b5276958d9cf98.ctex"]
 
 [params]
 
