@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name Entity
 
 const SPEED = 300.0
-const SPRINT_MOD = 2.0
+const SPRINT_MOD = 1.5
 const ACCELERATION = 1000.0
 const DECELERATION = 1500.0
 const TERMINAL_VELOCITY = 8000.0
