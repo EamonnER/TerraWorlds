@@ -2,6 +2,10 @@ extends Entity
 class_name Player
 
 var debug_mode = false
+var inventory: Inventory
+
+func pickup_item(item: Item) -> bool:
+	return inventory.add_item(item)
 
 func handle_primary_action_input():
 	# Only function is to remove tiles at mouse pos ATM
@@ -33,6 +37,7 @@ func _process(delta: float) -> void:
 			motion_mode = MotionMode.MOTION_MODE_FLOATING
 			set_collision_mask_value(2, false)
 		else:
+			world.spawn_item()
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
 	
@@ -62,8 +67,8 @@ func _process(delta: float) -> void:
 	# Mouse actions
 	var mouse_pos = get_global_mouse_position()
 	# Primary action input (LMB)
-	if Input.is_action_just_pressed("game_primary_action"):
+	if Input.is_action_pressed("game_primary_action"):
 		handle_primary_action_input()
 	# Secondary action input (RMB)
-	if Input.is_action_just_pressed("game_secondary_action"):
+	if Input.is_action_pressed("game_secondary_action"):
 		handle_secondary_action_input()

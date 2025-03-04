@@ -167,3 +167,9 @@ func remove_tile(vector: Vector2i):
 func _on_gravity_threshold_area_body_exited(body: Node2D) -> void:
 	if body is Entity:
 		body.update_rotation()
+
+func spawn_item() -> void:
+	var item = PotionItem.new()
+	var dropped_item = item.to_dropped_item()
+	add_child(dropped_item)
+	dropped_item.position = get_spawn_position() + Vector2i(40, 0)
