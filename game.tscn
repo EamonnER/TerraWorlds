@@ -28,6 +28,7 @@ process_callback = 0
 script = ExtResource("4_qqgmn")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 layout_mode = 3
