@@ -4,7 +4,7 @@ class_name World
 
 @onready var foreground: TileMapLayer = $Foreground
 
-const WORLD_SIZE: int = 600  # Total width / height of world (should be even)
+const WORLD_SIZE: int = 32  # Total width / height of world (should be even)
 const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
 
 const DIRT_ID: Vector2i = Vector2i(0, 0)
@@ -22,23 +22,13 @@ func map_to_local(map_position: Vector2i) -> Vector2:
 func generate_new_world():
 	foreground.clear()
 	
-	const HALF_WORLD = WORLD_SIZE / 2
-	const CAVE_OFFSET = 20
-	var terrain_to_pos = Dictionary()
-	terrain_to_pos[DIRT_ID] = Dictionary()
-	terrain_to_pos[STONE_ID] = Dictionary()
+	var seed = randi()
+	var cave_offset = 20
 	
-	_build_base_world(terrain_to_pos, CAVE_OFFSET)
+	var world_generator_script = load("res://src/world/WorldGenerator.cs")
+	var world_generator: WorldGenerator = world_generator_script.new()
 	
-	
-	
-	_add_surface_heightmap(terrain_to_pos)
-	
-	_add_caves(terrain_to_pos, CAVE_OFFSET)
-	
-	for terrain_id in terrain_to_pos.keys():
-		foreground.set_cells_terrain_connect(terrain_to_pos[terrain_id].keys(), terrain_id.x, terrain_id.y)
-	
+	world_generator.GenerateWorld(WORLD_SIZE, 3, cave_offset)
 	#foreground.set_cells_terrain_connect(tile_positions.keys(), 0, 0)
 	
 	_draw_gravity_collision()
