@@ -20,9 +20,23 @@ public partial class WorldGenerator : Node
 	private ushort[,] _rawWorld;
 	private Chunk[,] _chunks;
 	
-	public void GenerateWorld(int worldSize, int seed, int caveOffset)
+	public void GenerateWorld(int mapSize, int seed, int caveOffset)
 	{
-		if (worldSize % ChunkSize != 0)
+		/*
+		 * mapSize should be divisible by ChunkSize*2, minimum of ChunkSize*4
+		 */
+		
+		if (mapSize < ChunkSize*4 || mapSize % (ChunkSize * 2) != 0)
+		{
+			throw new Exception("Map size must be an odd multiple of " + ChunkSize + " and at least 96");
+		}
+		
+		_mapSize = mapSize;
+		_worldSize = _mapSize - (2*ChunkSize);
+		_halfWorldSize = _worldSize / 2;
+		_caveOffset = caveOffset;
+		
+		if (_worldSize % ChunkSize != 0)
 		{
 			throw new Exception("World size must be a multiple of the chunk size: " + ChunkSize);
 		}
@@ -31,36 +45,12 @@ public partial class WorldGenerator : Node
 		_seed = seed;
 		_noise.Seed = _seed;
 		
-		_worldSize = worldSize;
-		_mapSize = _worldSize * 4;
-		_halfWorldSize = worldSize / 2;
-		_caveOffset = caveOffset;
-		
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
 		//_drawHeightmap();
 		_drawCaves();
 		
 		_worldToChunks();
-		
-		 //Check if any elements in any chunk is null / empty
-		 for (var x = 0; x < _worldSize / ChunkSize; x++)
-		 {
-		 	for (var y = 0; y < _worldSize / ChunkSize; y++)
-		 	{
-		 		var chunk = _chunks[x, y];
-		 		for (var i = 0; i < ChunkSize; i++)
-		 		{
-		 			for (var j = 0; j < ChunkSize; j++)
-		 			{
-		 				if (chunk.Tiles[i, j] == 0)
-		 				{
-		 					GD.Print("Chunk at: ", x, " ", y, " has a null tile at: ", i, " ", j);
-		 				}
-		 			}
-		 		}
-		 	}
-		}
 	}
 
 	private void _drawBlankWorld()
@@ -79,7 +69,6 @@ public partial class WorldGenerator : Node
 			for (var y = 0; y < _mapSize; y++)
 			{
 				var distance = Mathf.Max(Mathf.Abs(centerOfMap - x), Mathf.Abs(centerOfMap - y));
-				
 				if (distance > _halfWorldSize)
 				{
 					_rawWorld[x, y] = (ushort) Null;
@@ -197,20 +186,20 @@ public partial class WorldGenerator : Node
 	private void _worldToChunks()
 	{
 		_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
-		for (var x = 0; x < _worldSize/ChunkSize; x ++)
+		for (var x = 0; x < _mapSize/ChunkSize; x ++)
 		{
-			for (var y = 0; y < _worldSize/ChunkSize; y ++)
+			for (var y = 0; y < _mapSize/ChunkSize; y ++)
 			{
-				var chunkTiles = new ushort[ChunkSize, ChunkSize];
+				var chunk = new Chunk();
+				chunk.Tiles = new ushort[ChunkSize, ChunkSize];
 				for (var i = 0; i < ChunkSize; i++)
 				{
 					for (var j = 0; j < ChunkSize; j++)
 					{
-						chunkTiles[i, j] = _rawWorld[x + i, y + j];
+						chunk.Tiles[i, j] = _rawWorld[(x*ChunkSize) + i, (y*ChunkSize) + j];
 					}
 				}
-				var chunk = new Chunk();
-				chunk.Tiles = chunkTiles;
+				
 				_chunks[x, y] = chunk;
 			}
 		}
@@ -225,13 +214,15 @@ public partial class WorldGenerator : Node
 		 */
 		var rawChunk = _chunks[x, y].ToDict();
 		var chunkTiles = new Godot.Collections.Dictionary<ushort, Godot.Collections.Array<Vector2>>();
+		
+		var halfMapSize = _mapSize / 2;
 		foreach (var (tile, positions) in rawChunk)
 		{
 			var newPositions = new Godot.Collections.Array<Vector2>();
-			foreach (Vector2 position in positions)
+			foreach (var position in positions)
 			{
 				// ReSharper disable twice PossibleLossOfFraction
-				newPositions.Add(new Vector2(position.X - _mapSize / 2, position.Y - _mapSize / 2));
+				newPositions.Add(new Vector2(position.X - (halfMapSize) + (x*ChunkSize), position.Y - (halfMapSize) + (y*ChunkSize)));
 			}
 			
 			chunkTiles[tile] = newPositions;

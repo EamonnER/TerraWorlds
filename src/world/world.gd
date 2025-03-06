@@ -4,8 +4,9 @@ class_name World
 
 @onready var foreground: TileMapLayer = $Foreground
 
-const WORLD_SIZE: int = 128  # Total width / height of world (should be even)
-const MAP_SIZE: int = WORLD_SIZE * 4  # Total width / height of playable / explorable area
+const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
+# Must be divisible by CHUNK_SIZE*2, minimum of CHUNK_SIZE*4
+const MAP_SIZE: int = CHUNK_SIZE*4  # Total width / height of playable / explorable area
 
 const DIRT_ID: Vector2i = Vector2i(0, 0)
 const STONE_ID: Vector2i = Vector2i(0, 1)
@@ -13,7 +14,6 @@ const STONE_ID: Vector2i = Vector2i(0, 1)
 @onready var gravity_threshold_collision: CollisionPolygon2D = $GravityThresholdArea/GravityThresholdCollision
 
 var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").new()
-const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
 
 func local_to_map(local_position: Vector2) -> Vector2i:
 	return foreground.local_to_map(local_position)
@@ -27,13 +27,16 @@ func generate_new_world():
 	var seed = randi()
 	var cave_offset = 20
 	
-	world_generator.GenerateWorld(WORLD_SIZE, 3, cave_offset)
+	world_generator.GenerateWorld(MAP_SIZE, 3, cave_offset)
 	for x in range(MAP_SIZE/CHUNK_SIZE):
 		for y in range(MAP_SIZE/CHUNK_SIZE):
-			var current_chunk = world_generator.GetChunk(x, y)
-			#if current_chunk != null:
-				#print(current_chunk.keys())
-	
+			var chunk = world_generator.GetChunk(x, y)
+			for terrain_id in chunk.keys():
+				if terrain_id == 2:
+					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0, false)
+				elif terrain_id == 3:
+					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1, false)
+				
 	_draw_gravity_collision()
 
 func _draw_gravity_collision() -> void:
