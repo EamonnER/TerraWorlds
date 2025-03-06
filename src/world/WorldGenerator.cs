@@ -7,7 +7,6 @@ namespace TerraWorlds.world;
 [GlobalClass]
 public partial class WorldGenerator : Node
 {
-	private FastNoiseLite _noise;
 	private int _seed;
 	
 	private int _worldSize;  // The size of the world in tiles
@@ -36,13 +35,11 @@ public partial class WorldGenerator : Node
 		_halfWorldSize = _worldSize / 2;
 		_caveOffset = caveOffset;
 		
-		_noise = new FastNoiseLite();
 		_seed = seed;
-		_noise.Seed = _seed;
 		
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
-		//_drawHeightmap();
+		_drawHeightmap();
 		_drawCaves();
 		
 		_worldToChunks();
@@ -85,69 +82,64 @@ public partial class WorldGenerator : Node
 		/*
 		 * Carves out the terrain based on perlin noise to create a heightmap.
 		 * All 4 sides of the world within the map has this heightmap applied.
-		 * This implementation treats the world as being completely flat, so it iterates over _worldSize * 4.
+		 * Only x value of noise is used for the heightmap for smooth transitions over the world corners.
 		 *
 		 * It follows the world from the top left, in the right direction, all the way around. This allows the world to
-		 * look like a continuous loop, apart from the top left corner.
+		 * look like a continuous loop, apart from at the top left corner where it meets the start.
 		 */
-		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
-		var maxDepth = _halfWorldSize / 4;  // 4 is arbitrary; increase for less depth
+		var noise = new FastNoiseLite();
+		noise.Seed = _seed;
+		var maxDepth = 35;  // 4 is arbitrary; increase for less depth
 
-		for (var x = 0; x < _worldSize * 4; x++) // *4 because we are drawing all 4 sides
+		var noiseX = 0;
+		var noiseY = 0;
+		// Top side
+		for (var x = (_mapSize / 2) - _halfWorldSize; x <=  (_mapSize / 2) + _halfWorldSize; x++)
 		{
-			var noiseValue = Mathf.Abs(_noise.GetNoise2D(x, 0));
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
+			noiseX++;
 			var depth = (int)(noiseValue * maxDepth);
-
-			// Top side
-			if (x <= _worldSize)
+			
+			for (var y = (_mapSize / 2) - _halfWorldSize; y < (_mapSize / 2) - _halfWorldSize + depth; y++)
 			{
-				x += (_mapSize / 2) - _halfWorldSize; // Makes x relative to the world, considering the map size
-				for (var y = 0; y < depth; y++)
-				{
-					y += (_mapSize / 2) - _halfWorldSize; // Makes y relative to the world, considering the map size
-					_rawWorld[x, y] = (ushort)Null; // Deletes / carves out tile
-				}
+				_rawWorld[x, y] = (ushort) Null;  // Deletes / carves out tile
 			}
-			// Right side
-			else if (x <= _worldSize * 2)
+		}
+		// Right side
+		for (var y = (_mapSize / 2) - _halfWorldSize; y <=  (_mapSize / 2) + _halfWorldSize; y++)
+		{
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
+			noiseY++;
+			var depth = (int) (noiseValue * maxDepth);
+			
+			for (var x = (_mapSize / 2) + _halfWorldSize; x >= (_mapSize / 2) + _halfWorldSize - depth; x--)  // x > -depth because we are carving from right side to left side
 			{
-				/*
-				 * Since we're treating the world as flat, we need to adjust x back so its relative position to the
-				 * world is top left. Think of this as a reset. x needs to represent from 0 to _worldSize.
-				 */
-				x -= _worldSize; // Reset x
-				x += (_mapSize / 2) - _halfWorldSize;
-
-				for (var y = 0; y < depth; y++)
-				{
-					y += (_mapSize) - _halfWorldSize;
-					_rawWorld[-y, x] = (ushort)Null; // Is carving from right to left, so negative y is needed
-				}
+				_rawWorld[x, y] = (ushort) Null;
 			}
-			// Bottom side
-			else if (x <= _worldSize * 3)
+		}
+		// Bottom side
+		for (var x = (_mapSize / 2) + _halfWorldSize; x >= (_mapSize / 2) - _halfWorldSize; x--)
+		{
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
+			noiseX--;
+			var depth = (int)(noiseValue * maxDepth);
+			
+			for (var y = (_mapSize / 2) + _halfWorldSize; y > (_mapSize / 2) + _halfWorldSize - depth; y--)  // Carving upwards
 			{
-				x -= _worldSize * 2; // Reset x
-				x += (_mapSize / 2) - _halfWorldSize;
-				for (var y = 0; y < depth; y++)
-				{
-					y += (_mapSize / 2) - _halfWorldSize;
-					// This is essentially the same as top side, but the x and y are flipped
-					_rawWorld[-x, -y] = (ushort)Null;
-				}
+				_rawWorld[x, y] = (ushort) Null;
 			}
-			// Left side
-			else
+		}
+		// Left side
+		for (var y = (_mapSize / 2) + _halfWorldSize; y >= (_mapSize / 2) - _halfWorldSize; y--)
+		{
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
+			noiseY--;
+			var depth = (int)(noiseValue * maxDepth);
+			
+			for (var x = (_mapSize / 2) - _halfWorldSize; x < (_mapSize / 2) - _halfWorldSize + depth; x++)
 			{
-				x -= _worldSize * 3; // Reset x
-				x += (_mapSize) - _halfWorldSize - x; // Sets x to count upwards from the bottom left of the world
-				for (var y = 0; y < depth; y++)
-				{
-					y += (_mapSize / 2) - _halfWorldSize;
-					_rawWorld[y, x] = (ushort)Null;
-				}
+				_rawWorld[x, y] = (ushort) Null;
 			}
-
 		}
 	}
 
@@ -159,7 +151,10 @@ public partial class WorldGenerator : Node
 		 * Let distance = max(x_distance_from_center_of_world, y_distance_from_center_of_world)
 		 * If _halfWorldSize - _caveOffset > distance, then the tile is eligible to be a cave tile.
 		 */
-		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
+		var noise = new FastNoiseLite();
+		noise.Seed = _seed;
+		
+		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		const float caveThreshold = 0.2f;
 		
@@ -170,7 +165,7 @@ public partial class WorldGenerator : Node
 		{
 			for (var y = start; y < end; y++)
 			{
-				if (_noise.GetNoise2D(x, y) > caveThreshold)
+				if (noise.GetNoise2D(x, y) > caveThreshold)
 				{
 					_rawWorld[x, y] = (ushort) Null;
 				}

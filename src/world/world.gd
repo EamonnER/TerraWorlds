@@ -5,8 +5,8 @@ class_name World
 @onready var foreground: TileMapLayer = $Foreground
 
 const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
-# Must be divisible by CHUNK_SIZE*2, minimum of CHUNK_SIZE*4
-const MAP_SIZE: int = CHUNK_SIZE*4  # Total width / height of playable / explorable area
+# Total width / height of playable / explorable area
+const MAP_SIZE: int = CHUNK_SIZE*4  # Must be divisible by CHUNK_SIZE
 
 const DIRT_ID: Vector2i = Vector2i(0, 0)
 const STONE_ID: Vector2i = Vector2i(0, 1)
@@ -27,7 +27,7 @@ func generate_new_world():
 	var seed = randi()
 	var cave_offset = 20
 	
-	world_generator.GenerateWorld(MAP_SIZE, 3, cave_offset)
+	world_generator.GenerateWorld(MAP_SIZE, seed, cave_offset)
 	for x in range(MAP_SIZE/CHUNK_SIZE):
 		for y in range(MAP_SIZE/CHUNK_SIZE):
 			var chunk = world_generator.GetChunk(x, y)
