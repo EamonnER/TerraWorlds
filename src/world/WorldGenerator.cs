@@ -206,15 +206,16 @@ public partial class WorldGenerator : Node
 				{
 					hasReachedSurface = true;
 				}
-				
-				if (hasReachedSurface)
-				{
-					distance++;
-				}
-				
+
+				if (!hasReachedSurface) continue;
+				distance++;
+					
 				if (distance > stoneStartDistance)
 				{
 					_rawWorld[x, y] = (ushort) Stone;
+				} else if (currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Dirt;
 				}
 			}
 		}
