@@ -166,15 +166,21 @@ public partial class WorldGenerator : Node
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
 		
-		const float caveThreshold = 0.2f;
-		
 		// Represents the offset needed to reach the cave boundary
 		var start = closeSideOfWorld + _caveOffset;  
 		var end = farSideOfWorld - _caveOffset;
-		for (var x = start; x < end; x++)
+		var caveBandDistance = (start + _mapSize / 2) / 2;
+		for (var x = start; x <= end; x++)
 		{
 			for (var y = start; y <= end; y++)
 			{
+				var distanceFromStart = Mathf.Max(Mathf.Abs(start-x), Mathf.Abs(start-y));
+				var distanceFromCenter = Mathf.Max(Mathf.Abs((_mapSize / 2)-x), Mathf.Abs((_mapSize / 2)-y));
+				// Cave threshold is a value between 0 and 1. It is 1 when at either the start or end of the cave, and
+				// 0 when at the center of the cave.
+				var distanceFromEdge = Mathf.Min(distanceFromStart, distanceFromCenter);
+				var caveThreshold = (float) distanceFromEdge / caveBandDistance;
+				
 				if (_noise.GetNoise2D(x, y) > caveThreshold)
 				{
 					_rawWorld[x, y] = (ushort) Null;
