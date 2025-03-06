@@ -6,7 +6,7 @@ class_name World
 
 const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
 # Total width / height of playable / explorable area
-const MAP_SIZE: int = CHUNK_SIZE*4  # Must be divisible by CHUNK_SIZE
+const MAP_SIZE: int = CHUNK_SIZE*12  # Must be divisible by CHUNK_SIZE
 
 const DIRT_ID: Vector2i = Vector2i(0, 0)
 const STONE_ID: Vector2i = Vector2i(0, 1)

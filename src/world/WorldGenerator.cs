@@ -168,7 +168,7 @@ public partial class WorldGenerator : Node
 		var end = farSideOfWorld - _caveOffset;
 		for (var x = start; x < end; x++)
 		{
-			for (var y = start; y < end; y++)
+			for (var y = start; y <= end; y++)
 			{
 				if (_noise.GetNoise2D(x, y) > caveThreshold)
 				{
