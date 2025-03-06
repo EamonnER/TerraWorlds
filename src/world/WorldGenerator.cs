@@ -44,7 +44,7 @@ public partial class WorldGenerator : Node
 		_drawBlankWorld();
 		_drawHeightmap();
 		_drawCaves();
-		_drawStone();
+		_drawDirt();
 		
 		_worldToChunks();
 	}
@@ -71,7 +71,7 @@ public partial class WorldGenerator : Node
 				}
 				else
 				{
-					_rawWorld[x, y] = (ushort) Dirt;
+					_rawWorld[x, y] = (ushort) Stone;
 				}
 				// else if (distance > _halfWorldSize - _caveOffset)
 				// {
@@ -183,114 +183,27 @@ public partial class WorldGenerator : Node
 		}
 	}
 
-	private void _drawStone()
+	private void _drawDirt()
 	{
 		/*
-		 * If a tile is below 10 tiles from the surface, it is a stone tile.
+		 * Uses noise to turn surface tiles into dirt
 		 */
 		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
 		
-		const int stoneStartDistance = 10;
-		
-		// Top side
-		for (var x = closeSideOfWorld+stoneStartDistance; x <= farSideOfWorld-stoneStartDistance; x++)
-		{
-			var distance = 0;
-			var hasReachedSurface = false;
-			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
-			{
-				var currentTile = _rawWorld[x, y];
-				if (currentTile != (ushort)Null)
-				{
-					hasReachedSurface = true;
-				}
-		
-				if (!hasReachedSurface) continue;
-				distance++;
-					
-				if (distance > stoneStartDistance && currentTile != (ushort) Null)
-				{
-					_rawWorld[x, y] = (ushort) Stone;
-				} 
-			}
-		}
-		
-		// Right side
-		for (var y = closeSideOfWorld+stoneStartDistance; y <= farSideOfWorld-stoneStartDistance; y++)
-		{
-			var distance = 0;
-			var hasReachedSurface = false;
-			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
-			{
-				var currentTile = _rawWorld[x, y];
-				if (currentTile != (ushort) Null)
-				{
-					hasReachedSurface = true;
-				}
-		
-				if (!hasReachedSurface) continue;
-				distance++;
-					
-				if (distance > stoneStartDistance && currentTile != (ushort) Null)
-				{
-					_rawWorld[x, y] = (ushort) Stone;
-				} 
-			}
-		}
-		
-		// Bottom side
-		for (var x = farSideOfWorld-stoneStartDistance; x >= closeSideOfWorld+stoneStartDistance; x--)
-		{
-			var distance = 0;
-			var hasReachedSurface = false;
-			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
-			{
-				var currentTile = _rawWorld[x, y];
-				if (currentTile != (ushort) Null)
-				{
-					hasReachedSurface = true;
-				}
-		
-				if (!hasReachedSurface) continue;
-				distance++;
-					
-				if (distance > stoneStartDistance && currentTile != (ushort) Null)
-				{
-					_rawWorld[x, y] = (ushort) Stone;
-				} 
-			}
-		}
-		
-		// Left side
-		for (var y = farSideOfWorld-stoneStartDistance; y >= closeSideOfWorld+stoneStartDistance; y--)
-		{
-			var distance = 0;
-			var hasReachedSurface = false;
-			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
-			{
-				var currentTile = _rawWorld[x, y];
-				if (currentTile != (ushort) Null)
-				{
-					hasReachedSurface = true;
-				}
-		
-				if (!hasReachedSurface) continue;
-				distance++;
-					
-				if (distance > stoneStartDistance && currentTile != (ushort) Null)
-				{
-					_rawWorld[x, y] = (ushort) Stone;
-				} 
-			}
-		}
-		
-		// Re-add dirt tiles to the surface
+		const int maxDirtStartDistance = 20;
+		const int minDirtStartDistance = 10;
+
+		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		// Top side
 		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
 		{
+			var dirtStartDistance =
+				minDirtStartDistance + (minDirtStartDistance *
+				                        Mathf.Abs(_noise.GetNoise2D(x, closeSideOfWorld + maxDirtStartDistance)));
+			GD.Print(dirtStartDistance);
 			var distance = 0;
 			var hasReachedSurface = false;
 			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
@@ -303,7 +216,7 @@ public partial class WorldGenerator : Node
 		
 				if (!hasReachedSurface) continue;
 					
-				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				if (distance < dirtStartDistance && currentTile != (ushort) Null)
 				{
 					_rawWorld[x, y] = (ushort) Dirt;
 				} 
@@ -314,6 +227,10 @@ public partial class WorldGenerator : Node
 		// Right side
 		for (var y = closeSideOfWorld; y <= farSideOfWorld; y++)
 		{
+			var dirtStartDistance =
+				minDirtStartDistance + (minDirtStartDistance *
+				                        Mathf.Abs(_noise.GetNoise2D(farSideOfWorld - maxDirtStartDistance, y)));
+
 			var distance = 0;
 			var hasReachedSurface = false;
 			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
@@ -326,7 +243,7 @@ public partial class WorldGenerator : Node
 		
 				if (!hasReachedSurface) continue;
 					
-				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				if (distance < dirtStartDistance && currentTile != (ushort) Null)
 				{
 					_rawWorld[x, y] = (ushort) Dirt;
 				} 
@@ -337,6 +254,10 @@ public partial class WorldGenerator : Node
 		// Bottom side
 		for (var x = farSideOfWorld; x >= closeSideOfWorld; x--)
 		{
+			var dirtStartDistance =
+				minDirtStartDistance + (minDirtStartDistance *
+				                        Mathf.Abs(_noise.GetNoise2D(x, farSideOfWorld - maxDirtStartDistance)));
+
 			var distance = 0;
 			var hasReachedSurface = false;
 			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
@@ -349,7 +270,7 @@ public partial class WorldGenerator : Node
 		
 				if (!hasReachedSurface) continue;
 					
-				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				if (distance < dirtStartDistance && currentTile != (ushort) Null)
 				{
 					_rawWorld[x, y] = (ushort) Dirt;
 				} 
@@ -360,6 +281,10 @@ public partial class WorldGenerator : Node
 		// Left side
 		for (var y = farSideOfWorld; y >= closeSideOfWorld; y--)
 		{
+			var stoneStartDistance =
+				minDirtStartDistance + (minDirtStartDistance *
+				                        Mathf.Abs(_noise.GetNoise2D(farSideOfWorld + maxDirtStartDistance, y)));
+
 			var distance = 0;
 			var hasReachedSurface = false;
 			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
