@@ -195,28 +195,188 @@ public partial class WorldGenerator : Node
 		const int stoneStartDistance = 10;
 		
 		// Top side
-		for (var x = closeSideOfWorld+stoneStartDistance; x < farSideOfWorld-stoneStartDistance; x++)
+		for (var x = closeSideOfWorld+stoneStartDistance; x <= farSideOfWorld-stoneStartDistance; x++)
 		{
 			var distance = 0;
 			var hasReachedSurface = false;
-			for (var y = closeSideOfWorld; y < _mapSize / 2; y++)
+			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
 			{
 				var currentTile = _rawWorld[x, y];
 				if (currentTile != (ushort)Null)
 				{
 					hasReachedSurface = true;
 				}
-
+		
 				if (!hasReachedSurface) continue;
 				distance++;
 					
-				if (distance > stoneStartDistance)
+				if (distance > stoneStartDistance && currentTile != (ushort) Null)
 				{
 					_rawWorld[x, y] = (ushort) Stone;
-				} else if (currentTile != (ushort) Null)
+				} 
+			}
+		}
+		
+		// Right side
+		for (var y = closeSideOfWorld+stoneStartDistance; y <= farSideOfWorld-stoneStartDistance; y++)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+				distance++;
+					
+				if (distance > stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Stone;
+				} 
+			}
+		}
+		
+		// Bottom side
+		for (var x = farSideOfWorld-stoneStartDistance; x >= closeSideOfWorld+stoneStartDistance; x--)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+				distance++;
+					
+				if (distance > stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Stone;
+				} 
+			}
+		}
+		
+		// Left side
+		for (var y = farSideOfWorld-stoneStartDistance; y >= closeSideOfWorld+stoneStartDistance; y--)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+				distance++;
+					
+				if (distance > stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Stone;
+				} 
+			}
+		}
+		
+		// Re-add dirt tiles to the surface
+		
+		// Top side
+		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+					
+				if (distance < stoneStartDistance && currentTile != (ushort) Null)
 				{
 					_rawWorld[x, y] = (ushort) Dirt;
+				} 
+				distance++;
+			}
+		}
+		
+		// Right side
+		for (var y = closeSideOfWorld; y <= farSideOfWorld; y++)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
 				}
+		
+				if (!hasReachedSurface) continue;
+					
+				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Dirt;
+				} 
+				distance++;
+			}
+		}
+		
+		// Bottom side
+		for (var x = farSideOfWorld; x >= closeSideOfWorld; x--)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+					
+				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Dirt;
+				} 
+				distance++;
+			}
+		}
+		
+		// Left side
+		for (var y = farSideOfWorld; y >= closeSideOfWorld; y--)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort) Null)
+				{
+					hasReachedSurface = true;
+				}
+		
+				if (!hasReachedSurface) continue;
+					
+				if (distance < stoneStartDistance && currentTile != (ushort) Null)
+				{
+					_rawWorld[x, y] = (ushort) Dirt;
+				} 
+				distance++;
 			}
 		}
 	}
