@@ -23,23 +23,18 @@ public partial class WorldGenerator : Node
 	public void GenerateWorld(int mapSize, int seed, int caveOffset)
 	{
 		/*
-		 * mapSize should be divisible by ChunkSize*2, minimum of ChunkSize*4
+		 * mapSize should be divisible by ChunkSize
 		 */
 		
-		if (mapSize < ChunkSize*4 || mapSize % (ChunkSize * 2) != 0)
+		if (mapSize < ChunkSize || mapSize % ChunkSize != 0)
 		{
-			throw new Exception("Map size must be an odd multiple of " + ChunkSize + " and at least 96");
+			throw new Exception("Map size must be a multiple of and at least " + ChunkSize);
 		}
 		
 		_mapSize = mapSize;
-		_worldSize = _mapSize - (2*ChunkSize);
+		_worldSize = _mapSize / 2;
 		_halfWorldSize = _worldSize / 2;
 		_caveOffset = caveOffset;
-		
-		if (_worldSize % ChunkSize != 0)
-		{
-			throw new Exception("World size must be a multiple of the chunk size: " + ChunkSize);
-		}
 		
 		_noise = new FastNoiseLite();
 		_seed = seed;
