@@ -44,6 +44,7 @@ public partial class WorldGenerator : Node
 		_drawBlankWorld();
 		_drawHeightmap();
 		_drawCaves();
+		_drawStone();
 		
 		_worldToChunks();
 	}
@@ -68,14 +69,18 @@ public partial class WorldGenerator : Node
 				{
 					_rawWorld[x, y] = (ushort) Null;
 				}
-				else if (distance > _halfWorldSize - _caveOffset)
+				else
 				{
 					_rawWorld[x, y] = (ushort) Dirt;
 				}
-				else
-				{
-					_rawWorld[x, y] = (ushort) Stone;
-				}
+				// else if (distance > _halfWorldSize - _caveOffset)
+				// {
+				// 	_rawWorld[x, y] = (ushort) Dirt;
+				// }
+				// else
+				// {
+				// 	_rawWorld[x, y] = (ushort) Stone;
+				// }
 			}
 		}
 	}
@@ -173,6 +178,43 @@ public partial class WorldGenerator : Node
 				if (_noise.GetNoise2D(x, y) > caveThreshold)
 				{
 					_rawWorld[x, y] = (ushort) Null;
+				}
+			}
+		}
+	}
+
+	private void _drawStone()
+	{
+		/*
+		 * If a tile is below 10 tiles from the surface, it is a stone tile.
+		 */
+		
+		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
+		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
+		
+		const int stoneStartDistance = 10;
+		
+		// Top side
+		for (var x = closeSideOfWorld+stoneStartDistance; x < farSideOfWorld-stoneStartDistance; x++)
+		{
+			var distance = 0;
+			var hasReachedSurface = false;
+			for (var y = closeSideOfWorld; y < _mapSize / 2; y++)
+			{
+				var currentTile = _rawWorld[x, y];
+				if (currentTile != (ushort)Null)
+				{
+					hasReachedSurface = true;
+				}
+				
+				if (hasReachedSurface)
+				{
+					distance++;
+				}
+				
+				if (distance > stoneStartDistance)
+				{
+					_rawWorld[x, y] = (ushort) Stone;
 				}
 			}
 		}
