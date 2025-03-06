@@ -94,7 +94,7 @@ public partial class WorldGenerator : Node
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
 		
-		var maxDepth = 35;
+		const int maxDepth = 35;
 
 		var noiseX = 0;
 		var noiseY = 0;
