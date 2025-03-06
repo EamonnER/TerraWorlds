@@ -203,7 +203,7 @@ public partial class WorldGenerator : Node
 			var dirtStartDistance =
 				minDirtStartDistance + (minDirtStartDistance *
 				                        Mathf.Abs(_noise.GetNoise2D(x, closeSideOfWorld + maxDirtStartDistance)));
-			GD.Print(dirtStartDistance);
+
 			var distance = 0;
 			var hasReachedSurface = false;
 			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
