@@ -163,30 +163,36 @@ public partial class WorldGenerator : Node
 		 */
 		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
-		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
-		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
-		
-		// Represents the offset needed to reach the cave boundary
-		var start = closeSideOfWorld + _caveOffset;  
+		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  
+		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  
+		var centerOfWorld = _mapSize / 2;  
+
+		var start = closeSideOfWorld + _caveOffset;
 		var end = farSideOfWorld - _caveOffset;
-		var caveBandDistance = (start + _mapSize / 2) / 2;
+
+		const float maxCaveThreshold = 1.0f;
+		const float minCaveThreshold = -0.5f;
+
+		// Calculate the maximum possible distance from the centre
+		var maxDistance = Mathf.Sqrt(Mathf.Pow(_halfWorldSize, 2) * 2);
+
 		for (var x = start; x <= end; x++)
 		{
 			for (var y = start; y <= end; y++)
 			{
-				var distanceFromStart = Mathf.Max(Mathf.Abs(start-x), Mathf.Abs(start-y));
-				var distanceFromCenter = Mathf.Max(Mathf.Abs((_mapSize / 2)-x), Mathf.Abs((_mapSize / 2)-y));
-				// Cave threshold is a value between 0 and 1. It is 1 when at either the start or end of the cave, and
-				// 0 when at the center of the cave.
-				var distanceFromEdge = Mathf.Min(distanceFromStart, distanceFromCenter);
-				var caveThreshold = (float) distanceFromEdge / caveBandDistance;
-				
+				var distanceToCenter = Mathf.Sqrt(Mathf.Pow(x - centerOfWorld, 2) + Mathf.Pow(y - centerOfWorld, 2));
+
+				// Inverse linear interpolation for threshold
+				var t = distanceToCenter / maxDistance;
+				var caveThreshold = Mathf.Lerp(minCaveThreshold, maxCaveThreshold, t);
+
 				if (_noise.GetNoise2D(x, y) > caveThreshold)
 				{
-					_rawWorld[x, y] = (ushort) Null;
+					_rawWorld[x, y] = (ushort)Null;
 				}
 			}
 		}
+
 	}
 
 	private void _drawDirt()

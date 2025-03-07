@@ -16,6 +16,6 @@ func _ready() -> void:
 		camera.set_target(player)
 		hud.set_target(player)
 	
-	hud.get_node("Minimap").world_size = world.MAP_SIZE
+	hud.get_node("Minimap").map_size = world.MAP_SIZE
 	hud.get_node("Minimap").draw(world.foreground)
 	

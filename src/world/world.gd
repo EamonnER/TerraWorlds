@@ -33,9 +33,9 @@ func generate_new_world():
 			var chunk = world_generator.GetChunk(x, y)
 			for terrain_id in chunk.keys():
 				if terrain_id == 2:
-					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0, false)
+					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0)
 				elif terrain_id == 3:
-					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1, false)
+					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
 				
 	_draw_gravity_collision()
 
