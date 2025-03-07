@@ -23,11 +23,10 @@ func map_to_local(map_position: Vector2i) -> Vector2:
 
 func generate_new_world():
 	foreground.clear()
-	
-	var seed = randi()
+	var world_seed = randi()
 	var cave_offset = 20
 	
-	world_generator.GenerateWorld(MAP_SIZE, seed, cave_offset)
+	world_generator.GenerateWorld(MAP_SIZE, world_seed, cave_offset)
 	for x in range(MAP_SIZE/CHUNK_SIZE):
 		for y in range(MAP_SIZE/CHUNK_SIZE):
 			var chunk = world_generator.GetChunk(x, y)

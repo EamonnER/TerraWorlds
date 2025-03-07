@@ -7,7 +7,6 @@ namespace TerraWorlds.world;
 [GlobalClass]
 public partial class WorldGenerator : Node
 {
-	private FastNoiseLite _noise;
 	private int _seed;
 	
 	private int _worldSize;  // The size of the world in tiles
@@ -36,14 +35,13 @@ public partial class WorldGenerator : Node
 		_halfWorldSize = _worldSize / 2;
 		_caveOffset = caveOffset;
 		
-		_noise = new FastNoiseLite();
 		_seed = seed;
-		_noise.Seed = _seed;
 		
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
 		_drawHeightmap();
 		_drawCaves();
+		_addTunnels();
 		_drawDirt();
 		
 		_worldToChunks();
@@ -94,7 +92,9 @@ public partial class WorldGenerator : Node
 		 * It follows the world from the top left, in the right direction, all the way around. This allows the world to
 		 * look like a continuous loop.
 		 */
-		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
+		var noise = new FastNoiseLite();
+		noise.SetSeed(_seed);
+		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
 		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
@@ -106,7 +106,7 @@ public partial class WorldGenerator : Node
 		// Top side
 		for (var x = closeSideOfWorld; x <=  farSideOfWorld; x++)
 		{
-			var noiseValue = Mathf.Abs(_noise.GetNoise2D(noiseX, noiseY));
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
 			noiseX++;
 			var depth = (int)(noiseValue * maxDepth);
 			
@@ -118,7 +118,7 @@ public partial class WorldGenerator : Node
 		// Right side
 		for (var y = closeSideOfWorld; y <=  farSideOfWorld; y++)
 		{
-			var noiseValue = Mathf.Abs(_noise.GetNoise2D(noiseX, noiseY));
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
 			noiseY++;
 			var depth = (int) (noiseValue * maxDepth);
 			
@@ -130,7 +130,7 @@ public partial class WorldGenerator : Node
 		// Bottom side
 		for (var x = farSideOfWorld; x >= closeSideOfWorld; x--)
 		{
-			var noiseValue = Mathf.Abs(_noise.GetNoise2D(noiseX, noiseY));
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
 			noiseX--;
 			var depth = (int)(noiseValue * maxDepth);
 			
@@ -142,7 +142,7 @@ public partial class WorldGenerator : Node
 		// Left side
 		for (var y = farSideOfWorld; y >= closeSideOfWorld; y--)
 		{
-			var noiseValue = Mathf.Abs(_noise.GetNoise2D(noiseX, noiseY));
+			var noiseValue = Mathf.Abs(noise.GetNoise2D(noiseX, noiseY));
 			noiseY--;
 			var depth = (int)(noiseValue * maxDepth);
 			
@@ -161,7 +161,9 @@ public partial class WorldGenerator : Node
 		 * Let distance = max(x_distance_from_center_of_world, y_distance_from_center_of_world)
 		 * If _halfWorldSize - _caveOffset > distance, then the tile is eligible to be a cave tile.
 		 */
-		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
+		var noise = new FastNoiseLite();
+		noise.SetSeed(_seed);
+		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  
@@ -186,7 +188,7 @@ public partial class WorldGenerator : Node
 				var t = distanceToCenter / maxDistance;
 				var caveThreshold = Mathf.Lerp(minCaveThreshold, maxCaveThreshold, t);
 
-				if (_noise.GetNoise2D(x, y) > caveThreshold)
+				if (noise.GetNoise2D(x, y) > caveThreshold)
 				{
 					_rawWorld[x, y] = (ushort)Null;
 				}
@@ -195,26 +197,69 @@ public partial class WorldGenerator : Node
 
 	}
 
+	private void _addTunnels()
+	{
+		var noise = new FastNoiseLite();
+		noise.SetSeed(_seed);
+		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
+		noise.SetFrequency(0.0025f);
+		
+		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
+		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
+		
+		var boundary = _worldSize / 4;
+		
+		const float maxUpperBound = 0.10f;
+		const float lowerBound = 0f;
+		
+		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
+		{
+			for (var y = closeSideOfWorld; y <= farSideOfWorld; y++)
+			{
+				var distanceFromSurface = Mathf.Min(Mathf.Min(x - closeSideOfWorld, farSideOfWorld - x), 
+														Mathf.Min(y - closeSideOfWorld, farSideOfWorld - y));
+				
+				if (distanceFromSurface > boundary) continue;
+				
+				var upperBound = maxUpperBound;
+				
+				if (distanceFromSurface > boundary / 2)
+				{
+					upperBound = Mathf.Lerp(maxUpperBound, lowerBound, 
+						(distanceFromSurface-((float) boundary/2)) / ((float) boundary/2));
+				}
+				
+				var noiseValue = noise.GetNoise2D(x, y);
+				if ((lowerBound < noiseValue) && noiseValue < upperBound)
+				{
+					_rawWorld[x, y] = (ushort) Null;
+				}
+			}
+		}
+	}
+
+	
 	private void _drawDirt()
 	{
 		/*
 		 * Uses noise to turn surface tiles into dirt
 		 */
-		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
 		
 		const int maxDirtStartDistance = 20;
 		const int minDirtStartDistance = 10;
 
-		_noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
+		var noise = new FastNoiseLite();
+		noise.SetSeed(_seed);
+		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		// Top side
 		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
 		{
 			var dirtStartDistance =
 				minDirtStartDistance + (minDirtStartDistance *
-				                        Mathf.Abs(_noise.GetNoise2D(x, closeSideOfWorld + maxDirtStartDistance)));
+				                        Mathf.Abs(noise.GetNoise2D(x, closeSideOfWorld + maxDirtStartDistance)));
 
 			var distance = 0;
 			var hasReachedSurface = false;
@@ -241,7 +286,7 @@ public partial class WorldGenerator : Node
 		{
 			var dirtStartDistance =
 				minDirtStartDistance + (minDirtStartDistance *
-				                        Mathf.Abs(_noise.GetNoise2D(farSideOfWorld - maxDirtStartDistance, y)));
+				                        Mathf.Abs(noise.GetNoise2D(farSideOfWorld - maxDirtStartDistance, y)));
 
 			var distance = 0;
 			var hasReachedSurface = false;
@@ -268,7 +313,7 @@ public partial class WorldGenerator : Node
 		{
 			var dirtStartDistance =
 				minDirtStartDistance + (minDirtStartDistance *
-				                        Mathf.Abs(_noise.GetNoise2D(x, farSideOfWorld - maxDirtStartDistance)));
+				                        Mathf.Abs(noise.GetNoise2D(x, farSideOfWorld - maxDirtStartDistance)));
 
 			var distance = 0;
 			var hasReachedSurface = false;
@@ -295,7 +340,7 @@ public partial class WorldGenerator : Node
 		{
 			var stoneStartDistance =
 				minDirtStartDistance + (minDirtStartDistance *
-				                        Mathf.Abs(_noise.GetNoise2D(farSideOfWorld + maxDirtStartDistance, y)));
+				                        Mathf.Abs(noise.GetNoise2D(farSideOfWorld + maxDirtStartDistance, y)));
 
 			var distance = 0;
 			var hasReachedSurface = false;
