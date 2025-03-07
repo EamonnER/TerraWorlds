@@ -173,7 +173,7 @@ public partial class WorldGenerator : Node
 		var end = farSideOfWorld - _caveOffset;
 
 		const float maxCaveThreshold = 1.0f;
-		const float minCaveThreshold = -0.5f;
+		const float minCaveThreshold = -0f;
 
 		// Calculate the maximum possible distance from the centre
 		var maxDistance = Mathf.Sqrt(Mathf.Pow(_halfWorldSize, 2) * 2);
