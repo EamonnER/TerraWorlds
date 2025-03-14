@@ -5,8 +5,21 @@ extends Node2D
 @onready var camera: Camera2D = $Camera
 @onready var hud: Control = $CanvasLayer/HUD
 
+var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").new()
+const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
+
+func generate_world() -> void:
+	world.clear()
+	var world_seed = randi()
+	var cave_offset = 20
+	var map_size = world.MAP_SIZE
+	
+	world_generator.GenerateWorld(map_size, world_seed, cave_offset)
+	var all_chunks = world_generator.GetAllChunks()
+	world.draw_chunks(all_chunks)
+
 func _ready() -> void:
-	world.generate_new_world()
+	generate_world()
 	
 	player.set_world(world)
 	player.position = world.get_spawn_position()

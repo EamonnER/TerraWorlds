@@ -13,13 +13,14 @@ const STONE_ID: Vector2i = Vector2i(0, 1)
 
 @onready var gravity_threshold_collision: CollisionPolygon2D = $GravityThresholdArea/GravityThresholdCollision
 
-var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").new()
-
 func local_to_map(local_position: Vector2) -> Vector2i:
 	return foreground.local_to_map(local_position)
 
 func map_to_local(map_position: Vector2i) -> Vector2:
 	return foreground.map_to_local(map_position)
+
+func clear() -> void:
+	foreground.clear()
 
 func draw_chunk(chunk: Dictionary[int, Array]) -> void:
 	for terrain_id in chunk.keys():
@@ -33,23 +34,6 @@ func draw_chunk(chunk: Dictionary[int, Array]) -> void:
 func draw_chunks(chunks: Array[Dictionary]) -> void:
 	for chunk in chunks:
 		draw_chunk(chunk)
-
-func generate_new_world():
-	foreground.clear()
-	var world_seed = randi()
-	var cave_offset = 20
-	
-	world_generator.GenerateWorld(MAP_SIZE, world_seed, cave_offset)
-	for x in range(MAP_SIZE/CHUNK_SIZE):
-		for y in range(MAP_SIZE/CHUNK_SIZE):
-			var chunk = world_generator.GetChunk(x, y)
-			for terrain_id in chunk.keys():
-				if terrain_id == 2:
-					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0)
-				elif terrain_id == 3:
-					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
-				
-	draw_gravity_collision()
 
 func draw_gravity_collision() -> void:
 	var width = 1.0
@@ -107,3 +91,6 @@ func spawn_item() -> void:
 	var dropped_item = item.to_dropped_item()
 	add_child(dropped_item)
 	dropped_item.position = get_spawn_position() + Vector2i(40, 0)
+
+func _ready() -> void:
+	draw_gravity_collision()
