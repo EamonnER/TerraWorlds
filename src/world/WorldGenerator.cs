@@ -430,7 +430,7 @@ public partial class WorldGenerator : Node
 		using (var fileStream = new FileStream(filePath, FileMode.Create))
 		using (var binaryWriter = new BinaryWriter(fileStream))
 		{
-			binaryWriter.Write(_worldSize);
+			binaryWriter.Write(_mapSize);
 			for (var x = 0; x < _mapSize / ChunkSize; x++)
 			{
 				for (var y = 0; y < _mapSize / ChunkSize; y++)
@@ -458,8 +458,7 @@ public partial class WorldGenerator : Node
 		using (var fileStream = new FileStream(filePath, FileMode.Open))
 		using (var binaryReader = new BinaryReader(fileStream))
 		{
-			_worldSize = binaryReader.ReadInt32();
-			_mapSize = _worldSize * 2;
+			_mapSize = binaryReader.ReadInt32();
 			_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
 
 			for (var x = 0; x < _mapSize / ChunkSize; x++)
