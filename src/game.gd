@@ -11,24 +11,27 @@ const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
 func generate_world() -> void:
 	world.clear()
 	var world_seed = randi()
-	var cave_offset = 20
-	var map_size = world.MAP_SIZE
+	const MAP_SIZE = 32 * CHUNK_SIZE
+	const CAVE_OFFSET = 20
 	
-	world_generator.GenerateWorld(map_size, world_seed, cave_offset)
+	world.map_size = MAP_SIZE
+	
+	world_generator.GenerateWorld(MAP_SIZE, world_seed, CAVE_OFFSET)
 	var all_chunks = world_generator.GetAllChunks()
 	world.draw_chunks(all_chunks)
+	world.draw_gravity_collision()
 
 func _ready() -> void:
 	generate_world()
 	
 	player.set_world(world)
-	player.position = world.get_spawn_position()
+	player.set_position(world.get_spawn_position())
 	player.update_rotation()
 	
 	if player.is_multiplayer_authority():  # Only follow the local player
 		camera.set_target(player)
 		hud.set_target(player)
 	
-	hud.get_node("Minimap").map_size = world.MAP_SIZE
+	hud.get_node("Minimap").map_size = world.map_size
 	hud.get_node("Minimap").draw(world.foreground)
 	
