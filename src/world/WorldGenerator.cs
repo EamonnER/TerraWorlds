@@ -21,6 +21,8 @@ public partial class WorldGenerator : Node
 	private ushort[,] _rawWorld;
 	private Chunk[,] _chunks;
 	
+	private String _worldsPath = ProjectSettings.GlobalizePath("user://worlds/");
+	
 	public void GenerateWorld(int mapSize, int seed, int caveOffset)
 	{
 		/*
@@ -437,58 +439,56 @@ public partial class WorldGenerator : Node
 	
 	public void SaveWorldToFile(string filePath)
 	{
-		using (var fileStream = new FileStream(filePath, FileMode.Create))
-		using (var binaryWriter = new BinaryWriter(fileStream))
+		if (!Directory.Exists(_worldsPath)) Directory.CreateDirectory(_worldsPath);
+		
+		var absoluteFilePath = _worldsPath + filePath;
+
+		using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
+		using var binaryWriter = new BinaryWriter(fileStream);
+		binaryWriter.Write(_mapSize);
+		for (var x = 0; x < _mapSize / ChunkSize; x++)
 		{
-			binaryWriter.Write(_mapSize);
-			for (var x = 0; x < _mapSize / ChunkSize; x++)
+			for (var y = 0; y < _mapSize / ChunkSize; y++)
 			{
-				for (var y = 0; y < _mapSize / ChunkSize; y++)
+				var chunk = _chunks[x, y];
+				for (var i = 0; i < ChunkSize; i++)
 				{
-					var chunk = _chunks[x, y];
-					for (var i = 0; i < ChunkSize; i++)
+					for (var j = 0; j < ChunkSize; j++)
 					{
-						for (var j = 0; j < ChunkSize; j++)
-						{
-							binaryWriter.Write(chunk.Tiles[i, j]);
-						}
+						binaryWriter.Write(chunk.Tiles[i, j]);
 					}
 				}
 			}
 		}
 	}
 	
-	public void LoadWorldFromFile(string filePath)
+	public void LoadWorldFromFile(string fileName)
 	{
-		if (!File.Exists(filePath))
-		{
-			throw new FileNotFoundException("The specified file does not exist.", filePath);
-		}
+		var absoluteFilePath = _worldsPath + fileName;
+		if (!File.Exists(absoluteFilePath)) throw new FileNotFoundException("The specified file does not exist.", absoluteFilePath);
 
-		using (var fileStream = new FileStream(filePath, FileMode.Open))
-		using (var binaryReader = new BinaryReader(fileStream))
-		{
-			_mapSize = binaryReader.ReadInt32();
-			_worldSize = _mapSize / 2;
-			_halfWorldSize = _worldSize / 2;
+		using var fileStream = new FileStream(absoluteFilePath, FileMode.Open);
+		using var binaryReader = new BinaryReader(fileStream);
+		_mapSize = binaryReader.ReadInt32();
+		_worldSize = _mapSize / 2;
+		_halfWorldSize = _worldSize / 2;
 			
-			_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
+		_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
 
-			for (var x = 0; x < _mapSize / ChunkSize; x++)
+		for (var x = 0; x < _mapSize / ChunkSize; x++)
+		{
+			for (var y = 0; y < _mapSize / ChunkSize; y++)
 			{
-				for (var y = 0; y < _mapSize / ChunkSize; y++)
+				var chunk = new Chunk();
+				chunk.Tiles = new ushort[ChunkSize, ChunkSize];
+				for (var i = 0; i < ChunkSize; i++)
 				{
-					var chunk = new Chunk();
-					chunk.Tiles = new ushort[ChunkSize, ChunkSize];
-					for (var i = 0; i < ChunkSize; i++)
+					for (var j = 0; j < ChunkSize; j++)
 					{
-						for (var j = 0; j < ChunkSize; j++)
-						{
-							chunk.Tiles[i, j] = binaryReader.ReadUInt16();
-						}
+						chunk.Tiles[i, j] = binaryReader.ReadUInt16();
 					}
-					_chunks[x, y] = chunk;
 				}
+				_chunks[x, y] = chunk;
 			}
 		}
 	}

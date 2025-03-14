@@ -20,17 +20,15 @@ func generate_world() -> void:
 	var all_chunks = world_generator.GetAllChunks()
 	world.draw_chunks(all_chunks)
 	
-	var appdata_path = OS.get_user_data_dir()
-	var world_path = appdata_path + "/world.tworld"
+	var world_path = "world.tworld"
 	world_generator.SaveWorldToFile(world_path)
 	
 	_on_world_set()
 
 func load_world() -> void:
 	world.clear()
-	
-	var appdata_path = OS.get_user_data_dir()
-	var world_path = appdata_path + "/world.tworld"
+
+	var world_path = "world.tworld"
 	world_generator.LoadWorldFromFile(world_path)
 	
 	world.map_size = world_generator.GetMapSize()
