@@ -19,15 +19,28 @@ func generate_world() -> void:
 	world_generator.GenerateWorld(MAP_SIZE, world_seed, CAVE_OFFSET)
 	var all_chunks = world_generator.GetAllChunks()
 	world.draw_chunks(all_chunks)
-	world.draw_gravity_collision()
 	
 	var appdata_path = OS.get_user_data_dir()
-	var world_path = appdata_path + "/world.json"
-	print(world_path)
+	var world_path = appdata_path + "/world.tworld"
 	world_generator.SaveWorldToFile(world_path)
+	
+	_on_world_set()
 
-func _ready() -> void:
-	generate_world()
+func load_world() -> void:
+	world.clear()
+	
+	var appdata_path = OS.get_user_data_dir()
+	var world_path = appdata_path + "/world.tworld"
+	world_generator.LoadWorldFromFile(world_path)
+	
+	world.map_size = world_generator.GetMapSize()
+	var all_chunks = world_generator.GetAllChunks()
+	world.draw_chunks(all_chunks)
+	
+	_on_world_set()
+
+func _on_world_set() -> void:
+	world.draw_gravity_collision()
 	
 	player.set_world(world)
 	player.set_position(world.get_spawn_position())
@@ -39,4 +52,3 @@ func _ready() -> void:
 	
 	hud.get_node("Minimap").map_size = world.map_size
 	hud.get_node("Minimap").draw(world.foreground)
-	

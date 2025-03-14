@@ -44,7 +44,13 @@ alignment = 1
 
 [node name="GenerateWorldButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 35
+theme_override_font_sizes/font_size = 32
 text = "Generate New World"
 
+[node name="LoadWorldButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Load World"
+
 [connection signal="pressed" from="VBoxContainer/GenerateWorldButton" to="." method="_on_generate_world_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/LoadWorldButton" to="." method="_on_load_world_button_pressed"]

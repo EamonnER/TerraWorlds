@@ -386,6 +386,16 @@ public partial class WorldGenerator : Node
 			}
 		}
 	}
+	
+	public int GetWorldSize()
+	{
+		return _worldSize;
+	}
+	
+	public int GetMapSize()
+	{
+		return _mapSize;
+	}
 
 	public Godot.Collections.Dictionary<ushort, Godot.Collections.Array<Vector2>> GetChunk(int x, int y)
 	{
@@ -459,6 +469,9 @@ public partial class WorldGenerator : Node
 		using (var binaryReader = new BinaryReader(fileStream))
 		{
 			_mapSize = binaryReader.ReadInt32();
+			_worldSize = _mapSize / 2;
+			_halfWorldSize = _worldSize / 2;
+			
 			_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
 
 			for (var x = 0; x < _mapSize / ChunkSize; x++)
