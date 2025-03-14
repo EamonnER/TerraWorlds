@@ -1,6 +1,8 @@
 using System;
 using Godot;
 using static TerraWorlds.world.TilesEnum;
+using System.IO;
+using System.Text.Json;
 
 namespace TerraWorlds.world;
 
@@ -421,5 +423,61 @@ public partial class WorldGenerator : Node
 			}
 		}
 		return allChunks;
+	}
+	
+	public void SaveWorldToFile(string filePath)
+	{
+		using (var fileStream = new FileStream(filePath, FileMode.Create))
+		using (var binaryWriter = new BinaryWriter(fileStream))
+		{
+			binaryWriter.Write(_worldSize);
+			for (var x = 0; x < _mapSize / ChunkSize; x++)
+			{
+				for (var y = 0; y < _mapSize / ChunkSize; y++)
+				{
+					var chunk = _chunks[x, y];
+					for (var i = 0; i < ChunkSize; i++)
+					{
+						for (var j = 0; j < ChunkSize; j++)
+						{
+							binaryWriter.Write(chunk.Tiles[i, j]);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void LoadWorldFromFile(string filePath)
+	{
+		if (!File.Exists(filePath))
+		{
+			throw new FileNotFoundException("The specified file does not exist.", filePath);
+		}
+
+		using (var fileStream = new FileStream(filePath, FileMode.Open))
+		using (var binaryReader = new BinaryReader(fileStream))
+		{
+			_worldSize = binaryReader.ReadInt32();
+			_mapSize = _worldSize * 2;
+			_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
+
+			for (var x = 0; x < _mapSize / ChunkSize; x++)
+			{
+				for (var y = 0; y < _mapSize / ChunkSize; y++)
+				{
+					var chunk = new Chunk();
+					chunk.Tiles = new ushort[ChunkSize, ChunkSize];
+					for (var i = 0; i < ChunkSize; i++)
+					{
+						for (var j = 0; j < ChunkSize; j++)
+						{
+							chunk.Tiles[i, j] = binaryReader.ReadUInt16();
+						}
+					}
+					_chunks[x, y] = chunk;
+				}
+			}
+		}
 	}
 }

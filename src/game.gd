@@ -20,6 +20,11 @@ func generate_world() -> void:
 	var all_chunks = world_generator.GetAllChunks()
 	world.draw_chunks(all_chunks)
 	world.draw_gravity_collision()
+	
+	var appdata_path = OS.get_user_data_dir()
+	var world_path = appdata_path + "/world.json"
+	print(world_path)
+	world_generator.SaveWorldToFile(world_path)
 
 func _ready() -> void:
 	generate_world()
