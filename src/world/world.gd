@@ -21,6 +21,19 @@ func local_to_map(local_position: Vector2) -> Vector2i:
 func map_to_local(map_position: Vector2i) -> Vector2:
 	return foreground.map_to_local(map_position)
 
+func draw_chunk(chunk: Dictionary[int, Array]) -> void:
+	for terrain_id in chunk.keys():
+		if terrain_id == 0:
+			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, -1)
+		if terrain_id == 2:
+			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0)
+		elif terrain_id == 3:
+			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
+
+func draw_chunks(chunks: Array[Dictionary]) -> void:
+	for chunk in chunks:
+		draw_chunk(chunk)
+
 func generate_new_world():
 	foreground.clear()
 	var world_seed = randi()
@@ -36,9 +49,9 @@ func generate_new_world():
 				elif terrain_id == 3:
 					foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
 				
-	_draw_gravity_collision()
+	draw_gravity_collision()
 
-func _draw_gravity_collision() -> void:
+func draw_gravity_collision() -> void:
 	var width = 1.0
 	var points = [
 		map_to_local(Vector2(-MAP_SIZE/2, -MAP_SIZE/2)),  # Top left corner

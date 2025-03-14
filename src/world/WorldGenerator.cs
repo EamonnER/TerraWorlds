@@ -409,4 +409,17 @@ public partial class WorldGenerator : Node
 		}
 		return chunkTiles;
 	}
+	
+	public Godot.Collections.Array<Godot.Collections.Dictionary<ushort, Godot.Collections.Array<Vector2>>> GetAllChunks()
+	{
+		var allChunks = new Godot.Collections.Array<Godot.Collections.Dictionary<ushort, Godot.Collections.Array<Vector2>>>();
+		for (var x = 0; x < _mapSize/ChunkSize; x ++)
+		{
+			for (var y = 0; y < _mapSize/ChunkSize; y ++)
+			{
+				allChunks.Add(GetChunk(x, y));
+			}
+		}
+		return allChunks;
+	}
 }
