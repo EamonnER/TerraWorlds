@@ -31,3 +31,6 @@ text = "Loading..."
 
 [node name="LoadingDetailsLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2

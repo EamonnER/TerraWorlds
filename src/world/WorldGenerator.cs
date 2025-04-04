@@ -2,19 +2,47 @@ using System;
 using Godot;
 using static TerraWorlds.world.TilesEnum;
 using System.IO;
-using System.Text.Json;
+using FileAccess = System.IO.FileAccess;
 
 namespace TerraWorlds.world;
 
 [GlobalClass]
 public partial class WorldGenerator : Node
 {
-	private int _seed;
-	
+	[Signal]
+	public delegate void ProgressUpdateEventHandler(string stage, int progress);
+	[Signal]
+	public delegate void GenCompletedEventHandler();
+	[Signal]
+	public delegate void LoadCompletedEventHandler();
+
 	private int _worldSize;  // The size of the world in tiles
 	private int _mapSize;  // The size of the playable area in tiles
 	private int _halfWorldSize;
 	private int _caveOffset;
+	
+	public int Seed { get; set; }
+
+	public int MapSize
+	{
+		get => _mapSize;
+		set
+		{
+			if (value < ChunkSize || value % ChunkSize != 0)
+			{
+				throw new Exception("Map size must be a multiple of and at least " + ChunkSize);
+			}
+			_mapSize = value;
+			_worldSize = _mapSize / 2;
+			_halfWorldSize = _worldSize / 2;
+		}
+	}
+
+	public int CaveOffset
+	{
+		get => _caveOffset;
+		set => _caveOffset = value;
+	}
 	
 	private const int ChunkSize = 32;
 	
@@ -23,24 +51,8 @@ public partial class WorldGenerator : Node
 	
 	private String _worldsPath = ProjectSettings.GlobalizePath("user://worlds/");
 	
-	public void GenerateWorld(int mapSize, int seed, int caveOffset)
+	public void GenerateWorld()
 	{
-		/*
-		 * mapSize should be divisible by ChunkSize
-		 */
-		
-		if (mapSize < ChunkSize || mapSize % ChunkSize != 0)
-		{
-			throw new Exception("Map size must be a multiple of and at least " + ChunkSize);
-		}
-		
-		_mapSize = mapSize;
-		_worldSize = _mapSize / 2;
-		_halfWorldSize = _worldSize / 2;
-		_caveOffset = caveOffset;
-		
-		_seed = seed;
-		
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
 		_drawHeightmap();
@@ -49,6 +61,9 @@ public partial class WorldGenerator : Node
 		_drawDirt();
 		
 		_worldToChunks();
+		
+		EmitSignal(nameof(ProgressUpdate), "World generation complete!", 100);
+		EmitSignal(nameof(GenCompletedEventHandler));
 	}
 
 	private void _drawBlankWorld()
@@ -61,6 +76,8 @@ public partial class WorldGenerator : Node
 		 * If _halfWorldSize > distance > _halfWorldSize - _caveOffset, then the tile is Dirt.
 		 * If _halfWorldSize - _caveOffset > distance, then the tile is Stone.
 		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating blank world...", 0);
+
 		var centerOfMap = _mapSize / 2;
 		for (var x = 0; x < _mapSize; x++)
 		{
@@ -96,8 +113,10 @@ public partial class WorldGenerator : Node
 		 * It follows the world from the top left, in the right direction, all the way around. This allows the world to
 		 * look like a continuous loop.
 		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating heightmap...", 25);
+		
 		var noise = new FastNoiseLite();
-		noise.SetSeed(_seed);
+		noise.SetSeed(Seed);
 		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
 		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
@@ -165,8 +184,10 @@ public partial class WorldGenerator : Node
 		 * Let distance = max(x_distance_from_center_of_world, y_distance_from_center_of_world)
 		 * If _halfWorldSize - _caveOffset > distance, then the tile is eligible to be a cave tile.
 		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating caves...", 50);
+		
 		var noise = new FastNoiseLite();
-		noise.SetSeed(_seed);
+		noise.SetSeed(Seed);
 		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  
@@ -203,8 +224,10 @@ public partial class WorldGenerator : Node
 
 	private void _addTunnels()
 	{
+		EmitSignal(nameof(ProgressUpdate), "Generating tunnels...", 75);
+		
 		var noise = new FastNoiseLite();
-		noise.SetSeed(_seed);
+		noise.SetSeed(Seed);
 		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin;
 		noise.SetFrequency(0.0025f);
 		
@@ -248,6 +271,8 @@ public partial class WorldGenerator : Node
 		/*
 		 * Uses noise to turn surface tiles into dirt
 		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating dirt...", 90);
+		
 		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
 		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
 		
@@ -255,7 +280,7 @@ public partial class WorldGenerator : Node
 		const int minDirtStartDistance = 10;
 
 		var noise = new FastNoiseLite();
-		noise.SetSeed(_seed);
+		noise.SetSeed(Seed);
 		noise.NoiseType = FastNoiseLite.NoiseTypeEnum.Simplex;
 		
 		// Top side
@@ -369,6 +394,8 @@ public partial class WorldGenerator : Node
 
 	private void _worldToChunks()
 	{
+		EmitSignal(nameof(ProgressUpdate), "Converting world to chunks...", 95);
+		
 		_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
 		for (var x = 0; x < _mapSize/ChunkSize; x ++)
 		{
@@ -467,14 +494,15 @@ public partial class WorldGenerator : Node
 		var absoluteFilePath = _worldsPath + fileName;
 		if (!File.Exists(absoluteFilePath)) throw new FileNotFoundException("The specified file does not exist.", absoluteFilePath);
 
-		using var fileStream = new FileStream(absoluteFilePath, FileMode.Open);
+		using var fileStream = new FileStream(absoluteFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 		using var binaryReader = new BinaryReader(fileStream);
 		_mapSize = binaryReader.ReadInt32();
 		_worldSize = _mapSize / 2;
 		_halfWorldSize = _worldSize / 2;
 			
 		_chunks = new Chunk[_mapSize / ChunkSize, _mapSize / ChunkSize];
-
+		
+		EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", 0);
 		for (var x = 0; x < _mapSize / ChunkSize; x++)
 		{
 			for (var y = 0; y < _mapSize / ChunkSize; y++)
@@ -489,7 +517,11 @@ public partial class WorldGenerator : Node
 					}
 				}
 				_chunks[x, y] = chunk;
+				
+				EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", (int) ((x * _mapSize / ChunkSize + y) / (_mapSize / ChunkSize * _mapSize / ChunkSize) * 100));
 			}
 		}
+		EmitSignal(nameof(ProgressUpdate), "World loaded from file!", 100);
+		EmitSignal(nameof(LoadCompleted));
 	}
 }
