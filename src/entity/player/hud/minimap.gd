@@ -8,8 +8,8 @@ class_name Minimap
 var player: Player
 
 var foreground: TileMapLayer
-var world_size: int
-var world_map: Image
+var map_size: int
+var map_image: Image
 
 func draw(new_foreground: TileMapLayer):
 	foreground = new_foreground
@@ -26,21 +26,21 @@ func draw(new_foreground: TileMapLayer):
 			img.set_pixel(x, y, colour)
 
 	img.resize(minimap_size.x, minimap_size.y, Image.INTERPOLATE_NEAREST)
-	world_map = img
-	texture = ImageTexture.create_from_image(world_map)
+	map_image = img
+	texture = ImageTexture.create_from_image(map_image)
 
 func draw_player(pos: Vector2):
 	#if not world_map or not player_texture:
-	if not world_map:
+	if not map_image:
 		return
 	
 	pos = foreground.local_to_map(pos)
-	var img = world_map.duplicate()
+	var img = map_image.duplicate()
 	
 	# Convert world position to minimap position
 	var minimap_pos = Vector2(
-		(((pos.x + (world_size/2)) / world_size) * minimap_size.x),
-		(((pos.y + (world_size/2)) / world_size) * minimap_size.y)
+		(((pos.x + (map_size/2)) / map_size) * minimap_size.x),
+		(((pos.y + (map_size/2)) / map_size) * minimap_size.y)
 	)
 	
 	# Draw the player texture on the image
@@ -59,4 +59,4 @@ func draw_player(pos: Vector2):
 
 func _process(delta: float) -> void:
 	if player:
-		draw_player(player.get_position())
+		draw_player(player.get_global_position())
