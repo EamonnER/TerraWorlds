@@ -9,6 +9,12 @@ var loading_screen: Control = preload("res://src/loading/loading_screen.tscn").i
 
 var world_thread: Thread = Thread.new()
 
+@onready var virtual_cursor := $VirtualCursor
+var cursor_speed := 600.0
+var last_mouse_pos := Vector2.ZERO
+var use_mouse := false
+var deadzone := 0.2
+
 func _on_generate_world_button_pressed() -> void:
 	var world_seed = randi()
 	const MAP_SIZE = 32 * CHUNK_SIZE
@@ -50,6 +56,12 @@ func _on_world_load_completed() -> void:
 	move_to_game = true
 
 func _ready() -> void:
+	
+	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	last_mouse_pos = get_viewport().get_mouse_position()
+	#Start cursor at center
+	virtual_cursor.position = get_viewport().get_visible_rect().size / 2
+	
 	get_tree().root.add_child.call_deferred(loading_screen)
 	loading_screen.hide()
 	
@@ -57,29 +69,30 @@ func _ready() -> void:
 	world_generator.connect("GenCompleted", _on_world_gen_completed)
 	world_generator.connect("LoadCompleted", _on_world_load_completed)
 
-@onready var virtual_cursor := $VirtualCursor
-var cursor_speed := 500.0
-var deadzone := 0.2
-
 func _process(delta: float) -> void:
-	var x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
-	var y_input = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
-	var move = Vector2(x_input, y_input)
-	if move.length() > deadzone:
-		move = move.normalized()
-		virtual_cursor.position += move * cursor_speed * delta
-
-	# Keep the cursor on-screen
-	var screen_size = get_viewport().get_visible_rect().size
-	virtual_cursor.position.x = clamp(virtual_cursor.position.x, 0, screen_size.x)
-	virtual_cursor.position.y = clamp(virtual_cursor.position.y, 0, screen_size.y)
-	
-	# Simulate a mouse move at the cursor position
+	#Simulate a mouse move at the cursor position
 	var motion := InputEventMouseMotion.new()
 	motion.position = virtual_cursor.position
 	Input.parse_input_event(motion)
-
 	
+	#Detect mouse movement
+	var current_mouse_pos = get_viewport().get_mouse_position()
+	if current_mouse_pos != last_mouse_pos:
+		use_mouse = true
+		virtual_cursor.position = current_mouse_pos
+		last_mouse_pos = current_mouse_pos
+	else:
+		#If no mouse input, fall back to controller
+		var move = Vector2(
+			Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
+			Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up"))
+		if move.length() > 0:
+			use_mouse = false
+			virtual_cursor.position += move.normalized() * cursor_speed * delta
+	   		#Clamp to screen bounds
+			var screen_size = get_viewport().get_visible_rect().size
+			virtual_cursor.position = virtual_cursor.position.clamp(Vector2.ZERO, screen_size)
+
 	if move_to_game:
 		var game = game_scene.instantiate()
 		game.world_generator = world_generator
@@ -89,14 +102,14 @@ func _process(delta: float) -> void:
 		
 func _input(event):
 	if event.is_action_pressed("ui_accept"):
-		# Simulate press
+		#Simulate press
 		var press = InputEventMouseButton.new()
 		press.button_index = MOUSE_BUTTON_LEFT
 		press.pressed = true
 		press.position = virtual_cursor.position
 		Input.parse_input_event(press)
 		
-		# Simulate release
+		#Simulate release
 		var release = InputEventMouseButton.new()
 		release.button_index = MOUSE_BUTTON_LEFT
 		release.pressed = false
