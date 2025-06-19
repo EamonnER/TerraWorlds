@@ -57,10 +57,48 @@ func _ready() -> void:
 	world_generator.connect("GenCompleted", _on_world_gen_completed)
 	world_generator.connect("LoadCompleted", _on_world_load_completed)
 
+@onready var virtual_cursor := $VirtualCursor
+var cursor_speed := 500.0
+var deadzone := 0.2
+
 func _process(delta: float) -> void:
+	var x_input = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	var y_input = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
+	var move = Vector2(x_input, y_input)
+	if move.length() > deadzone:
+		move = move.normalized()
+		virtual_cursor.position += move * cursor_speed * delta
+
+	# Keep the cursor on-screen
+	var screen_size = get_viewport().get_visible_rect().size
+	virtual_cursor.position.x = clamp(virtual_cursor.position.x, 0, screen_size.x)
+	virtual_cursor.position.y = clamp(virtual_cursor.position.y, 0, screen_size.y)
+	
+	# Simulate a mouse move at the cursor position
+	var motion := InputEventMouseMotion.new()
+	motion.position = virtual_cursor.position
+	Input.parse_input_event(motion)
+
+	
 	if move_to_game:
 		var game = game_scene.instantiate()
 		game.world_generator = world_generator
 		add_sibling(game)
 		game.load_world()
 		queue_free()
+		
+func _input(event):
+	if event.is_action_pressed("ui_accept"):
+		# Simulate press
+		var press = InputEventMouseButton.new()
+		press.button_index = MOUSE_BUTTON_LEFT
+		press.pressed = true
+		press.position = virtual_cursor.position
+		Input.parse_input_event(press)
+		
+		# Simulate release
+		var release = InputEventMouseButton.new()
+		release.button_index = MOUSE_BUTTON_LEFT
+		release.pressed = false
+		release.position = virtual_cursor.position
+		Input.parse_input_event(release)
