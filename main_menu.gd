@@ -1,6 +1,6 @@
 extends Control
 
-var game_scene: PackedScene = preload("res://src/game.tscn")
+var game: Node2D = preload("res://src/game.tscn").instantiate()
 var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").new()
 const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
 var move_to_game = false
@@ -11,7 +11,7 @@ var world_thread: Thread = Thread.new()
 
 func _on_generate_world_button_pressed() -> void:
 	var world_seed = randi()
-	const MAP_SIZE = 32 * CHUNK_SIZE
+	const MAP_SIZE = 4 * CHUNK_SIZE
 	const CAVE_OFFSET = 20
 	
 	world_generator.Seed = world_seed
@@ -24,7 +24,22 @@ func _on_generate_world_button_pressed() -> void:
 	if world_thread.is_started(): world_thread.wait_to_finish()
 	world_thread.start(_generate_world)
 
-func _on_load_world_button_pressed() -> void:
+func _on_host_game_button_pressed() -> void:
+	add_sibling(game)
+	game.hide()
+	MultiplayerManager.host_server(game)
+	
+	hide()
+	loading_screen.show()
+	
+	if world_thread.is_started(): world_thread.wait_to_finish()
+	world_thread.start(_load_world)
+
+func _on_join_game_button_pressed() -> void:
+	add_sibling(game)
+	game.hide()
+	MultiplayerManager.connect_to_server(game)
+	
 	hide()
 	loading_screen.show()
 	
@@ -50,7 +65,7 @@ func _on_world_load_completed() -> void:
 	move_to_game = true
 
 func _ready() -> void:
-	get_tree().root.add_child.call_deferred(loading_screen)
+	add_sibling.call_deferred(loading_screen)
 	loading_screen.hide()
 	
 	world_generator.connect("ProgressUpdate", _on_world_gen_progress_update)
@@ -59,8 +74,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if move_to_game:
-		var game = game_scene.instantiate()
+		game.show()
+		if world_thread.is_started(): world_thread.wait_to_finish()
 		game.world_generator = world_generator
-		add_sibling(game)
 		game.load_world()
+		
 		queue_free()

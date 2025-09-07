@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=8 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" uid="uid://d1cbeetmusqr" path="res://src/game.gd" id="1_1l5x6"]
-[ext_resource type="PackedScene" uid="uid://dcawu5ccdv1ty" path="res://src/entity/player/player.tscn" id="3_s6re8"]
 [ext_resource type="Script" uid="uid://bcsrjkokwrrjk" path="res://src/entity/player/camera.gd" id="4_qqgmn"]
 [ext_resource type="Script" uid="uid://bhmqcs2qrf3ni" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" uid="uid://cr0am3ve7478t" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
@@ -15,7 +14,9 @@ script = ExtResource("1_1l5x6")
 
 [node name="World" parent="." instance=ExtResource("8_gxbsa")]
 
-[node name="Player" parent="World" instance=ExtResource("3_s6re8")]
+[node name="Players" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("uid://dcawu5ccdv1ty")
+spawn_path = NodePath(".")
 
 [node name="Camera" type="Camera2D" parent="."]
 ignore_rotation = false

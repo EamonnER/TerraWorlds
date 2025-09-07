@@ -16,9 +16,5 @@ func _physics_process(delta: float) -> void:
 		
 
 func set_target(new_player: CharacterBody2D):
-	if not new_player.is_multiplayer_authority():
-		queue_free()  # Destroy this camera if it's not for the local player
-		return
-
 	player = new_player
 	make_current()

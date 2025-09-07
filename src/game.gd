@@ -1,7 +1,9 @@
 extends Node2D
 
-@onready var player: Player = $World/Player
+signal world_ready
+
 @onready var world: World = $World
+@onready var players: MultiplayerSpawner = $World/Players
 @onready var camera: Camera2D = $Camera
 @onready var canvas_layer: CanvasLayer = $CanvasLayer
 @onready var hud: Control = $CanvasLayer/HUD
@@ -14,13 +16,4 @@ func load_world() -> void:
 	world.draw_chunks(all_chunks)
 	world.draw_gravity_collision()
 	
-	player.set_world(world)
-	player.set_position(world.get_spawn_position())
-	player.update_rotation()
-	
-	if player.is_multiplayer_authority():  # Only follow the local player
-		camera.set_target(player)
-		hud.set_target(player)
-	
-	hud.get_node("Minimap").map_size = world.map_size
-	hud.get_node("Minimap").draw(world.foreground)
+	emit_signal("world_ready")
