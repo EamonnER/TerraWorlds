@@ -4,7 +4,14 @@ extends Control
 @onready var minimap = $Minimap
 @onready var inventory = $Inventory
 
-func set_target(new_player: Player):
-	health.player = new_player
-	minimap.player = new_player
-	new_player.inventory = inventory
+func _process(_delta: float) -> void:
+	if !health.player || !minimap.player:
+		return
+	
+	var player = get_tree().root.get_node("Game/World/Players/Player#%s" % multiplayer.get_unique_id())
+	if !player:
+		return
+		
+	health.player = player
+	minimap.player = player
+	player.inventory = inventory

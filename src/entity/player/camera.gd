@@ -13,8 +13,5 @@ func _physics_process(delta: float) -> void:
 		
 		if player.is_rotating:
 			set_rotation(player.get_rotation())
-		
-
-func set_target(new_player: CharacterBody2D):
-	player = new_player
-	make_current()
+	else:
+		player = get_tree().root.get_node("Game/World/Players/Player#%s" % multiplayer.get_unique_id())

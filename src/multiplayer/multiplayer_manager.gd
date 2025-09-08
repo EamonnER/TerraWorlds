@@ -48,12 +48,3 @@ func request_player(id: int) -> void:
 	player.set_world(world)
 	player.set_position(world.get_spawn_position())
 	player.update_rotation()
-	
-	var camera = _game.get_node("Camera")
-	camera.set_target(player)
-	
-	var hud = _game.get_node("CanvasLayer/HUD")
-	hud.set_target(player)
-	hud.get_node("Minimap").map_size = world.map_size
-	hud.get_node("Minimap").draw(world.foreground)
-	
