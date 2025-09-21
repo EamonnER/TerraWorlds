@@ -33,7 +33,7 @@ func _peer_connected(id: int):
 	request_player(id)
 
 func _peer_disconnected(id: int):
-	pass  # TODO implement
+	remove_player(id)
 
 func request_player(id: int) -> void:
 	var player: Player = player_scene.instantiate()
@@ -48,3 +48,8 @@ func request_player(id: int) -> void:
 	player.set_world(world)
 	player.set_position(world.get_spawn_position())
 	player.update_rotation()
+
+func remove_player(id: int) -> void:
+	var players_spawn_node = _game.get_node("World/Players")
+	var player_name = "Player#%s" % id
+	players_spawn_node.get_node(player_name).queue_free()
