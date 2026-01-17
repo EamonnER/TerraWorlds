@@ -6,7 +6,6 @@ var jump_pressed: bool = false
 var debug_toggle_pressed: bool = false
 
 func _ready() -> void:
-	print(get_multiplayer_authority(), " ", multiplayer.get_unique_id())
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
 		set_physics_process(false)
