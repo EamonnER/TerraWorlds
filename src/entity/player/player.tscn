@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcawu5ccdv1ty"]
+[gd_scene load_steps=6 format=3 uid="uid://dcawu5ccdv1ty"]
 
 [ext_resource type="Script" uid="uid://trx68tpagttj" path="res://src/entity/player/player.gd" id="1_u6ven"]
 [ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_wpkrl"]
+[ext_resource type="Script" uid="uid://c5ugvgkkicx8u" path="res://src/multiplayer/input_synchronizer.gd" id="3_utwn8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1b3qp"]
 size = Vector2(32, 96)
@@ -28,3 +29,4 @@ texture = ExtResource("1_wpkrl")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5qyn1")
+script = ExtResource("3_utwn8")
