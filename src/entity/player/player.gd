@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
 		jump()
 	
 	# Mouse actions
-	# var mouse_pos = get_global_mouse_position()
+	#var mouse_pos = get_global_mouse_position()
 	# Primary action input (LMB)
 	#if Input.is_action_pressed("game_primary_action"):
 	#	handle_primary_action_input()
