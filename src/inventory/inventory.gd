@@ -60,7 +60,7 @@ func add_item(item: Item, quantity: int = 1) -> bool:
 			return true
 	return false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var offset = Vector2(held_inventory_slot.get_size().x, held_inventory_slot.get_size().x/2)
 	held_inventory_slot.set_position(get_global_mouse_position() - offset)
 	if Input.is_action_just_pressed("game_open_inventory"):

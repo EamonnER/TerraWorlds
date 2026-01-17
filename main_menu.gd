@@ -72,7 +72,7 @@ func _ready() -> void:
 	world_generator.connect("GenCompleted", _on_world_gen_completed)
 	world_generator.connect("LoadCompleted", _on_world_load_completed)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if move_to_game:
 		game.show()
 		if world_thread.is_started(): world_thread.wait_to_finish()
