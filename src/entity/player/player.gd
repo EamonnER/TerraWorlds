@@ -4,6 +4,8 @@ class_name Player
 var debug_mode = false
 var inventory: Inventory
 
+@export var id = 0
+
 func pickup_item(item: Item) -> bool:
 	return false  # TODO revert
 	return inventory.add_item(item)
@@ -29,8 +31,8 @@ func handle_secondary_action_input():
 func _ready() -> void:
 	health = 100.0
 
-func handle_inputs(delta: float) -> void:
-	if $MultiplayerSynchronizer.debug_toggle_pressed:
+func _handle_inputs(delta: float) -> void:
+	if $InputSynchronizer.debug_toggle_pressed:
 		debug_mode = not debug_mode
 		print("Debug mode: ", debug_mode)
 		if debug_mode == true:
@@ -43,8 +45,8 @@ func handle_inputs(delta: float) -> void:
 	
 	# Left / right / up / down inputs
 	var new_velocity = get_relative_velocity()
-	var horizontal_direction = $MultiplayerSynchronizer.horizontal_input
-	var vertical_direction = $MultiplayerSynchronizer.vertical_input
+	var horizontal_direction = $InputSynchronizer.horizontal_input
+	var vertical_direction = $InputSynchronizer.vertical_input
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		# Apply acceleration or decelleration
 		if sign(horizontal_direction) == sign(new_velocity.x):
@@ -61,7 +63,7 @@ func handle_inputs(delta: float) -> void:
 	set_relative_velocity(new_velocity)
 	
 	# Jump
-	if Input.is_action_just_pressed("game_jump"): 
+	if $InputSynchronizer.jump_pressed: 
 		jump()
 	
 	# Mouse actions
@@ -75,4 +77,8 @@ func handle_inputs(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
-	handle_inputs(delta)
+	if multiplayer.is_server():
+		_handle_inputs(delta)
+
+func _enter_tree() -> void:
+	$InputSynchronizer.set_multiplayer_authority(id)

@@ -19,10 +19,6 @@ var is_rotating = false  # True if up_direction has just been changed in the cur
 
 var health: float = 100.0
 
-@export var id := 1:
-	set(id):
-		id = id
-
 func set_world(new_world: World) -> void:
 	world = new_world
 
