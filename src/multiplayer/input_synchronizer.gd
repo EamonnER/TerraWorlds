@@ -6,6 +6,7 @@ var jump_pressed: bool = false
 var debug_toggle_pressed: bool = false
 
 func _ready() -> void:
+	print(get_multiplayer_authority(), " ", multiplayer.get_unique_id())
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
 		set_physics_process(false)
@@ -15,3 +16,6 @@ func _physics_process(_delta: float) -> void:
 	vertical_input = Input.get_axis("game_up", "game_down")
 	jump_pressed = Input.is_action_just_pressed("game_jump")
 	debug_toggle_pressed = Input.is_action_just_pressed("game_debug_toggle")
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(get_parent().id)

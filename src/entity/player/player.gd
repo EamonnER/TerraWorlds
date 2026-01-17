@@ -79,6 +79,3 @@ func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
 	if multiplayer.is_server():
 		_handle_inputs(delta)
-
-func _enter_tree() -> void:
-	$InputSynchronizer.set_multiplayer_authority(id)
