@@ -51,7 +51,7 @@ public partial class WorldGenerator : Node
 	
 	private String _worldsPath = ProjectSettings.GlobalizePath("user://worlds/");
 	
-	public void GenerateWorld()
+	public void GenerateWorld(string worldName)
 	{
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
@@ -63,7 +63,7 @@ public partial class WorldGenerator : Node
 		_worldToChunks();
 		
 		EmitSignal(nameof(ProgressUpdate), "World generation complete!", 100);
-		SaveWorldToFile("world.tworld");
+		_saveWorldToFile(worldName);
 		EmitSignal(nameof(GenCompleted));
 	}
 
@@ -465,7 +465,7 @@ public partial class WorldGenerator : Node
 		return allChunks;
 	}
 	
-	public void SaveWorldToFile(string filePath)
+	private void _saveWorldToFile(string filePath)
 	{
 		if (!Directory.Exists(_worldsPath)) Directory.CreateDirectory(_worldsPath);
 		
@@ -490,9 +490,9 @@ public partial class WorldGenerator : Node
 		}
 	}
 	
-	public void LoadWorldFromFile(string fileName)
+	public void LoadWorld(string worldName)
 	{
-		var absoluteFilePath = _worldsPath + fileName;
+		var absoluteFilePath = _worldsPath + worldName + ".tworld";
 		if (!File.Exists(absoluteFilePath)) throw new FileNotFoundException("The specified file does not exist.", absoluteFilePath);
 
 		using var fileStream = new FileStream(absoluteFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);

@@ -47,10 +47,10 @@ func _on_join_game_button_pressed() -> void:
 	world_thread.start(_load_world)
 
 func _generate_world() -> void:
-	world_generator.GenerateWorld()
+	world_generator.GenerateWorld("world")
 
 func _load_world() -> void:
-	world_generator.LoadWorldFromFile("world.tworld")
+	world_generator.LoadWorld("world")
 
 func _on_world_gen_progress_update(details: String, percent: int) -> void:
 	loading_screen.call_deferred("update", details, percent)
