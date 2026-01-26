@@ -19,9 +19,6 @@ var is_rotating = false  # True if up_direction has just been changed in the cur
 
 var health: float = 100.0
 
-func set_world(new_world: World) -> void:
-	world = new_world
-
 func update_rotation():
 	var coords: Vector2 = self.global_position
 	var old_up_direction = up_direction
@@ -113,3 +110,6 @@ func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	
 	move_and_slide()
+
+func _ready() -> void:
+	world = get_tree().root.get_node("Game/World")

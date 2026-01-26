@@ -9,6 +9,7 @@ var _game: Node2D
 
 func host_server(game: Node2D, port: int = DEFAULT_PORT):
 	_game = game
+	game.get_node("World/RpcInterface")._game = game
 	
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_server(port)
@@ -23,6 +24,7 @@ func host_server(game: Node2D, port: int = DEFAULT_PORT):
 
 func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = DEFAULT_PORT):
 	_game = game
+	game.get_node("World/RpcInterface")._game = game
 	
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_client(ip, port)
@@ -43,8 +45,7 @@ func request_player(id: int) -> void:
 	var players_spawn_node = _game.get_node("World/Players")
 	players_spawn_node.add_child(player, true)
 	
-	var world =_game.get_node("World")
-	player.set_world(world)
+	var world = _game.get_node("World")
 	player.set_position(world.get_spawn_position())
 	player.update_rotation()
 

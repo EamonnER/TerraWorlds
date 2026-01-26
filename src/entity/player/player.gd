@@ -6,32 +6,21 @@ var inventory: Inventory
 
 @export var id = 0
 
+var rpc_interface: Node
+
 func pickup_item(item: Item) -> bool:
 	return false  # TODO revert
 	return inventory.add_item(item)
 
-func handle_primary_action_input():
-	# Only function is to remove tiles at mouse pos ATM
-	
-	# TODO I dislike implimenting this by directly referencing the world. 
-	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.remove_tile(Vector2i(tile_coords))
-
-func handle_secondary_action_input():
-	# Only function is to place tiles at mouse pos ATM
-	
-	# TODO I dislike implimenting this by directly referencing the world. 
-	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()  
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.place_tile(Vector2i(tile_coords), 0)
+func get_tile_pos_at_mouse_pos() -> Vector2i:
+	return world.local_to_map(get_global_mouse_position())
 
 func _ready() -> void:
+	super._ready()
+	rpc_interface = world.get_node("RpcInterface")
 	health = 100.0
 
-func _handle_inputs(delta: float) -> void:
+func _handle_server_authoratitive_inputs(delta: float) -> void:
 	if $InputSynchronizer.debug_toggle_pressed:
 		debug_mode = not debug_mode
 		print("Debug mode: ", debug_mode)
@@ -66,16 +55,16 @@ func _handle_inputs(delta: float) -> void:
 	if $InputSynchronizer.jump_pressed: 
 		jump()
 	
-	# Mouse actions
-	#var mouse_pos = get_global_mouse_position()
+func _handle_local_inputs() -> void:
 	# Primary action input (LMB)
-	#if Input.is_action_pressed("game_primary_action"):
-	#	handle_primary_action_input()
+	if $InputSynchronizer.primary_action_pressed:
+		rpc_interface.request_remove_tile.rpc_id(1, get_tile_pos_at_mouse_pos())
 	# Secondary action input (RMB)
-	#if Input.is_action_pressed("game_secondary_action"):
-	#	handle_secondary_action_input()
+	if $InputSynchronizer.secondary_action_pressed:
+		rpc_interface.request_place_tile.rpc_id(1, get_tile_pos_at_mouse_pos(), 0)
+
 
 func _physics_process(delta: float) -> void:
 	super._physics_process(delta)
-	if multiplayer.is_server():
-		_handle_inputs(delta)
+	if multiplayer.is_server(): _handle_server_authoratitive_inputs(delta)
+	if id == multiplayer.get_unique_id(): _handle_local_inputs()
