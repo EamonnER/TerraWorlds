@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://584iwacehuqm"]
 
 [ext_resource type="Texture2D" uid="uid://b0lsyi7yplcin" path="res://assets/missing-texture.png" id="1_2nlwl"]
-[ext_resource type="Script" uid="uid://cwd414q7ol7d3" path="res://src/item/inventory_item.gd" id="1_h6of8"]
+[ext_resource type="Script" uid="uid://cwd414q7ol7d3" path="res://src/entity/player/hud/inventory/inventory_item.gd" id="1_h6of8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ewcgs"]
 animations = [{

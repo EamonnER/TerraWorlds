@@ -2,7 +2,7 @@ extends Node
 
 var _game: Node2D
 
-# World Editing ----------------------------------------------------------------
+# World Editing --------------------------------------------------------------------------------------------------------
 @rpc("any_peer", "call_local", "reliable")  # Clients call to server, server validates
 func request_place_tile(tile: Vector2i, terrain_id: int):
 	if !multiplayer.is_server(): return
@@ -27,3 +27,10 @@ func request_remove_tile(tile: Vector2i):
 func _remove_tile(tile: Vector2i):
 	var world = _game.get_node("World")
 	world.remove_tile(tile)
+
+
+# Dropped Item Interaction ---------------------------------------------------------------------------------------------
+@rpc("authority", "call_remote", "reliable")  # Server calls all clients
+func pickup_item(player_id: int, item: Item):
+	var player = _game.get_node("World/Players/Player#%s" % player_id)
+	

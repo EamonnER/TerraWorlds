@@ -1,10 +1,10 @@
-extends Node
+extends Resource
 class_name Item
 
 var dropped_item_scene = preload("res://src/item/dropped_item.tscn")
 var dropped_item_sprite_path = "res://assets/items/null/"
 
-var inventory_item_scene = preload("res://src/item/inventory_item.tscn")
+var inventory_item_scene = preload("res://src/entity/player/hud/inventory/inventory_item.tscn")
 var inventory_item_sprite_path = "res://assets/items/null/"
 
 var id: int = 0

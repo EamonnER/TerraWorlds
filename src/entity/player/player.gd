@@ -1,11 +1,12 @@
 extends Entity
 class_name Player
 
-var debug_mode = false
+var debug_mode: bool = false
 
-@export var id = 0
+@export var id: int = 0
 
 var rpc_interface: Node
+@export var inventory: Inventory
 
 func get_tile_pos_at_mouse_pos() -> Vector2i:
 	return world.local_to_map(get_global_mouse_position())
@@ -28,7 +29,7 @@ func _handle_server_authoratitive_inputs(delta: float) -> void:
 			set_collision_mask_value(2, true)
 	
 	# Left / right / up / down inputs
-	var new_velocity = get_relative_velocity()
+	var new_velocity: Vector2 = get_relative_velocity()
 	var horizontal_direction = $InputSynchronizer.horizontal_input
 	var vertical_direction = $InputSynchronizer.vertical_input
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
