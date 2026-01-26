@@ -48,7 +48,6 @@ func _on_join_game_button_pressed() -> void:
 
 func _generate_world() -> void:
 	world_generator.GenerateWorld()
-	world_generator.SaveWorldToFile("world.tworld")
 
 func _load_world() -> void:
 	world_generator.LoadWorldFromFile("world.tworld")
@@ -57,7 +56,7 @@ func _on_world_gen_progress_update(details: String, percent: int) -> void:
 	loading_screen.call_deferred("update", details, percent)
 
 func _on_world_gen_completed() -> void:
-	world_generator.SaveWorldToFile("world.tworld")
+	await get_tree().create_timer(1.5).timeout
 	call_deferred("show")
 	loading_screen.call_deferred("hide")
 

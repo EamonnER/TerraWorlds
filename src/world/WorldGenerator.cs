@@ -63,7 +63,8 @@ public partial class WorldGenerator : Node
 		_worldToChunks();
 		
 		EmitSignal(nameof(ProgressUpdate), "World generation complete!", 100);
-		EmitSignal(nameof(GenCompletedEventHandler));
+		SaveWorldToFile("world.tworld");
+		EmitSignal(nameof(GenCompleted));
 	}
 
 	private void _drawBlankWorld()
