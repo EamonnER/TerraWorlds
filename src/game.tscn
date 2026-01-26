@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bhmqcs2qrf3ni" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" uid="uid://cr0am3ve7478t" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" uid="uid://dj7qvwxstkgtf" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
-[ext_resource type="PackedScene" uid="uid://c8w68wmnu80ky" path="res://src/inventory/inventory.tscn" id="6_n78m7"]
+[ext_resource type="PackedScene" uid="uid://t0rore7q1l01" path="res://src/entity/player/hud/inventory/inventory_ui.tscn" id="8_cdx1q"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
 
 [node name="Game" type="Node2D"]
@@ -44,14 +44,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("5_iee2e")
 
-[node name="Inventory" parent="CanvasLayer/HUD" instance=ExtResource("6_n78m7")]
-layout_mode = 1
-offset_left = 15.0
-offset_top = -41.0
-offset_right = 15.0
-offset_bottom = -41.0
-columns = 9
-
 [node name="Health" type="Label" parent="CanvasLayer/HUD"]
 layout_mode = 1
 anchors_preset = 7
@@ -82,3 +74,7 @@ offset_right = -17.0
 offset_bottom = 266.0
 grow_horizontal = 0
 script = ExtResource("5_ap3o4")
+
+[node name="Inventory" parent="CanvasLayer/HUD" instance=ExtResource("8_cdx1q")]
+layout_mode = 0
+columns = 9

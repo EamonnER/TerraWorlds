@@ -2,15 +2,10 @@ extends Entity
 class_name Player
 
 var debug_mode = false
-var inventory: Inventory
 
 @export var id = 0
 
 var rpc_interface: Node
-
-func pickup_item(item: Item) -> bool:
-	return false  # TODO revert
-	return inventory.add_item(item)
 
 func get_tile_pos_at_mouse_pos() -> Vector2i:
 	return world.local_to_map(get_global_mouse_position())

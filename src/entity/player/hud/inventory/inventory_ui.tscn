@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://t0rore7q1l01"]
+
+[ext_resource type="Script" uid="uid://col8v7t2iyjdg" path="res://src/entity/player/hud/inventory/inventory_ui.gd" id="1_pe5n6"]
+
+[node name="Inventory" type="GridContainer"]
+script = ExtResource("1_pe5n6")

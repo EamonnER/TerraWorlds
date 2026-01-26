@@ -1,10 +1,11 @@
 extends TextureRect
+class_name InventorySlot
 
 @export var quantity: int = 0
 @export var item_name: String = ""
 
 @onready var quantity_label: Label = $Quantity
-@onready var this_scene = preload("res://src/inventory/inventory_slot.tscn")
+@onready var this_scene = preload("res://src/entity/player/hud/inventory/inventory_slot.tscn")
 
 @onready var parent_inventory = get_parent()
 
