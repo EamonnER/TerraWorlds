@@ -1,6 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://dygll51d2ua07"]
+[gd_scene load_steps=3 format=3 uid="uid://dygll51d2ua07"]
 
 [ext_resource type="Script" uid="uid://blvjip6juvqsq" path="res://src/item/item_stack_sprite.gd" id="1_8yr61"]
 
-[node name="ItemStackSprite" type="AnimatedSprite2D"]
+[sub_resource type="LabelSettings" id="LabelSettings_8yr61"]
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="ItemStackSprite" type="Control"]
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_8yr61")
+
+[node name="ItemSprite" type="AnimatedSprite2D" parent="."]
+
+[node name="QuantityLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = -0.5
+offset_right = 10.000002
+offset_bottom = 22.5
+label_settings = SubResource("LabelSettings_8yr61")
