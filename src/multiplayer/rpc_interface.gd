@@ -29,8 +29,6 @@ func _remove_tile(tile: Vector2i):
 	world.remove_tile(tile)
 
 
-# Dropped Item Interaction ---------------------------------------------------------------------------------------------
-@rpc("authority", "call_remote", "reliable")  # Server calls all clients
-func pickup_item(player_id: int, item: Item):
-	var player = _game.get_node("World/Players/Player#%s" % player_id)
-	
+# Item Interaction ---------------------------------------------------------------------------------------------
+
+		

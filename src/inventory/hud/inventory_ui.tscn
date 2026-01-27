@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://u1scj6fphukm"]
+
+[ext_resource type="Script" uid="uid://cvb46h4tdhpid" path="res://src/inventory/hud/inventory_ui.gd" id="1_qbade"]
+
+[node name="InventoryUI" type="GridContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_qbade")

@@ -88,6 +88,10 @@ func _on_gravity_threshold_area_body_exited(body: Node2D) -> void:
 
 func spawn_item() -> void:
 	var item = PotionItem.new()
-	var dropped_item = item.to_dropped_item()
+	var item_stack = ItemStack.new()
+	item_stack.set_item(item, 1)
+	var dropped_item = preload("res://src/item/dropped_item.tscn").instantiate()
+	dropped_item.set_item_stack(item_stack)
+	
 	add_child(dropped_item)
 	dropped_item.position = get_spawn_position() + Vector2i(40, 0)

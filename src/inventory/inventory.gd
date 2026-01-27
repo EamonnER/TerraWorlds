@@ -5,12 +5,12 @@ var rows: int = 4
 var columns: int = 9
 @export var inventory: Array[Array]  # 2D array if 'ItemStack'. Row index 0 is hotbar
 
-func _ready() -> void:
+func _init() -> void:
 	inventory = []
 	for row in rows:
 		inventory.append([])
 		for column in columns:
-			inventory[row][column] = ItemStack.new()
+			inventory[row].append(ItemStack.new())
 
 # Adds an item to the first available slot. Returns true if successful; false otherwise
 func pick_up_item(item_stack: ItemStack) -> bool:

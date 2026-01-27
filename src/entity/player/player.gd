@@ -7,6 +7,21 @@ var debug_mode: bool = false
 
 var rpc_interface: Node
 @export var inventory: Inventory
+var inventory_ui: InventoryUI
+var hud: Control
+
+
+@rpc("authority", "call_local", "reliable")
+func pick_up_item(item_stack: ItemStack) -> bool:
+	var success: bool = inventory.pick_up_item(item_stack)
+	if success: inventory_ui.populate(inventory)
+	return success
+
+@rpc("authority", "call_remote", "reliable")
+func set_inventory(new_inventory: Inventory) -> void:
+	if !multiplayer.is_server() and id != multiplayer.get_unique_id(): return
+	inventory = new_inventory
+	inventory_ui.populate(inventory)
 
 func get_tile_pos_at_mouse_pos() -> Vector2i:
 	return world.local_to_map(get_global_mouse_position())
@@ -14,6 +29,10 @@ func get_tile_pos_at_mouse_pos() -> Vector2i:
 func _ready() -> void:
 	super._ready()
 	rpc_interface = world.get_node("RpcInterface")
+	hud = world.get_parent().get_node("CanvasLayer/HUD")
+	inventory_ui = hud.get_node("Inventory")
+	set_inventory(inventory)
+	
 	health = 100.0
 
 func _handle_server_authoratitive_inputs(delta: float) -> void:
