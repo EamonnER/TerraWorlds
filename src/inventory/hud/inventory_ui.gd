@@ -14,6 +14,6 @@ func populate(inventory: Inventory) -> void:
 	for row in inventory.rows:
 		for column in inventory.columns:
 			var slot: InventorySlot = slot_scene.instantiate()
-			var item_stack: ItemStack = inventory.inventory[row][column]
+			var item_stack: ItemStack = inventory.inventoryArray[row][column]
 			slot.set_item_stack(item_stack)
 			add_child(slot)

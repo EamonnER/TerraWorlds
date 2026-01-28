@@ -41,7 +41,6 @@ func request_player(id: int) -> void:
 	var player: Player = player_scene.instantiate()
 	player.id = id
 	player.set_name("Player#%s" % id)
-	player.inventory = Inventory.new()
 	
 	var players_spawn_node = _game.get_node("World/Players")
 	players_spawn_node.add_child(player, true)
