@@ -5,3 +5,4 @@ func _init() -> void:
 	sprite_path = "res://assets/items/potion/"
 	id = 2
 	name = "Potion"
+	is_stackable = false

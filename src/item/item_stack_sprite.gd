@@ -22,7 +22,9 @@ func set_item_stack(new_item_stack: ItemStack) -> void:
 		return
 	
 	hover_tooltip.set_text(item_stack.item.name)
-	quantity_label.set_text(str(item_stack.quantity))
+	
+	if item_stack.item.is_stackable:
+		quantity_label.set_text(str(item_stack.quantity))
 	
 	var sprite_path: String = item_stack.item.sprite_path
 	

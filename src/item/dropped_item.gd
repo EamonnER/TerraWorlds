@@ -11,7 +11,6 @@ func _on_pickup_area_body_entered(body: Node2D) -> void:
 	if !multiplayer.is_server() or !(body is Player): return
 	
 	if body.pick_up_item(item_stack):
-		body.pick_up_item.rpc_id(body.id, item_stack)
 		queue_free()
 
 func start_float_animation():
