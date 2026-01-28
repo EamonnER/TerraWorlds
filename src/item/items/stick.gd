@@ -4,4 +4,4 @@ class_name StickItem
 func _init() -> void:
 	sprite_path = "res://assets/items/stick/"
 	id = 1
-	item_name = "Stick"
+	name = "Stick"

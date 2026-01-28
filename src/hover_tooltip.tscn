@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxf184txuburs"]
+
+[ext_resource type="Script" uid="uid://bpvf0irv7qm" path="res://src/hover_tooltip.gd" id="1_trkuu"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trkuu"]
+bg_color = Color(0.21568628, 0.21568628, 0.21568628, 0.7529412)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 8
+corner_radius_top_right = 9
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+
+[node name="HoverTooltip" type="Control"]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_trkuu")
+
+[node name="Tooltip" type="RichTextLabel" parent="."]
+visible = false
+clip_contents = false
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 27.0
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_trkuu")
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
