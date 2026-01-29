@@ -63,7 +63,7 @@ public partial class WorldGenerator : Node
 		_worldToChunks();
 		
 		EmitSignal(nameof(ProgressUpdate), "World generation complete!", 100);
-		_saveWorldToFile(worldName);
+		_saveWorld(worldName);
 		EmitSignal(nameof(GenCompleted));
 	}
 
@@ -465,11 +465,11 @@ public partial class WorldGenerator : Node
 		return allChunks;
 	}
 	
-	private void _saveWorldToFile(string filePath)
+	private void _saveWorld(string worldName)
 	{
 		if (!Directory.Exists(_worldsPath)) Directory.CreateDirectory(_worldsPath);
 		
-		var absoluteFilePath = _worldsPath + filePath;
+		var absoluteFilePath = _worldsPath + worldName + ".tworld";
 
 		using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
 		using var binaryWriter = new BinaryWriter(fileStream);
