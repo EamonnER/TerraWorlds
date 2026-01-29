@@ -16,7 +16,6 @@ func is_empty() -> bool:
 	return get_text().is_empty()
 
 func _on_mouse_entered() -> void:
-	print("AAA")
 	if tooltip and !is_empty(): tooltip.show()
 
 func _on_mouse_exited() -> void:
