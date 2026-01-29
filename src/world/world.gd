@@ -70,7 +70,7 @@ func get_spawn_position() -> Vector2i:
 	
 	for y in range(-top_of_map, top_of_map):
 		if get_tile_at_position(Vector2i(x, y)):
-			return Vector2i(x, y-1) * GlobalVariables.TILE_SIZE
+			return Vector2i(x, y-2) * GlobalVariables.TILE_SIZE
 	return Vector2i(x, top_of_map) * GlobalVariables.TILE_SIZE
 
 func get_tile_at_position(vector: Vector2i) -> TileData:
