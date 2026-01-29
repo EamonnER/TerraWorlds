@@ -1,7 +1,7 @@
 extends Entity
 class_name DroppedItem
 
-var item_stack: ItemStack
+var item_stack: ItemStack = ItemStack.new()
 var float_speed: float = 2.0
 var float_amplitude: float = 10.0
 

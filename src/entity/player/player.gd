@@ -41,9 +41,13 @@ func _handle_server_authoratitive_inputs(delta: float) -> void:
 			motion_mode = MotionMode.MOTION_MODE_FLOATING
 			set_collision_mask_value(2, false)
 		else:
-			world.spawn_item()
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
+			
+			var item = PotionItem.new()
+			var item_stack = ItemStack.new()
+			item_stack.set_item(item, 1)
+			MultiplayerManager.spawn_item_stack(item_stack)
 	
 	# Left / right / up / down inputs
 	var new_velocity: Vector2 = get_relative_velocity()

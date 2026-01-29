@@ -22,6 +22,10 @@ spawn_path = NodePath(".")
 [node name="RpcInterface" type="Node" parent="World"]
 script = ExtResource("3_cdx1q")
 
+[node name="Items" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("uid://bnrb5wdjhgfv7")
+spawn_path = NodePath(".")
+
 [node name="Camera" type="Camera2D" parent="."]
 ignore_rotation = false
 process_callback = 0

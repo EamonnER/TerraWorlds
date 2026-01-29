@@ -3,7 +3,8 @@ extends Node
 const LOCALHOST: String = "127.0.0.1"
 const DEFAULT_PORT: int = 8080
 
-var player_scene = preload("res://src/entity/player/player.tscn")
+var player_scene: PackedScene = preload("res://src/entity/player/player.tscn")
+var dropped_item_scene: PackedScene = preload("res://src/item/dropped_item.tscn")
 
 var _game: Node2D
 
@@ -53,3 +54,12 @@ func remove_player(id: int) -> void:
 	var players_spawn_node = _game.get_node("World/Players")
 	var player_name = "Player#%s" % id
 	players_spawn_node.get_node(player_name).queue_free()
+
+func spawn_item_stack(item_stack: ItemStack) -> void:
+	var dropped_item: DroppedItem = dropped_item_scene.instantiate()
+	dropped_item.set_item_stack(item_stack)
+	
+	var world = _game.get_node("World")
+	var item_spawn_node = world.get_node("Items")
+	item_spawn_node.add_child(dropped_item)
+	dropped_item.set_position(world.get_spawn_position())
