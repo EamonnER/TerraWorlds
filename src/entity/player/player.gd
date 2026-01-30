@@ -3,8 +3,6 @@ class_name Player
 
 var debug_mode: bool = false
 
-@export var id: int = 0
-
 var rpc_interface: Node
 @export var inventory: Inventory
 var inventory_ui: InventoryUI

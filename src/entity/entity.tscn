@@ -22,7 +22,7 @@ properties/3/replication_mode = 1
 
 [node name="Entity" type="CharacterBody2D"]
 collision_layer = 64
-collision_mask = 199
+collision_mask = 7
 script = ExtResource("1_agdxr")
 
 [node name="Collision" type="CollisionShape2D" parent="."]

@@ -17,6 +17,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var gravity_vector = ProjectSettings.get_setting("physics/2d/default_gravity_vector")
 var is_rotating = false  # True if up_direction has just been changed in the current frame
 
+@export var id: int = 0
 var health: float = 100.0
 
 func update_rotation():

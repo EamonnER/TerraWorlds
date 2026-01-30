@@ -157,9 +157,11 @@ sprint={
 2d_physics/layer_5="Interactable Background"
 2d_physics/layer_6="Unteractable Background"
 2d_physics/layer_7="Entities"
-2d_physics/layer_8="Projectiles"
-2d_physics/layer_9="Particles"
+2d_physics/layer_8="Characters"
+2d_physics/layer_9="Players"
 2d_physics/layer_10="Dropped Item"
+2d_physics/layer_11="Projectiles"
+2d_physics/layer_12="Particles"
 
 [physics]
 

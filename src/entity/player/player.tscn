@@ -29,7 +29,8 @@ properties/5/spawn = true
 properties/5/replication_mode = 1
 
 [node name="Player" instance=ExtResource("1_5qyn1")]
-collision_mask = 711
+collision_layer = 448
+collision_mask = 519
 script = ExtResource("1_u6ven")
 id = 0
 inventory = null

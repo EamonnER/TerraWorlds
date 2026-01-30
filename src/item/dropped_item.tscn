@@ -1,38 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://bnrb5wdjhgfv7"]
+[gd_scene load_steps=5 format=3 uid="uid://bnrb5wdjhgfv7"]
 
+[ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_7rf8y"]
 [ext_resource type="Script" uid="uid://dmp5uqlcocv11" path="res://src/item/dropped_item.gd" id="1_etopm"]
 [ext_resource type="PackedScene" uid="uid://dygll51d2ua07" path="res://src/item/item_stack_sprite.tscn" id="2_7rf8y"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tqjbq"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_yy7x1"]
 radius = 40.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1hw4u"]
-size = Vector2(32, 32)
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7rf8y"]
-properties/0/path = NodePath(".:item_stack")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:position")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-
-[node name="DroppedItem" type="CharacterBody2D"]
-collision_layer = 512
-collision_mask = 583
+[node name="DroppedItem" instance=ExtResource("1_7rf8y")]
+collision_layer = 576
+collision_mask = 263
 script = ExtResource("1_etopm")
 
-[node name="PickupArea" type="Area2D" parent="."]
+[node name="PickupArea" type="Area2D" parent="." index="3"]
 collision_layer = 512
-collision_mask = 64
+collision_mask = 768
 
-[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea"]
-shape = SubResource("CircleShape2D_tqjbq")
+[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea" index="0"]
+shape = SubResource("CircleShape2D_yy7x1")
 
-[node name="Collision" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_1hw4u")
-
-[node name="ItemStackSprite" parent="." instance=ExtResource("2_7rf8y")]
+[node name="ItemStackSprite" parent="." index="4" instance=ExtResource("2_7rf8y")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -44,8 +31,5 @@ offset_right = 16.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_7rf8y")
 
 [connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]
