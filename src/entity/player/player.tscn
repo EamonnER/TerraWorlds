@@ -1,22 +1,12 @@
 [gd_scene load_steps=7 format=3 uid="uid://dcawu5ccdv1ty"]
 
+[ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_5qyn1"]
 [ext_resource type="Script" uid="uid://trx68tpagttj" path="res://src/entity/player/player.gd" id="1_u6ven"]
 [ext_resource type="Texture2D" uid="uid://oehadtam0o37" path="res://icon.svg" id="1_wpkrl"]
 [ext_resource type="Script" uid="uid://c5ugvgkkicx8u" path="res://src/multiplayer/input_synchronizer.gd" id="3_utwn8"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1b3qp"]
-size = Vector2(32, 96)
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5qyn1"]
-properties/0/path = NodePath(".:position")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:id")
-properties/2/spawn = true
-properties/2/replication_mode = 1
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_14xgr"]
+size = Vector2(30, 60)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_utwn8"]
 properties/0/path = NodePath("InputSynchronizer:jump_pressed")
@@ -38,21 +28,19 @@ properties/5/path = NodePath("InputSynchronizer:secondary_action_pressed")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="Player" type="CharacterBody2D"]
-collision_layer = 64
-collision_mask = 79
+[node name="Player" instance=ExtResource("1_5qyn1")]
+collision_mask = 711
 script = ExtResource("1_u6ven")
+id = 0
+inventory = null
 
-[node name="Collision" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_1b3qp")
+[node name="Collision" parent="." index="0"]
+shape = SubResource("RectangleShape2D_14xgr")
 
-[node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.75)
+[node name="Sprite" parent="." index="1"]
+scale = Vector2(0.25, 0.5)
 texture = ExtResource("1_wpkrl")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_5qyn1")
-
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="3"]
 replication_config = SubResource("SceneReplicationConfig_utwn8")
 script = ExtResource("3_utwn8")

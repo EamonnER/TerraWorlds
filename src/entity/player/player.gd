@@ -6,7 +6,7 @@ var debug_mode: bool = false
 @export var id: int = 0
 
 var rpc_interface: Node
-@export var inventory: Inventory = Inventory.new()
+@export var inventory: Inventory
 var inventory_ui: InventoryUI
 var hud: Control
 
@@ -29,6 +29,7 @@ func _ready() -> void:
 	rpc_interface = world.get_node("RpcInterface")
 	hud = world.get_parent().get_node("CanvasLayer/HUD")
 	inventory_ui = hud.get_node("Inventory")
+	inventory = Inventory.new()
 	set_inventory(inventory.inventoryArray)
 	
 	health = 100.0
