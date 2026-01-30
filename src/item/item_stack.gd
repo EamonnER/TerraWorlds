@@ -5,6 +5,13 @@ class_name ItemStack
 @export var quantity: int
 
 
+func get_item() -> Item:
+	return item
+
+func get_quantity() -> int:
+	return quantity
+
+
 func set_item(new_item: Item, new_quantity = 1) -> void:
 	if new_quantity <= 0 or !new_item:
 		push_error("Tried setting item stack with parameters: Item: '%s', Quantity: '%d'" % [item, quantity])

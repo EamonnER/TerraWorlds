@@ -3,6 +3,6 @@ class_name Item
 
 var sprite_path = "res://assets/items/null/"
 
-var id: int = 0
-var name: String = "Item"
-var is_stackable: bool = true
+@export var id: int = 0
+@export var name: String = "Item"
+@export var is_stackable: bool = true
