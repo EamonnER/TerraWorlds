@@ -8,7 +8,6 @@ var float_amplitude: float = 10.0
 @onready var item_stack_sprite: ItemStackSprite = $ItemStackSprite
 
 func _on_pickup_area_body_entered(body: Node2D) -> void:
-	print(body.get_class())
 	if !multiplayer.is_server() or !(body is Player): return
 	
 	if body.pick_up_item(item_stack):
