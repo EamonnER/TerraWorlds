@@ -8,6 +8,9 @@ class_name ItemStack
 func get_item() -> Item:
 	return item
 
+func get_item_id() -> int:
+	return item.id
+
 func get_quantity() -> int:
 	return quantity
 

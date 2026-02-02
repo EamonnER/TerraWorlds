@@ -3,32 +3,22 @@ class_name Player
 
 var debug_mode: bool = false
 
-var rpc_interface: Node
 @export var inventory: Inventory
 var inventory_ui: InventoryUI
 var hud: Control
 
 func pick_up_item(item_stack: ItemStack) -> bool:
-	var success: bool = inventory.pick_up_item(item_stack)
-	if success: inventory_ui.populate(inventory)
-	return success
-
-@rpc("authority", "call_local", "reliable")
-func set_inventory(inventory_array: Array[Array]) -> void:
-	if (!multiplayer) or (!multiplayer.is_server() and id != multiplayer.get_unique_id()): return
-	inventory.set_inventory(inventory_array)
-	inventory_ui.populate(inventory)
+	return inventory.pick_up_item(item_stack)
 
 func get_tile_pos_at_mouse_pos() -> Vector2i:
 	return world.local_to_map(get_global_mouse_position())
 
 func _ready() -> void:
 	super._ready()
-	rpc_interface = world.get_node("RpcInterface")
 	hud = world.get_parent().get_node("CanvasLayer/HUD")
 	inventory_ui = hud.get_node("Inventory")
 	inventory = Inventory.new()
-	set_inventory(inventory.inventory_array)
+	inventory.initialise(id)
 	
 	health = 100.0
 
@@ -74,10 +64,10 @@ func _handle_server_authoratitive_inputs(delta: float) -> void:
 func _handle_local_inputs() -> void:
 	# Primary action input (LMB)
 	if $InputSynchronizer.primary_action_pressed:
-		rpc_interface.request_remove_tile.rpc_id(1, get_tile_pos_at_mouse_pos())
+		RpcInterface.request_remove_tile.rpc_id(1, get_tile_pos_at_mouse_pos())
 	# Secondary action input (RMB)
 	if $InputSynchronizer.secondary_action_pressed:
-		rpc_interface.request_place_tile.rpc_id(1, get_tile_pos_at_mouse_pos(), 0)
+		RpcInterface.request_place_tile.rpc_id(1, get_tile_pos_at_mouse_pos(), 0)
 
 
 func _physics_process(delta: float) -> void:

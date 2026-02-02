@@ -29,8 +29,12 @@ func _remove_tile(tile: Vector2i):
 	world.remove_tile(tile)
 
 # Inventory Management -------------------------------------------------------------------------------------------------
-func set_ui_inventory_slot(item_stack: ItemStack, row: int, column: int) -> void:
+func initialise_ui_inventory(player_id: int, rows: int, columns: int) -> void:
 	var hud = _game.get_node("CanvasLayer/HUD")
 	var inventory_ui = hud.get_node("Inventory")
-	inventory_ui.set_slot.rpc(row, column, item_stack.get_item_id(), item_stack.quantity)
-	
+	inventory_ui.initialise.rpc_id(player_id, rows, columns)
+
+func set_ui_inventory_slot(player_id: int, item_stack: ItemStack, row: int, column: int) -> void:
+	var hud = _game.get_node("CanvasLayer/HUD")
+	var inventory_ui = hud.get_node("Inventory")
+	inventory_ui.set_slot.rpc_id(player_id, row, column, item_stack.get_item_id(), item_stack.quantity)

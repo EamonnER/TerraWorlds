@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=8 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" uid="uid://d1cbeetmusqr" path="res://src/game.gd" id="1_1l5x6"]
-[ext_resource type="Script" uid="uid://ci4657p88r2hs" path="res://src/multiplayer/rpc_interface.gd" id="3_cdx1q"]
 [ext_resource type="Script" uid="uid://bcsrjkokwrrjk" path="res://src/entity/player/camera.gd" id="4_qqgmn"]
 [ext_resource type="Script" uid="uid://bhmqcs2qrf3ni" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" uid="uid://cr0am3ve7478t" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
@@ -18,9 +17,6 @@ script = ExtResource("1_1l5x6")
 [node name="Players" type="MultiplayerSpawner" parent="World"]
 _spawnable_scenes = PackedStringArray("uid://dcawu5ccdv1ty")
 spawn_path = NodePath(".")
-
-[node name="RpcInterface" type="Node" parent="World"]
-script = ExtResource("3_cdx1q")
 
 [node name="Items" type="MultiplayerSpawner" parent="World"]
 _spawnable_scenes = PackedStringArray("uid://bnrb5wdjhgfv7")

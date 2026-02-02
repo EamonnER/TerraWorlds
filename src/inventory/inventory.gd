@@ -7,12 +7,18 @@ var rows: int = 4
 var columns: int = 9
 @export var inventory_array: Array[Array]  # 2D array if 'ItemStack'. Row index 0 is hotbar
 
-func _init() -> void:
+func initialise(player_id: int, num_rows: int = 4, num_columns: int = 9) -> void:
+	id = player_id
+	rows = num_rows
+	columns = num_columns
+
 	inventory_array = []
 	for row in rows:
 		inventory_array.append([])
 		for column in columns:
 			inventory_array[row].append(ItemStack.new())
+	
+	RpcInterface.initialise_ui_inventory(id, rows, columns)
 
 func set_inventory(new_inventory: Array[Array]) -> void:
 	inventory_array = new_inventory
@@ -22,7 +28,7 @@ func pick_up_item(item_stack: ItemStack) -> bool:
 	for row in rows:
 		for column in columns:
 			if add_item_to_slot(item_stack, row, column):
-				
+				RpcInterface.set_ui_inventory_slot(id, item_stack, row, column)
 				return true
 	
 	return false

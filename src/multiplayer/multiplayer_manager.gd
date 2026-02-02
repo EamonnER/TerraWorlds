@@ -10,7 +10,7 @@ var _game: Node2D
 
 func host_server(game: Node2D, port: int = DEFAULT_PORT):
 	_game = game
-	game.get_node("World/RpcInterface")._game = game
+	RpcInterface._game = game
 	
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_server(port)
@@ -25,7 +25,7 @@ func host_server(game: Node2D, port: int = DEFAULT_PORT):
 
 func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = DEFAULT_PORT):
 	_game = game
-	game.get_node("World/RpcInterface")._game = game
+	RpcInterface._game = game
 	
 	var peer = ENetMultiplayerPeer.new()
 	peer.create_client(ip, port)
