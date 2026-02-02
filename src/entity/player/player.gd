@@ -28,7 +28,7 @@ func _ready() -> void:
 	hud = world.get_parent().get_node("CanvasLayer/HUD")
 	inventory_ui = hud.get_node("Inventory")
 	inventory = Inventory.new()
-	set_inventory(inventory.inventoryArray)
+	set_inventory(inventory.inventory_array)
 	
 	health = 100.0
 

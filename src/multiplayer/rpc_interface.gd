@@ -28,7 +28,9 @@ func _remove_tile(tile: Vector2i):
 	var world = _game.get_node("World")
 	world.remove_tile(tile)
 
-
-# Item Interaction ---------------------------------------------------------------------------------------------
-
-		
+# Inventory Management -------------------------------------------------------------------------------------------------
+func set_ui_inventory_slot(item_stack: ItemStack, row: int, column: int) -> void:
+	var hud = _game.get_node("CanvasLayer/HUD")
+	var inventory_ui = hud.get_node("Inventory")
+	inventory_ui.set_slot.rpc(row, column, item_stack.get_item_id(), item_stack.quantity)
+	
