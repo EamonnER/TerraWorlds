@@ -15,9 +15,9 @@ func tilemap_to_texture(tilemap: TileMapLayer) -> ImageTexture:
 			if tile:
 				match tile.terrain:
 					0:  # Grass
-						colour = Color.GREEN
+						colour = Color.DARK_GREEN
 					1:  # Stone
-						colour = Color.GRAY
+						colour = Color.DARK_GRAY
 					_:  # Default
 						colour = Color.WHITE
 			else:
@@ -30,9 +30,17 @@ func tilemap_to_texture(tilemap: TileMapLayer) -> ImageTexture:
 func set_texture_from_tilemap(tilemap: TileMapLayer) -> void:
 	texture = tilemap_to_texture(tilemap)
 
-func _process(_delta: float) -> void:
+func toggle() -> void:
+	visible = not visible
+	
+	if !visible: return
+	
 	var world = get_tree().root.get_node("Game/World")
-	if not world:
-		return
+	if not world: return
+
 	var tilemap = world.foreground
 	set_texture_from_tilemap(tilemap)
+
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("game_map"):
+		toggle()

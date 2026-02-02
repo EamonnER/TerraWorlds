@@ -82,6 +82,7 @@ offset_right = 16.0
 offset_bottom = 16.0
 
 [node name="Map" type="TextureRect" parent="CanvasLayer/HUD"]
+visible = false
 z_index = 1
 layout_mode = 1
 anchors_preset = 8
