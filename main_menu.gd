@@ -11,7 +11,7 @@ var world_thread: Thread = Thread.new()
 
 func _on_generate_world_button_pressed() -> void:
 	var world_seed = randi()
-	const MAP_SIZE = 4 * CHUNK_SIZE
+	const MAP_SIZE = 32 * CHUNK_SIZE
 	const CAVE_OFFSET = 20
 	
 	world_generator.Seed = world_seed

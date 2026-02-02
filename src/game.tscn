@@ -1,12 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene load_steps=10 format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" uid="uid://d1cbeetmusqr" path="res://src/game.gd" id="1_1l5x6"]
 [ext_resource type="Script" uid="uid://bcsrjkokwrrjk" path="res://src/entity/player/camera.gd" id="4_qqgmn"]
 [ext_resource type="Script" uid="uid://bhmqcs2qrf3ni" path="res://src/entity/player/hud/minimap.gd" id="5_ap3o4"]
 [ext_resource type="Script" uid="uid://cr0am3ve7478t" path="res://src/entity/player/hud/hud.gd" id="5_iee2e"]
 [ext_resource type="Script" uid="uid://dj7qvwxstkgtf" path="res://src/entity/player/hud/health.gd" id="6_4awlf"]
+[ext_resource type="Script" uid="uid://boxuflbll2qk7" path="res://src/entity/player/hud/map.gd" id="8_4bcji"]
 [ext_resource type="PackedScene" uid="uid://u1scj6fphukm" path="res://src/inventory/hud/inventory_ui.tscn" id="8_cdx1q"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
+
+[sub_resource type="ImageTexture" id="ImageTexture_wqvko"]
 
 [node name="Game" type="Node2D"]
 texture_filter = 1
@@ -77,3 +80,20 @@ offset_left = 16.0
 offset_top = 16.0
 offset_right = 16.0
 offset_bottom = 16.0
+
+[node name="Map" type="TextureRect" parent="CanvasLayer/HUD"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ImageTexture_wqvko")
+script = ExtResource("8_4bcji")
