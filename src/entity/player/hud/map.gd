@@ -1,4 +1,4 @@
-extends TextureRect
+extends ColorRect
 
 var player: Player
 
@@ -28,7 +28,7 @@ func tilemap_to_texture(tilemap: TileMapLayer) -> ImageTexture:
 	return ImageTexture.create_from_image(img)
 
 func set_texture_from_tilemap(tilemap: TileMapLayer) -> void:
-	texture = tilemap_to_texture(tilemap)
+	$MapTexture.set_texture(tilemap_to_texture(tilemap))
 
 func toggle() -> void:
 	visible = not visible
