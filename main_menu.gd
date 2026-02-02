@@ -78,4 +78,5 @@ func _process(_delta: float) -> void:
 		game.world_generator = world_generator
 		game.load_world()
 		
+		loading_screen.queue_free()
 		queue_free()

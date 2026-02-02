@@ -17,3 +17,8 @@ func load_world() -> void:
 	world.draw_gravity_collision()
 	
 	emit_signal("world_ready")
+
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("escape"):
+		get_tree().change_scene_to_file("res://main_menu.tscn")
+		queue_free()
