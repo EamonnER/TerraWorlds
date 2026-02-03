@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://5fuyxnhgd51k"]
+
+[ext_resource type="Script" uid="uid://ye3mxeg7symj" path="res://src/menu/main/main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://cax1uolgb265w" path="res://src/menu/main/main_menu.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://nbktg3ox03i" path="res://src/loading/loading_screen.tscn" id="3_rarkj"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0xm2m")
+
+[node name="Camera" type="Camera2D" parent="."]
+
+[node name="Menus" type="Node2D" parent="."]
+
+[node name="MainMenu" parent="Menus" instance=ExtResource("2_h2yge")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="LoadingScreen" parent="CanvasLayer" instance=ExtResource("3_rarkj")]
+visible = false
+
+[connection signal="generate_world_button_pressed" from="Menus/MainMenu" to="." method="_on_generate_world_button_pressed"]
+[connection signal="host_game_button_pressed" from="Menus/MainMenu" to="." method="_on_host_game_button_pressed"]
+[connection signal="join_game_button_pressed" from="Menus/MainMenu" to="." method="_on_join_game_button_pressed"]
