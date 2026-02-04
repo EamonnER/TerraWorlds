@@ -42,7 +42,6 @@ func populate(inventory: Inventory) -> void:
 
 @rpc("authority", "call_local", "reliable")
 func set_slot(row: int, column: int, item_id: int, item_quantity: int) -> void:
-	print("AAA")
 	var item = ItemOracle.get_item_by_id(item_id)
 	var item_stack = ItemStack.new()
 	item_stack.set_item(item, item_quantity)
