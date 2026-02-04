@@ -1,7 +1,7 @@
 extends Node
 
 const LOCALHOST: String = "127.0.0.1"
-const DEFAULT_PORT: int = 8080
+const DEFAULT_PORT: int = GlobalVariables.DEFAULT_PORT
 
 var player_scene: PackedScene = preload("res://src/entity/player/player.tscn")
 var dropped_item_scene: PackedScene = preload("res://src/item/dropped_item.tscn")

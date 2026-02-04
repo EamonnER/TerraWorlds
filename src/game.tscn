@@ -42,6 +42,7 @@ size_flags_vertical = 4
 script = ExtResource("5_iee2e")
 
 [node name="Health" type="Label" parent="CanvasLayer/HUD"]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5

@@ -1,15 +1,14 @@
 extends Control
 
-signal generate_world_button_pressed
-signal host_game_button_pressed
-signal join_game_button_pressed
+signal play_button_pressed
+signal settings_button_pressed
+signal quit_button_pressed
 
+func _on_play_button_pressed() -> void:
+	play_button_pressed.emit()
 
-func _on_generate_world_button_pressed() -> void:
-	generate_world_button_pressed.emit()
+func _on_settings_button_pressed() -> void:
+	settings_button_pressed.emit()
 
-func _on_host_game_button_pressed() -> void:
-	host_game_button_pressed.emit()
-
-func _on_join_game_button_pressed() -> void:
-	join_game_button_pressed.emit()
+func _on_quit_button_pressed() -> void:
+	quit_button_pressed.emit()

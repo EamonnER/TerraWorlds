@@ -21,6 +21,8 @@ public partial class WorldGenerator : Node
 	private int _halfWorldSize;
 	private int _caveOffset;
 	
+	public string WorldName { get; set; } = "World";
+	
 	public int Seed { get; set; }
 
 	public int MapSize
@@ -51,7 +53,7 @@ public partial class WorldGenerator : Node
 	
 	private String _worldsPath = ProjectSettings.GlobalizePath("user://worlds/");
 	
-	public void GenerateWorld(string worldName)
+	public void GenerateWorld()
 	{
 		_rawWorld = new ushort[_mapSize, _mapSize];
 		_drawBlankWorld();
@@ -63,7 +65,7 @@ public partial class WorldGenerator : Node
 		_worldToChunks();
 		
 		EmitSignal(nameof(ProgressUpdate), "World generation complete!", 100);
-		_saveWorld(worldName);
+		_saveWorld(WorldName);
 		EmitSignal(nameof(GenCompleted));
 	}
 

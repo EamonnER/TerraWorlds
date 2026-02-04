@@ -33,7 +33,7 @@ func _handle_server_authoratitive_inputs(delta: float) -> void:
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
 			
-			var item = PotionItem.new()
+			var item = StickItem.new()
 			var item_stack = ItemStack.new()
 			item_stack.set_item(item, 1)
 			MultiplayerManager.spawn_item_stack(item_stack)

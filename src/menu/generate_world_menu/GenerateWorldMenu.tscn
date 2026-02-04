@@ -1,0 +1,183 @@
+[gd_scene load_steps=4 format=3 uid="uid://c61vhp120lotm"]
+
+[ext_resource type="Script" uid="uid://du5erss3ukgtd" path="res://src/menu/generate_world_menu/generate_world_menu.gd" id="1_4mf8y"]
+[ext_resource type="StyleBox" uid="uid://pslsimyhvpga" path="res://src/menu/resources/style_box.tres" id="2_rwln6"]
+
+[sub_resource type="Theme" id="Theme_4mf8y"]
+default_font_size = 24
+
+[node name="GenerateWorldMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4mf8y")
+
+[node name="TitleContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -137.5
+offset_right = 137.5
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 32
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Generate World"
+horizontal_alignment = 1
+
+[node name="Options" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OptionsContainer" type="PanelContainer" parent="Options"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -264.0
+offset_top = -136.5
+offset_right = 264.0
+offset_bottom = 136.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("2_rwln6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer"]
+custom_minimum_size = Vector2(512, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="WorldNameContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer"]
+layout_mode = 2
+
+[node name="WorldNameLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer"]
+layout_mode = 2
+text = "World Name"
+
+[node name="WorldNameInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "My World"
+
+[node name="SeedContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 18
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/SeedContainer"]
+layout_mode = 2
+
+[node name="SeedLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer"]
+layout_mode = 2
+text = "Seed"
+
+[node name="SeedInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Random"
+
+[node name="AdvancedOptionsContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 18
+
+[node name="AdvancedOptionsContainer" type="FoldableContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer"]
+layout_mode = 2
+folded = true
+title = "Advanced Options"
+
+[node name="WorldSizeContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer"]
+layout_mode = 2
+
+[node name="WorldSizeLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer"]
+layout_mode = 2
+text = "World Size"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="WorldSizeSlider" type="HSlider" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 4.0
+max_value = 128.0
+step = 4.0
+value = 64.0
+rounded = true
+tick_count = 16
+ticks_on_borders = true
+ticks_position = 3
+
+[node name="WorldSizeValueLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(28, 0)
+layout_mode = 2
+text = "64"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Buttons" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = SubResource("Theme_4mf8y")
+
+[node name="ButtonsContainer" type="MarginContainer" parent="Buttons"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -90.0
+offset_top = -63.0
+offset_right = 90.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Buttons/ButtonsContainer"]
+layout_mode = 2
+
+[node name="GenerateWorldButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer"]
+layout_mode = 2
+text = "Generate World"
+
+[node name="BackButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="value_changed" from="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer/WorldSizeSlider" to="." method="_on_world_size_slider_value_changed"]
+[connection signal="pressed" from="Buttons/ButtonsContainer/HBoxContainer/GenerateWorldButton" to="." method="_on_generate_world_button_pressed"]
+[connection signal="pressed" from="Buttons/ButtonsContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

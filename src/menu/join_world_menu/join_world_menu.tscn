@@ -1,0 +1,177 @@
+[gd_scene load_steps=4 format=3 uid="uid://xkvwegkmja32"]
+
+[ext_resource type="StyleBox" uid="uid://pslsimyhvpga" path="res://src/menu/resources/style_box.tres" id="1_aubcu"]
+[ext_resource type="Script" uid="uid://bye8j5lt2idqq" path="res://src/menu/join_world_menu/join_world_menu.gd" id="1_mv6k0"]
+
+[sub_resource type="Theme" id="Theme_mv6k0"]
+default_font_size = 24
+
+[node name="JoinWorldMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mv6k0")
+
+[node name="TitleContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -137.5
+offset_right = 137.5
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_constants/margin_top = 32
+
+[node name="Title" type="Label" parent="TitleContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Join World"
+horizontal_alignment = 1
+
+[node name="Body" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SavedServersContainer" type="PanelContainer" parent="Body"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.5
+offset_top = -228.5
+offset_right = 125.5
+offset_bottom = 228.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_aubcu")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/SavedServersContainer"]
+layout_mode = 2
+
+[node name="SavedServersTitleContainer" type="MarginContainer" parent="Body/SavedServersContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SavedServersLabel" type="Label" parent="Body/SavedServersContainer/VBoxContainer/SavedServersTitleContainer"]
+layout_mode = 2
+text = "Saved Servers"
+horizontal_alignment = 1
+
+[node name="ServersContainer" type="MarginContainer" parent="Body/SavedServersContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Body/SavedServersContainer/VBoxContainer/ServersContainer"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("1_aubcu")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Body/SavedServersContainer/VBoxContainer/ServersContainer/PanelContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/SavedServersContainer/VBoxContainer/ServersContainer/PanelContainer/ScrollContainer"]
+layout_mode = 2
+
+[node name="AddServerContainer" type="FoldableContainer" parent="Body/SavedServersContainer/VBoxContainer"]
+layout_mode = 2
+title = "Add New Server"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer"]
+layout_mode = 2
+
+[node name="ServerNameContainer" type="VBoxContainer" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ServerNameLabel" type="Label" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerNameContainer"]
+layout_mode = 2
+text = "Name"
+
+[node name="ServerNameInput" type="LineEdit" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerNameContainer"]
+layout_mode = 2
+placeholder_text = "Server Name"
+
+[node name="ServerAddressContainer" type="VBoxContainer" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ServerAddressContainer" type="Label" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerAddressContainer"]
+layout_mode = 2
+text = "Address"
+
+[node name="ServerAddressInput" type="LineEdit" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerAddressContainer"]
+layout_mode = 2
+placeholder_text = "Server Address"
+
+[node name="ServerPortContainer" type="HBoxContainer" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ServerPortLabel" type="Label" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerPortContainer"]
+layout_mode = 2
+text = "Server Port"
+
+[node name="ServerPortInput" type="LineEdit" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/ServerPortContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "55000"
+placeholder_text = "Server Port"
+alignment = 1
+
+[node name="AddServerButton" type="Button" parent="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer"]
+layout_mode = 2
+text = "Add Server"
+
+[node name="Footer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = SubResource("Theme_mv6k0")
+
+[node name="ButtonContainer" type="MarginContainer" parent="Footer"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -71.5
+offset_top = -63.0
+offset_right = 71.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Footer/ButtonContainer"]
+layout_mode = 2
+
+[node name="JoinWorldButton" type="Button" parent="Footer/ButtonContainer/HBoxContainer"]
+layout_mode = 2
+text = "Join World"
+
+[node name="BackButton" type="Button" parent="Footer/ButtonContainer/HBoxContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="Body/SavedServersContainer/VBoxContainer/AddServerContainer/VBoxContainer/AddServerButton" to="." method="_on_add_server_button_pressed"]
+[connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/JoinWorldButton" to="." method="_on_join_world_button_pressed"]
+[connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
