@@ -10,7 +10,10 @@ func _on_generate_new_world_button_pressed() -> void:
 	generate_new_world_button_pressed.emit()
 
 func _on_load_world_button_pressed() -> void:
-	load_world.emit("World")
+	var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
+	if selected_item_indexes.is_empty(): return
+	var selected_world: String = world_list.get_item_text(selected_item_indexes[0])
+	load_world.emit(selected_world)
 
 func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
