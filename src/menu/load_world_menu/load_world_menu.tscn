@@ -170,5 +170,6 @@ layout_mode = 2
 text = "Back"
 
 [connection signal="pressed" from="Body/VBoxContainer/WorldsContainer/VBoxContainer/MarginContainer/HBoxContainer/GenerateNewWorldButton" to="." method="_on_generate_new_world_button_pressed"]
+[connection signal="pressed" from="Body/VBoxContainer/WorldsContainer/VBoxContainer/MarginContainer/HBoxContainer/ReloadButton" to="." method="reload_worlds"]
 [connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/LoadWorldButton" to="." method="_on_load_world_button_pressed"]
 [connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

@@ -36,6 +36,7 @@ func _on_play_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/MainMenu)
 
 func _on_play_menu_load_world_button_pressed() -> void:
+	$Menus/LoadWorldMenu/LoadWorldMenuUI.reload_worlds()
 	move_to_menu($Menus/LoadWorldMenu)
 
 func _on_play_menu_join_world_button_pressed() -> void:
@@ -68,6 +69,7 @@ var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").
 var world_thread: Thread = Thread.new()
 
 func _on_generate_world_menu_back_button_pressed() -> void:
+	$Menus/LoadWorldMenu/LoadWorldMenuUI.reload_worlds()
 	move_to_menu($Menus/LoadWorldMenu)
 
 func _on_generate_world_menu_generate_world_button_pressed(world_name: String, world_seed: int, map_size: int, cave_offset: int) -> void:
