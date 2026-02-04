@@ -28,7 +28,8 @@ func pick_up_item(item_stack: ItemStack) -> bool:
 	for row in rows:
 		for column in columns:
 			if add_item_to_slot(item_stack, row, column):
-				RpcInterface.set_ui_inventory_slot(id, item_stack, row, column)
+				var item_stack_in_slot: ItemStack = inventory_array[row][column]
+				RpcInterface.set_ui_inventory_slot(id, item_stack_in_slot, row, column)
 				return true
 	
 	return false
