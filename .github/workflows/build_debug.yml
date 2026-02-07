@@ -1,10 +1,10 @@
-name: Debug build
-run-name: Build debug version of the project
+name: Build [Debug]
+run-name: Build for debugging
 on:
   workflow_dispatch: 
     inputs: 
       job_target:
-        description: 'Select the platform'
+        description: 'Select platform'
         required: true
         default: windows
         type: choice
@@ -19,65 +19,82 @@ env:
   EXPORT_FOLDER_LINUX: bin/Linux
   APPLICATION_NAME: TerraWorlds
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: archlinux:latest
     steps:
-      - name: Setting metadata
+      - name: Set metadata
         run: |
-          echo 'DATE=$(date +"%Y-%m-%d")' >> $GITHUB_ENV
+          echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
           echo 'GODOT_VERSION=${{ env.GODOT_VERSION }}' >> $GITHUB_ENV
           echo 'MAIN_FOLDER=$(pwd)' >> $GITHUB_ENV
+          
+      - name: Initialise pacman
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
       
-      - name: Installing dependencies
-        run: pacman -Syu --noconfirm git bash yasm python python-pip scons gcc diffutils make wget unzip tar mingw-w64
+      - name: Install dependencies
+        run: |
+          pacman -Syu --noconfirm \
+            git bash yasm python python-pip scons gcc diffutils make wget unzip tar \
+            fontconfig freetype2 libx11 libxcursor libxinerama libxrandr libxi libxrender libxext \
+            dotnet-runtime dotnet-sdk
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
       
       - name: Checkout submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      
+
       - name: Prepare Godot
         run: |
-          wget -q -0 godot_linux.zip https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64.zip
+          wget -q -O godot_linux.zip https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64.zip
           unzip godot_linux.zip
-          wget -q -0 godot_export_templates.tpz https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_export_templates.tpz
-          mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          unzip godot_export_templates.tpz -d ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          mv ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          chmod +x Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64
+          
+          wget -q -O godot_export_templates.tpz https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable.mono
+          unzip godot_export_templates.tpz -d godot_templates
+          mv godot_templates/templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable.mono/
+          
           sed -i 's/config\/version="[^"]*"/config\/version="${{ env.DATE }}-debug"/' ${{ env.GODOT_PROJECT_LOCATION }}
       
-      - name: Building debug Linux
+      - name: [Linux] Build
         if : ${{ github.event.inputs.job_target == 'linux' }}
         run: |
           mkdir -p ${{ env.EXPORT_FOLDER_LINUX }}
-          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-debug Linux ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.x86_64
+          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-debug Linux ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.x86_64
           chmod +x ${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.sh
           chmod +x ${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.x86_64
       
-      - name: Tar files
+      - name: [Linux] Tar files
         if : ${{ github.event.inputs.job_target == 'linux' }}
         run: tar -cvf ${{ env.APPLICATION_NAME }}_linux_debug_${{ env.DATE }}.tar ${{ env.EXPORT_FOLDER_LINUX }}
         
-      - name: Uplodading GDExtension debug artifacts
+      - name: [Linux] Uplodad artifacts
         if : ${{ github.event.inputs.job_target == 'linux' }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APPLICATION_NAME }}_linux_debug_${{ env.DATE }}.tar
           path: ${{ env.APPLICATION_NAME }}_linux_debug_${{ env.DATE }}.tar
       
-      - name: Building debug Windows
+      - name: [Windows] Build
         if: ${{ github.event.inputs.job_target == 'windows' }}
         run: |
           mkdir -p ${{ env.EXPORT_FOLDER_WINDOWS }}
-          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-debug Windows ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_WINDOWS }}/${{ env.APPLICATION_NAME }}.exe
+          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-debug Windows ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_WINDOWS }}/${{ env.APPLICATION_NAME }}.exe
       
-      - name: Uplodading GDExtension debug artifacts
+      - name: [Windows] Uplodad artifacts
         if: ${{ github.event.inputs.job_target == 'windows' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.APPLICATION_NAME }}_windows_debug_${{ env.DATE }}.zip
+          name: ${{ env.APPLICATION_NAME }}_windows_debug_${{ env.DATE }}
           path: ${{ env.EXPORT_FOLDER_WINDOWS }}/
           
