@@ -1,0 +1,82 @@
+name: Release build
+run-name: Build release version of the project
+on:
+  workflow_dispatch:
+    inputs:
+      job_target:
+        description: 'Select the platform'
+        required: true
+        default: windows
+        type: choice
+        options:
+          - windows
+          - linux
+
+env:
+  GODOT_VERSION: 4.6
+  GODOT_PROJECT_LOCATION: project.godot
+  EXPORT_FOLDER_WINDOWS: bin/Windows
+  EXPORT_FOLDER_LINUX: bin/Linux
+  APPLICATION_NAME: TerraWorlds
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Setting metadata
+        run: |
+          echo 'DATE=$(date +"%Y-%m-%d")' >> $GITHUB_ENV
+          echo 'GODOT_VERSION=${{ env.GODOT_VERSION }}' >> $GITHUB_ENV
+          echo 'MAIN_FOLDER=$(pwd)' >> $GITHUB_ENV
+
+      - name: Installing dependencies
+        run: pacman -Syu --noconfirm git bash yasm python python-pip scons gcc diffutils make wget unzip tar mingw-w64
+
+      - name: Checkout submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Prepare Godot
+        run: |
+          wget -q -0 godot_linux.zip https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64.zip
+          unzip godot_linux.zip
+          wget -q -0 godot_export_templates.tpz https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          unzip godot_export_templates.tpz -d ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          mv ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          sed -i 's/config\/version="[^"]*"/config\/version="${{ env.DATE }}-release"/' ${{ env.GODOT_PROJECT_LOCATION }}
+
+      - name: Building release Linux
+        if : ${{ github.event.inputs.job_target == 'linux' }}
+        run: |
+          mkdir -p ${{ env.EXPORT_FOLDER_LINUX }}
+          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-release Linux ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.x86_64
+          chmod +x ${{ env.EXPORT_FOLDER_LINUX }}/${{ env.APPLICATION_NAME }}.x86_64
+
+      - name: Tar files
+        if : ${{ github.event.inputs.job_target == 'linux' }}
+        run: tar -cvf ${{ env.APPLICATION_NAME }}_linux_release_${{ env.DATE }}.tar ${{ env.EXPORT_FOLDER_LINUX }}
+
+      - name: Uplodading GDExtension release artifacts
+        if : ${{ github.event.inputs.job_target == 'linux' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APPLICATION_NAME }}_linux_release_${{ env.DATE }}.tar
+          path: ${{ env.APPLICATION_NAME }}_linux_release_${{ env.DATE }}.tar
+
+      - name: Building release Windows
+        if: ${{ github.event.inputs.job_target == 'windows' }}
+        run: |
+          mkdir -p ${{ env.EXPORT_FOLDER_WINDOWS }}
+          ./Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64 --import ${{ env.GODOT_PROJECT_LOCATION }} --quiet --headless --export-release Windows ${{ env.MAIN_FOLDER }}/${{ env.EXPORT_FOLDER_WINDOWS }}/${{ env.APPLICATION_NAME }}.exe
+
+      - name: Uplodading GDExtension release artifacts
+        if: ${{ github.event.inputs.job_target == 'windows' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APPLICATION_NAME }}_windows_release_${{ env.DATE }}.zip
+          path: ${{ env.EXPORT_FOLDER_WINDOWS }}/
+          
