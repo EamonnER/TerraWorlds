@@ -19,4 +19,4 @@
     config/icon="res://icon.svg"
     ```
   - It is likely there is a version mismatch if `project.godot` has changes while creating this pull request
-  - If using a later version, make sure to bump the Godot version in `.github/workflows/build_debug.yml` and `.github/workflows/build_release.yml`
+  - If using a later version, make sure to bump the Godot version in `.github/workflows/build-debug.yml` and `.github/workflows/build-release.yml`
