@@ -12,7 +12,6 @@ jobs:
         run: |
           PR_BODY="${{ github.event.pull_request.body }}"
 
-          # Define required checklist items exactly as in your template
           REQUIRED_ITEMS=(
             "- [x] I have tested the changes locally"
             "- [x] I have reviewed and cleaned all AI-generated code (if applicable)"
