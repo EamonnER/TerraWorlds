@@ -31,8 +31,22 @@ jobs:
           echo 'GODOT_VERSION=${{ env.GODOT_VERSION }}' >> $GITHUB_ENV
           echo 'MAIN_FOLDER=$(pwd)' >> $GITHUB_ENV
 
+      - name: Initialise pacman
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+
       - name: Installing dependencies
-        run: pacman -Syu --noconfirm git bash yasm python python-pip scons gcc diffutils make wget unzip tar mingw-w64
+        run: |
+          pacman -Syu --noconfirm \
+            git bash yasm python python-pip scons gcc diffutils make wget unzip tar \
+            fontconfig freetype2 libx11 libxcursor libxinerama libxrandr libxi libxrender libxext \
+            dotnet-runtime dotnet-sdk
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
       - name: Checkout submodules
         uses: actions/checkout@v4
