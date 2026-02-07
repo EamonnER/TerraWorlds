@@ -9,14 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR checkboxes
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
           PR_BODY=$(echo "$PR_BODY" | tr -d '\r')
           
           REQUIRED_ITEMS=(
             "- [x] I have tested the changes locally"
             "- [x] I have reviewed and cleaned all AI-generated code (if applicable)"
-            "- [x] I am using a version of Godot equal to or higher than the version on `main`"
+            "- [x] I am using a version of Godot equal to or higher than the version on \`main\`"
           )
           
           MISSING=0
