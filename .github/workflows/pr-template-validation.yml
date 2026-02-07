@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Validate PR checkboxes
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
+          PR_BODY=$(echo "${{ github.event.pull_request.body }}" | tr -d '\r')
 
           REQUIRED_ITEMS=(
             "- [x] I have tested the changes locally"
