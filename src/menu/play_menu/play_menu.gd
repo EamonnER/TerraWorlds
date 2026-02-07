@@ -41,6 +41,20 @@ func reload_worlds() -> void:
 
 var saved_server_list_item_scene: PackedScene = preload("res://src/menu/play_menu/saved_server_list_item.tscn")
 
+func load_saved_servers() -> void:
+	for child in saved_servers_container.get_children():
+		child.queue_free()
+	
+	var saved_servers: Dictionary = SavedServers.load_saved_servers()
+	for server_address in saved_servers.keys():
+		var server_info: Dictionary = saved_servers[server_address]
+		var server_name: String = server_info.get("name", "Unnamed Server")
+		var server_port: int = server_info.get("port", GlobalVariables.DEFAULT_PORT)
+		
+		var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
+		saved_server_list_item.set_details(server_name, server_address, server_port)
+		saved_servers_container.add_child(saved_server_list_item)
+
 func _on_add_server_button_pressed() -> void:
 	var server_name: String = new_server_name_input.get_text().strip_edges()
 	if server_name.is_empty(): return
@@ -53,13 +67,11 @@ func _on_add_server_button_pressed() -> void:
 	elif !server_port_str.is_valid_int(): return
 	var server_port: int = server_port_str.to_int()
 	
-	var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
-	saved_server_list_item.set_details(server_name, server_address, server_port)
-	saved_servers_container.add_child(saved_server_list_item)
-	
+	SavedServers.add_saved_server(server_address, server_name, server_port)
 	new_server_name_input.clear()
 	new_server_address_input.clear()
 	new_server_port.clear()
+	load_saved_servers()
 
 
 # Footer Buttons------------------------------------------------------------------------------------

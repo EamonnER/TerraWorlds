@@ -31,16 +31,13 @@ func _process(_delta: float) -> void:
 # Main Menu ----------------------------------------------------------------------------------------
 func _on_main_menu_play_button_pressed() -> void:
 	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
+	$Menus/PlayMenu/PlayMenuUI.load_saved_servers()
 	move_to_menu($Menus/PlayMenu)
 
 
 # Play Menu ----------------------------------------------------------------------------------------
 func _on_play_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/MainMenu)
-
-## Singleplayer
-func _on_load_world_menu_back_button_pressed() -> void:
-	move_to_menu($Menus/PlayMenu)
 
 func _on_load_world_menu_generate_new_world_button_pressed() -> void:
 	move_to_menu($Menus/GenerateWorldMenu)
@@ -83,6 +80,7 @@ var world_thread: Thread = Thread.new()
 
 func _on_generate_world_menu_back_button_pressed() -> void:
 	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
+	$Menus/PlayMenu/PlayMenuUI.load_saved_servers()
 	move_to_menu($Menus/PlayMenu)
 
 func _on_generate_world_menu_generate_world_button_pressed(world_name: String, world_seed: int, map_size: int, cave_offset: int) -> void:
