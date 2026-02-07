@@ -1,15 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://chobjrk2tdygd"]
+[gd_scene format=3 uid="uid://chobjrk2tdygd"]
 
 [ext_resource type="StyleBox" uid="uid://pslsimyhvpga" path="res://src/menu/resources/style_box.tres" id="1_10kmq"]
 [ext_resource type="Script" uid="uid://d10pu11wqf63v" path="res://src/menu/play_menu/play_menu.gd" id="1_rnxxs"]
 
-[sub_resource type="Theme" id="Theme_rnxxs"]
-default_font_size = 32
-
 [sub_resource type="Theme" id="Theme_10kmq"]
 default_font_size = 24
 
-[node name="PlayMenu" type="Control"]
+[node name="PlayMenu" type="Control" unique_id=702268125]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rnxxs")
 
-[node name="TitleContainer" type="MarginContainer" parent="."]
+[node name="TitleContainer" type="MarginContainer" parent="." unique_id=1933083969]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -29,13 +26,13 @@ offset_bottom = 50.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 32
 
-[node name="Title" type="Label" parent="TitleContainer"]
+[node name="Title" type="Label" parent="TitleContainer" unique_id=391341168]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Play"
 horizontal_alignment = 1
 
-[node name="Body" type="Control" parent="."]
+[node name="Body" type="Control" parent="." unique_id=955029140]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -48,35 +45,166 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_rnxxs")
 
-[node name="BodyContainer" type="PanelContainer" parent="Body"]
+[node name="TabContainer" type="TabContainer" parent="Body" unique_id=1077235041]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -55.5
-offset_top = -41.0
-offset_right = 55.5
-offset_bottom = 41.0
+offset_left = -120.5
+offset_top = -26.5
+offset_right = 120.5
+offset_bottom = 26.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = ExtResource("1_10kmq")
+tab_alignment = 1
+current_tab = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Body/BodyContainer"]
+[node name="Singleplayer" type="VBoxContainer" parent="Body/TabContainer" unique_id=711644429]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="WorldsTitleContainer" type="MarginContainer" parent="Body/TabContainer/Singleplayer" unique_id=70859641]
 layout_mode = 2
 
-[node name="LoadWorldButton" type="Button" parent="Body/BodyContainer/VBoxContainer"]
+[node name="SavedWorldsLabel" type="Label" parent="Body/TabContainer/Singleplayer/WorldsTitleContainer" unique_id=2045004946]
 layout_mode = 2
-text = "Host World"
+text = "Saved Worlds"
+horizontal_alignment = 1
 
-[node name="JoinWorldButton" type="Button" parent="Body/BodyContainer/VBoxContainer"]
+[node name="WorldsContainer" type="MarginContainer" parent="Body/TabContainer/Singleplayer" unique_id=150287949]
 layout_mode = 2
-text = "Join World"
 
-[node name="Footer" type="Control" parent="."]
+[node name="WorldList" type="ItemList" parent="Body/TabContainer/Singleplayer/WorldsContainer" unique_id=614113819]
+clip_contents = false
+custom_minimum_size = Vector2(0, 256)
+layout_mode = 2
+item_count = 1
+item_0/text = "No saved worlds..."
+item_0/selectable = false
+item_0/disabled = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Body/TabContainer/Singleplayer" unique_id=2119441060]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/MarginContainer" unique_id=18646247]
+layout_mode = 2
+
+[node name="GenerateNewWorldButton" type="Button" parent="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer" unique_id=957713026]
+layout_mode = 2
+text = "Generate New World"
+
+[node name="ReloadButton" type="Button" parent="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer" unique_id=1621756164]
+layout_mode = 2
+text = "Reload"
+
+[node name="FoldableContainer" type="FoldableContainer" parent="Body/TabContainer/Singleplayer" unique_id=234325839]
+layout_mode = 2
+folded = true
+title = "Server Hosting Options"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer" unique_id=301781131]
+visible = false
+layout_mode = 2
+
+[node name="HostServerCheckbox" type="CheckBox" parent="Body/TabContainer/Singleplayer/FoldableContainer/VBoxContainer" unique_id=1546865903]
+layout_mode = 2
+text = "Host Server"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer/VBoxContainer" unique_id=301323074]
+layout_mode = 2
+
+[node name="ServerPortLabel" type="Label" parent="Body/TabContainer/Singleplayer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=1210582297]
+layout_mode = 2
+text = "Server Port"
+
+[node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Singleplayer/FoldableContainer/VBoxContainer/HBoxContainer" unique_id=353913121]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "55000"
+placeholder_text = "Server Port"
+alignment = 1
+
+[node name="Multiplayer" type="VBoxContainer" parent="Body/TabContainer" unique_id=1567896612]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="SavedServersTitleContainer" type="MarginContainer" parent="Body/TabContainer/Multiplayer" unique_id=1892704889]
+layout_mode = 2
+
+[node name="SavedServersLabel" type="Label" parent="Body/TabContainer/Multiplayer/SavedServersTitleContainer" unique_id=2055691578]
+layout_mode = 2
+text = "Saved Servers"
+horizontal_alignment = 1
+
+[node name="ServersContainer" type="MarginContainer" parent="Body/TabContainer/Multiplayer" unique_id=448476363]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Body/TabContainer/Multiplayer/ServersContainer" unique_id=1715136235]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("1_10kmq")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Body/TabContainer/Multiplayer/ServersContainer/PanelContainer" unique_id=66667531]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/TabContainer/Multiplayer/ServersContainer/PanelContainer/ScrollContainer" unique_id=930456203]
+layout_mode = 2
+
+[node name="AddServerContainer" type="FoldableContainer" parent="Body/TabContainer/Multiplayer" unique_id=1367802793]
+layout_mode = 2
+folded = true
+title = "Add New Server"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/TabContainer/Multiplayer/AddServerContainer" unique_id=1277564315]
+visible = false
+layout_mode = 2
+
+[node name="ServerNameContainer" type="VBoxContainer" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer" unique_id=445588992]
+layout_mode = 2
+
+[node name="ServerNameLabel" type="Label" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerNameContainer" unique_id=608034928]
+layout_mode = 2
+text = "Name"
+
+[node name="ServerNameInput" type="LineEdit" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerNameContainer" unique_id=1764584979]
+layout_mode = 2
+placeholder_text = "Server Name"
+
+[node name="ServerAddressContainer" type="VBoxContainer" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer" unique_id=1719769925]
+layout_mode = 2
+
+[node name="ServerAddressContainer" type="Label" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerAddressContainer" unique_id=82068746]
+layout_mode = 2
+text = "Address"
+
+[node name="ServerAddressInput" type="LineEdit" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerAddressContainer" unique_id=861605709]
+layout_mode = 2
+placeholder_text = "Server Address"
+
+[node name="ServerPortContainer" type="HBoxContainer" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer" unique_id=89904460]
+layout_mode = 2
+
+[node name="ServerPortLabel" type="Label" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerPortContainer" unique_id=1523885990]
+layout_mode = 2
+text = "Server Port"
+
+[node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerPortContainer" unique_id=1223121375]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "55000"
+placeholder_text = "Server Port"
+alignment = 1
+
+[node name="AddServerButton" type="Button" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer" unique_id=1550598372]
+layout_mode = 2
+text = "Add Server"
+
+[node name="Footer" type="Control" parent="." unique_id=2019061934]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -90,7 +218,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = SubResource("Theme_10kmq")
 
-[node name="ButtonContainer" type="MarginContainer" parent="Footer"]
+[node name="ButtonContainer" type="MarginContainer" parent="Footer" unique_id=1788953953]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -104,10 +232,19 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_bottom = 32
 
-[node name="BackButton" type="Button" parent="Footer/ButtonContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Footer/ButtonContainer" unique_id=659147660]
+layout_mode = 2
+
+[node name="PlayButton" type="Button" parent="Footer/ButtonContainer/HBoxContainer" unique_id=1747862937]
+layout_mode = 2
+text = "Play"
+
+[node name="BackButton" type="Button" parent="Footer/ButtonContainer/HBoxContainer" unique_id=1507735126]
 layout_mode = 2
 text = "Back"
 
-[connection signal="pressed" from="Body/BodyContainer/VBoxContainer/LoadWorldButton" to="." method="_on_load_world_button_pressed"]
-[connection signal="pressed" from="Body/BodyContainer/VBoxContainer/JoinWorldButton" to="." method="_on_join_world_button_pressed"]
-[connection signal="pressed" from="Footer/ButtonContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer/GenerateNewWorldButton" to="." method="_on_generate_new_world_button_pressed"]
+[connection signal="pressed" from="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer/ReloadButton" to="." method="reload_worlds"]
+[connection signal="pressed" from="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/AddServerButton" to="." method="_on_add_server_button_pressed"]
+[connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

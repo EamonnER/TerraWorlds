@@ -27,22 +27,18 @@ func _process(_delta: float) -> void:
 
 		queue_free()
 
+
 # Main Menu ----------------------------------------------------------------------------------------
 func _on_main_menu_play_button_pressed() -> void:
+	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
 	move_to_menu($Menus/PlayMenu)
+
 
 # Play Menu ----------------------------------------------------------------------------------------
 func _on_play_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/MainMenu)
 
-func _on_play_menu_load_world_button_pressed() -> void:
-	$Menus/LoadWorldMenu/LoadWorldMenuUI.reload_worlds()
-	move_to_menu($Menus/LoadWorldMenu)
-
-func _on_play_menu_join_world_button_pressed() -> void:
-	move_to_menu($Menus/JoinWorldMenu)
-
-# Load World Menu ----------------------------------------------------------------------------------
+## Singleplayer
 func _on_load_world_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/PlayMenu)
 
@@ -64,13 +60,30 @@ func load_world(world_name: String) -> void:
 func _load_world(world_name: String) -> void:
 	world_generator.LoadWorld(world_name)
 
+## Multiplayer
+func _on_join_world_menu_back_button_pressed() -> void:
+	move_to_menu($Menus/PlayMenu)
+
+func connect_to_server(address: String, port: int) -> void:
+	add_sibling(game)
+	game.hide()
+	MultiplayerManager.connect_to_server(game, address, port)
+	
+	$Menus.hide()
+	loading_screen.show()
+	
+	if world_thread.is_started(): world_thread.wait_to_finish()
+	var callable = Callable(self, "_load_world").bind("World")
+	world_thread.start(callable)
+
+
 # Generate World Menu ------------------------------------------------------------------------------
 var world_generator: WorldGenerator = load("res://src/world/WorldGenerator.cs").new()
 var world_thread: Thread = Thread.new()
 
 func _on_generate_world_menu_back_button_pressed() -> void:
-	$Menus/LoadWorldMenu/LoadWorldMenuUI.reload_worlds()
-	move_to_menu($Menus/LoadWorldMenu)
+	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
+	move_to_menu($Menus/PlayMenu)
 
 func _on_generate_world_menu_generate_world_button_pressed(world_name: String, world_seed: int, map_size: int, cave_offset: int) -> void:
 	world_generator.WorldName = world_name
@@ -97,19 +110,3 @@ func _on_world_gen_completed() -> void:
 
 func _on_world_load_completed() -> void:
 	move_to_game = true
-
-# Joining Game Menu --------------------------------------------------------------------------------
-func _on_join_world_menu_back_button_pressed() -> void:
-	move_to_menu($Menus/PlayMenu)
-
-func connect_to_server(address: String, port: int) -> void:
-	add_sibling(game)
-	game.hide()
-	MultiplayerManager.connect_to_server(game, address, port)
-	
-	$Menus.hide()
-	loading_screen.show()
-	
-	if world_thread.is_started(): world_thread.wait_to_finish()
-	var callable = Callable(self, "_load_world").bind("World")
-	world_thread.start(callable)
