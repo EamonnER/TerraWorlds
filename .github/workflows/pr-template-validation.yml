@@ -23,7 +23,7 @@ jobs:
           MISSING=0
           
           for ITEM in "${REQUIRED_ITEMS[@]}"; do
-            if ! echo "$PR_BODY" | grep -F -q "$ITEM"; then
+            if ! echo "$PR_BODY" | grep -F -q -- "$ITEM"; then
               echo "❌ Checklist item not completed: $ITEM"
               MISSING=$((MISSING + 1))
             fi
