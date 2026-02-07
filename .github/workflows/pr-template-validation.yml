@@ -38,3 +38,4 @@ jobs:
             exit 1
           else
             echo "✅ All required checklist items are completed."
+          fi
