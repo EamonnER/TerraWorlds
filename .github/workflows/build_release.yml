@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: Setting metadata
         run: |
-          echo 'DATE=$(date +"%Y-%m-%d")' >> $GITHUB_ENV
+          echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
           echo 'GODOT_VERSION=${{ env.GODOT_VERSION }}' >> $GITHUB_ENV
           echo 'MAIN_FOLDER=$(pwd)' >> $GITHUB_ENV
 
