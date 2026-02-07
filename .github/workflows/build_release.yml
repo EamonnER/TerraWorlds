@@ -58,10 +58,14 @@ jobs:
           wget -q -O godot_linux.zip https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64.zip
           unzip godot_linux.zip
           chmod +x Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux_x86_64/Godot_v${{ env.GODOT_VERSION }}-stable_mono_linux.x86_64
+          
           wget -q -O godot_export_templates.tpz https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_export_templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          unzip godot_export_templates.tpz -d ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          mv ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          unzip godot_export_templates.tpz -d godot_templates
+          
+          cp godot_templates/windows/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          cp godot_templates/linux/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          
           sed -i 's/config\/version="[^"]*"/config\/version="${{ env.DATE }}-release"/' ${{ env.GODOT_PROJECT_LOCATION }}
 
       - name: Building release Linux
