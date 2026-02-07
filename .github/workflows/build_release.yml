@@ -9,8 +9,8 @@ on:
         default: windows
         type: choice
         options:
-          - windows
-          - linux
+          - Windows
+          - Linux
 
 env:
   GODOT_VERSION: 4.6
