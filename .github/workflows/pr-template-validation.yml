@@ -10,11 +10,7 @@ jobs:
     steps:
       - name: Validate PR checkboxes
         run: |
-          PR_BODY=$(
-            cat <<'EOF'
-            ${{ github.event.pull_request.body }}
-            EOF
-          )
+          PR_BODY="${{ github.event.pull_request.body }}"
           PR_BODY=$(echo "$PR_BODY" | tr -d '\r')
           
           REQUIRED_ITEMS=(
@@ -37,4 +33,3 @@ jobs:
             exit 1
           else
             echo "✅ All required checklist items are completed."
-          
