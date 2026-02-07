@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate PR checkboxes
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          PR_BODY=$(echo "$PR_BODY" | tr -d '\r')
+          # Write PR body to a temporary file
+          PR_FILE=$(mktemp)
+          echo "${{ github.event.pull_request.body }}" > "$PR_FILE"
           
           REQUIRED_ITEMS=(
             "- [x] I have tested the changes locally"
@@ -23,11 +23,13 @@ jobs:
           MISSING=0
           
           for ITEM in "${REQUIRED_ITEMS[@]}"; do
-            if ! echo "$PR_BODY" | grep -F -q -- "$ITEM"; then
+            if ! grep -F -q -- "$ITEM" "$PR_FILE"; then
               echo "❌ Checklist item not completed: $ITEM"
               MISSING=$((MISSING + 1))
             fi
-          done
+          done 
+          
+          rm "$PR_FILE"
           
           if [[ $MISSING -gt 0 ]]; then
             echo "PR checklist validation failed. Please check all required boxes."
