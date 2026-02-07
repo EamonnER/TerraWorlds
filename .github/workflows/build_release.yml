@@ -62,9 +62,7 @@ jobs:
           wget -q -O godot_export_templates.tpz https://github.com/godotengine/godot-builds/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_mono_export_templates.tpz
           mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
           unzip godot_export_templates.tpz -d godot_templates
-          
-          cp godot_templates/windows/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
-          cp godot_templates/linux/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+          mv godot_templates/templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
           
           sed -i 's/config\/version="[^"]*"/config\/version="${{ env.DATE }}-release"/' ${{ env.GODOT_PROJECT_LOCATION }}
 
