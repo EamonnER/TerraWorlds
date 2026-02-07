@@ -10,9 +10,11 @@ jobs:
     steps:
       - name: Validate PR checkboxes
         run: |
-          # Write PR body to a temporary file
+          # Write PR body safely to a temporary file
           PR_FILE=$(mktemp)
-          echo "${{ github.event.pull_request.body }}" > "$PR_FILE"
+          cat <<'EOF' > "$PR_FILE"
+          ${{ github.event.pull_request.body }}
+          EOF
           
           REQUIRED_ITEMS=(
             "- [x] I have tested the changes locally"
@@ -27,7 +29,7 @@ jobs:
               echo "❌ Checklist item not completed: $ITEM"
               MISSING=$((MISSING + 1))
             fi
-          done 
+          done
           
           rm "$PR_FILE"
           
