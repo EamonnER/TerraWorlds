@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       job_target:
-        description: 'Select the platform'
+        description: 'Select platform'
         required: true
         default: windows
         type: choice
