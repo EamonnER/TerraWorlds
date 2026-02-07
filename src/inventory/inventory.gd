@@ -1,67 +1,45 @@
-extends GridContainer
+extends Resource
 class_name Inventory
 
-enum SLOT_TYPE {
-	INVENTORY_HOTBAR,
-	INVENTORY,
-	HELD
-}
+@export var id: int
 
-@onready var inventory_slot_scene = preload("res://src/inventory/inventory_slot.tscn")
-@onready var held_inventory_slot: InventorySlot = inventory_slot_scene.instantiate()
+var rows: int = 4
+var columns: int = 9
+@export var inventory_array: Array[Array]  # 2D array if 'ItemStack'. Row index 0 is hotbar
 
-var rows = 4
-var slots: Dictionary
-var is_open: bool = false
+func initialise(player_id: int, num_rows: int = 4, num_columns: int = 9) -> void:
+	id = player_id
+	rows = num_rows
+	columns = num_columns
 
-func _ready() -> void:
-	columns = 9
+	inventory_array = []
+	for row in rows:
+		inventory_array.append([])
+		for column in columns:
+			inventory_array[row].append(ItemStack.new())
 	
-	slots[SLOT_TYPE.INVENTORY_HOTBAR] = []
-	slots[SLOT_TYPE.INVENTORY] = []
-	slots[SLOT_TYPE.HELD] = [held_inventory_slot]
+	RpcInterface.initialise_ui_inventory(id, rows, columns)
+
+func set_inventory(new_inventory: Array[Array]) -> void:
+	inventory_array = new_inventory
+
+# Adds an item to the first available slot. Returns true if successful; false otherwise
+func pick_up_item(item_stack: ItemStack) -> bool:
+	for row in rows:
+		for column in columns:
+			if add_item_to_slot(item_stack, row, column):
+				var item_stack_in_slot: ItemStack = inventory_array[row][column]
+				RpcInterface.set_ui_inventory_slot(id, item_stack_in_slot, row, column)
+				return true
 	
-	for i in range(columns * rows):
-		var slot: InventorySlot = inventory_slot_scene.instantiate()
-		add_child(slot)
-		slot.add_to_group("inventory_slots")
-		
-		if i < columns:
-			slots[SLOT_TYPE.INVENTORY_HOTBAR].append(slot)
-		else:
-			slots[SLOT_TYPE.INVENTORY].append(slot)
-	
-	hide_inventory()
-	
-	add_child(held_inventory_slot)
-	held_inventory_slot.set_texture(null)
-
-func hide_inventory() -> void:
-	for slot in slots[SLOT_TYPE.INVENTORY]:
-		slot.hide()
-	is_open = false
-
-func show_inventory() -> void:
-	for slot in slots[SLOT_TYPE.INVENTORY]:
-		slot.show()
-	is_open = true
-
-func toggle_inventory() -> void:
-	hide_inventory() if is_open else show_inventory()
-
-func add_item(item: Item, quantity: int = 1) -> bool:
-	# Returns true if successful; false otherwise
-	for slot in get_children():
-		if slot == held_inventory_slot:
-			continue
-		var current_slot_item = slot.get_item()
-		if (current_slot_item == null) or (item.is_stackable and current_slot_item.id == item.id):
-			slot.set_item(item, quantity)
-			return true
 	return false
 
-func _process(delta: float) -> void:
-	var offset = Vector2(held_inventory_slot.get_size().x, held_inventory_slot.get_size().x/2)
-	held_inventory_slot.set_position(get_global_mouse_position() - offset)
-	if Input.is_action_just_pressed("game_open_inventory"):
-		toggle_inventory()
+# Attempts to add an item to a specific slot. Returns true if successful; false otherwise
+func add_item_to_slot(item_stack: ItemStack, row: int, column: int) -> bool:
+	var item_stack_in_slot: ItemStack = inventory_array[row][column]
+	
+	if item_stack_in_slot.combine_stacks(item_stack):
+		inventory_array[row][column] = item_stack_in_slot
+		return true
+		
+	return false

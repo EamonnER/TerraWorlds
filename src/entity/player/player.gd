@@ -1,50 +1,47 @@
 extends Entity
 class_name Player
 
-var debug_mode = false
-var inventory: Inventory
+var debug_mode: bool = false
 
-func pickup_item(item: Item) -> bool:
-	return inventory.add_item(item)
+@export var inventory: Inventory
+var inventory_ui: InventoryUI
+var hud: Control
 
-func handle_primary_action_input():
-	# Only function is to remove tiles at mouse pos ATM
-	
-	# TODO I dislike implimenting this by directly referencing the world. 
-	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.remove_tile(Vector2i(tile_coords))
+func pick_up_item(item_stack: ItemStack) -> bool:
+	return inventory.pick_up_item(item_stack)
 
-func handle_secondary_action_input():
-	# Only function is to place tiles at mouse pos ATM
-	
-	# TODO I dislike implimenting this by directly referencing the world. 
-	# Player should not have direct access to the world object. 
-	var mouse_pos = get_global_mouse_position()  
-	var tile_coords = world.local_to_map(mouse_pos)
-	world.place_tile(Vector2i(tile_coords), 0)
+func get_tile_pos_at_mouse_pos() -> Vector2i:
+	return world.local_to_map(get_global_mouse_position())
 
 func _ready() -> void:
+	super._ready()
+	hud = world.get_parent().get_node("CanvasLayer/HUD")
+	inventory_ui = hud.get_node("Inventory")
+	inventory = Inventory.new()
+	inventory.initialise(id)
+	
 	health = 100.0
 
-# Handling inputs
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("game_debug_toggle"):
+func _handle_server_authoratitive_inputs(delta: float) -> void:
+	if $InputSynchronizer.debug_toggle_pressed:
 		debug_mode = not debug_mode
 		print("Debug mode: ", debug_mode)
 		if debug_mode == true:
 			motion_mode = MotionMode.MOTION_MODE_FLOATING
 			set_collision_mask_value(2, false)
 		else:
-			world.spawn_item()
 			motion_mode = MotionMode.MOTION_MODE_GROUNDED
 			set_collision_mask_value(2, true)
+			
+			var item = StickItem.new()
+			var item_stack = ItemStack.new()
+			item_stack.set_item(item, 1)
+			MultiplayerManager.spawn_item_stack(item_stack)
 	
 	# Left / right / up / down inputs
-	var new_velocity = get_relative_velocity()
-	var horizontal_direction = Input.get_axis("game_left", "game_right")
-	var vertical_direction = Input.get_axis("game_up", "game_down")
+	var new_velocity: Vector2 = get_relative_velocity()
+	var horizontal_direction = $InputSynchronizer.horizontal_input
+	var vertical_direction = $InputSynchronizer.vertical_input
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED:
 		# Apply acceleration or decelleration
 		if sign(horizontal_direction) == sign(new_velocity.x):
@@ -61,14 +58,19 @@ func _process(delta: float) -> void:
 	set_relative_velocity(new_velocity)
 	
 	# Jump
-	if Input.is_action_just_pressed("game_jump"): 
+	if $InputSynchronizer.jump_pressed: 
 		jump()
 	
-	# Mouse actions
-	var mouse_pos = get_global_mouse_position()
+func _handle_local_inputs() -> void:
 	# Primary action input (LMB)
-	if Input.is_action_pressed("game_primary_action"):
-		handle_primary_action_input()
+	if $InputSynchronizer.primary_action_pressed:
+		RpcInterface.request_remove_tile.rpc_id(1, get_tile_pos_at_mouse_pos())
 	# Secondary action input (RMB)
-	if Input.is_action_pressed("game_secondary_action"):
-		handle_secondary_action_input()
+	if $InputSynchronizer.secondary_action_pressed:
+		RpcInterface.request_place_tile.rpc_id(1, get_tile_pos_at_mouse_pos(), 0)
+
+
+func _physics_process(delta: float) -> void:
+	super._physics_process(delta)
+	if multiplayer.is_server(): _handle_server_authoratitive_inputs(delta)
+	if id == multiplayer.get_unique_id(): _handle_local_inputs()

@@ -1,41 +1,47 @@
 [gd_scene load_steps=6 format=3 uid="uid://bnrb5wdjhgfv7"]
 
+[ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_7rf8y"]
 [ext_resource type="Script" uid="uid://dmp5uqlcocv11" path="res://src/item/dropped_item.gd" id="1_etopm"]
-[ext_resource type="Texture2D" uid="uid://b0lsyi7yplcin" path="res://assets/missing-texture.png" id="2_t83l8"]
+[ext_resource type="PackedScene" uid="uid://dygll51d2ua07" path="res://src/item/item_stack_sprite.tscn" id="2_7rf8y"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_tqjbq"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_yy7x1"]
 radius = 40.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1hw4u"]
-size = Vector2(32, 32)
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yy7x1"]
+properties/0/path = NodePath(".:quantity")
+properties/0/spawn = true
+properties/0/replication_mode = 1
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_wh564"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_t83l8")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[node name="DroppedItem" type="CharacterBody2D"]
-collision_layer = 512
-collision_mask = 583
+[node name="DroppedItem" instance=ExtResource("1_7rf8y")]
+collision_layer = 576
+collision_mask = 263
 script = ExtResource("1_etopm")
+quantity = 1
 
-[node name="PickupArea" type="Area2D" parent="."]
+[node name="Sprite" parent="." index="1"]
+visible = false
+
+[node name="PickupArea" type="Area2D" parent="." index="3"]
 collision_layer = 512
-collision_mask = 64
+collision_mask = 768
 
-[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea"]
-shape = SubResource("CircleShape2D_tqjbq")
+[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea" index="0"]
+shape = SubResource("CircleShape2D_yy7x1")
 
-[node name="Collision" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_1hw4u")
+[node name="ItemStackSprite" parent="." index="4" instance=ExtResource("2_7rf8y")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_wh564")
+[node name="QuantitySynchronizer" type="MultiplayerSynchronizer" parent="." index="5"]
+replication_config = SubResource("SceneReplicationConfig_yy7x1")
 
 [connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]

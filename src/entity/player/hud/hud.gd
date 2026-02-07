@@ -1,16 +1,13 @@
 extends Control
 
-@onready var health = $Health
-@onready var minimap = $Minimap
-@onready var inventory = $Inventory
-
-func set_target(new_player: Player):
-	if not new_player.is_multiplayer_authority():
-		minimap.queue_free()
-		health.queue_free()
-		inventory.queue_free()
+func _process(_delta: float) -> void:
+	if !$Health.player || !$Minimap.player:
 		return
-
-	health.player = new_player
-	minimap.player = new_player
-	new_player.inventory = inventory
+	
+	var player = get_tree().root.get_node("Game/World/Players/Player#%s" % multiplayer.get_unique_id())
+	if !player:
+		return
+		
+	$Health.player = player
+	$Minimap.player = player
+	$Map.player = player

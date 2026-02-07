@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://dygll51d2ua07"]
+
+[ext_resource type="Script" uid="uid://blvjip6juvqsq" path="res://src/item/item_stack_sprite.gd" id="1_8yr61"]
+[ext_resource type="PackedScene" uid="uid://cxf184txuburs" path="res://src/hover_tooltip.tscn" id="2_58r1o"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8yr61"]
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="ItemStackSprite" type="Control"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+mouse_filter = 1
+script = ExtResource("1_8yr61")
+
+[node name="ItemSprite" type="AnimatedSprite2D" parent="."]
+centered = false
+
+[node name="QuantityLabel" type="Label" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -0.5
+offset_top = -15.5
+offset_right = 0.50001144
+offset_bottom = 7.5
+grow_horizontal = 0
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_8yr61")
+
+[node name="HoverTooltip" parent="." instance=ExtResource("2_58r1o")]
+z_index = 2
+layout_mode = 1

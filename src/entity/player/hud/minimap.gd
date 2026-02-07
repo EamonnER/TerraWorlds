@@ -57,6 +57,6 @@ func draw_player(pos: Vector2):
 	
 	texture = ImageTexture.create_from_image(img)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if player:
 		draw_player(player.get_global_position())

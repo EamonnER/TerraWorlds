@@ -1,0 +1,63 @@
+[gd_scene load_steps=4 format=3 uid="uid://cax1uolgb265w"]
+
+[ext_resource type="Script" uid="uid://h2lwnr2nwdlh" path="res://src/menu/main/main_menu.gd" id="1_i7jkh"]
+
+[sub_resource type="Theme" id="Theme_7vrkn"]
+default_font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_7vrkn"]
+font_size = 64
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_7vrkn")
+script = ExtResource("1_i7jkh")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -191.0
+offset_right = 191.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 125
+
+[node name="TerraWorlds Label" type="Label" parent="MainContainer/MarginContainer"]
+layout_mode = 2
+text = "TerraWorlds"
+label_settings = SubResource("LabelSettings_7vrkn")
+
+[node name="ButtonContainer" type="VBoxContainer" parent="MainContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+accessibility_name = "Generate new world"
+text = "Play"
+
+[node name="SettingsButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+accessibility_name = "Host game button"
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MainContainer/ButtonContainer"]
+layout_mode = 2
+accessibility_name = "Join game button"
+text = "Quit"
+
+[connection signal="pressed" from="MainContainer/ButtonContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="MainContainer/ButtonContainer/QuitButton" to="." method="_on_quit_button_pressed"]
