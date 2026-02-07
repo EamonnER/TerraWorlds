@@ -1,9 +1,10 @@
 # TerraWorlds Pull Request
 
 ## Description
-
 <!-- Please provide a description of the changes in this pull request here -->
+<!-- START-DESCRIPTION -->
 
+<!-- END-DESCRIPTION -->
 ## Checklist - All Are Required
 
 - [ ] I have tested the changes locally

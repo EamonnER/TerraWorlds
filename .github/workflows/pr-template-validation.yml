@@ -5,12 +5,12 @@ on:
     types: [opened, edited, reopened, synchronize]
 
 jobs:
-  validate-checklist:
+  validate-pr:
     runs-on: ubuntu-latest
+    env:
+      PR_BODY: ${{ github.event.pull_request.body }}
     steps:
       - name: Validate PR checkboxes
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           # Remove Windows-style line endings
           PR_BODY=$(echo "$PR_BODY" | tr -d '\r')
@@ -35,4 +35,18 @@ jobs:
             exit 1
           else
             echo "✅ All required checklist items are completed."
+          fi
+
+      - name: Validate PR description
+        run: |
+          # Remove Windows-style line endings
+          PR_BODY=$(echo "$PR_BODY" | tr -d '\r')
+          
+          DESCRIPTION=$(echo "$PR_BODY" | sed -n '/<!-- START-DESCRIPTION -->/,/<!-- END-DESCRIPTION -->/p' | sed '1d;$d' | tr -d '[:space:]')
+          
+          if [[ -z "$DESCRIPTION" ]]; then
+            echo "❌ PR description is empty. Please provide a description between <!-- START-DESCRIPTION --> and <!-- END-DESCRIPTION -->"
+            exit 1
+          else
+            echo "✅ PR description is populated."
           fi
