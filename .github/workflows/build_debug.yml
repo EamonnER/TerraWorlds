@@ -1,5 +1,5 @@
 name: '[Debug] Build'
-run-name: '[Debug] Build'
+run-name: '[Debug] Build (${{ github.event.inputs.job_target }})'
 on:
   workflow_dispatch: 
     inputs: 
