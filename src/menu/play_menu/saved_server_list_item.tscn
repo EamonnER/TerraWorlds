@@ -1,10 +1,14 @@
 [gd_scene format=3 uid="uid://eh68x0kmvrrr"]
 
+[ext_resource type="StyleBox" uid="uid://b1ereu0kfyt1b" path="res://src/menu/resources/button/checkbox/normal.tres" id="1_uqr1f"]
 [ext_resource type="Script" uid="uid://we4aqgelt51b" path="res://src/menu/play_menu/saved_server_list_item.gd" id="2_q2oqb"]
+[ext_resource type="StyleBox" uid="uid://2f2rr6ki3p0q" path="res://src/menu/resources/button/checkbox/pressed.tres" id="2_um3ku"]
 [ext_resource type="Texture2D" uid="uid://c4eg3w8hxb7c4" path="res://assets/icons/edit-icon.png" id="3_j67f8"]
 
 [sub_resource type="Theme" id="Theme_ordeh"]
 default_font_size = 14
+CheckBox/styles/normal = ExtResource("1_uqr1f")
+CheckBox/styles/pressed = ExtResource("2_um3ku")
 
 [node name="SavedServerListItem" type="MarginContainer" unique_id=80071850]
 offset_right = 306.0
