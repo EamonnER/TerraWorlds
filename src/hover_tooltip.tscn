@@ -27,11 +27,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_trkuu")
 
-[node name="Tooltip" type="Label" parent="." unique_id=1758646829]
-visible = false
+[node name="Tooltip" type="Label" parent="." unique_id=141509279]
 layout_mode = 0
 offset_right = 5.0
-offset_bottom = 27.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_trkuu")
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
