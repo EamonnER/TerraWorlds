@@ -17,6 +17,10 @@ func _ready() -> void:
 	world_generator.connect("ProgressUpdate", _on_world_gen_progress_update)
 	world_generator.connect("GenCompleted", _on_world_gen_completed)
 	world_generator.connect("LoadCompleted", _on_world_load_completed)
+	
+	MultiplayerManager.connection_success.connect(_on_connection_success)
+	MultiplayerManager.connection_failed.connect(_on_connection_failed)
+
 
 func _process(_delta: float) -> void:
 	if move_to_game:
@@ -39,39 +43,47 @@ func _on_main_menu_play_button_pressed() -> void:
 func _on_play_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/MainMenu)
 
-func _on_load_world_menu_generate_new_world_button_pressed() -> void:
-	move_to_menu($Menus/GenerateWorldMenu)
-
-func load_world(world_name: String) -> void:
+func load_world(world_name: String, port: int) -> void:
 	add_sibling(game)
 	game.hide()
-	MultiplayerManager.host_server(game)
+	MultiplayerManager.host_server(game, port)
 	
 	$Menus.hide()
 	loading_screen.show()
 	
 	if world_thread.is_started(): world_thread.wait_to_finish()
-	var callable = Callable(self, "_load_world").bind(world_name)
+	var callable: Callable = Callable(self, "_load_world").bind(world_name)
 	world_thread.start(callable)
 	
 func _load_world(world_name: String) -> void:
 	world_generator.LoadWorld(world_name)
 
-## Multiplayer
-func _on_join_world_menu_back_button_pressed() -> void:
-	move_to_menu($Menus/PlayMenu)
+## Singleplayer
+func _on_load_world_menu_generate_new_world_button_pressed() -> void:
+	move_to_menu($Menus/GenerateWorldMenu)
 
+## Multiplayer
 func connect_to_server(address: String, port: int) -> void:
-	add_sibling(game)
-	game.hide()
-	MultiplayerManager.connect_to_server(game, address, port)
-	
 	$Menus.hide()
 	loading_screen.show()
+	loading_screen.call_deferred("update", "Connecting to server…", 0)
+	
+	MultiplayerManager.connect_to_server(game, address, port)
+
+func _on_connection_success():
+	loading_screen.call_deferred("update", "Loading world…", 50)
 	
 	if world_thread.is_started(): world_thread.wait_to_finish()
-	var callable = Callable(self, "_load_world").bind("World")
+	
+	add_sibling(game)
+	game.hide()
+	
+	var callable := Callable(self, "_load_world").bind("World")
 	world_thread.start(callable)
+
+func _on_connection_failed():
+	loading_screen.hide()
+	$Menus.show()
 
 
 # Generate World Menu ------------------------------------------------------------------------------
