@@ -38,6 +38,7 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="ServerDetailsContainer" type="PanelContainer" parent="VBoxContainer" unique_id=819538762]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = ExtResource("1_otp3r")
 
@@ -75,4 +76,5 @@ alignment = 1
 context_menu_enabled = false
 emoji_menu_enabled = false
 
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/ServerSelectButton" to="." method="_on_server_select_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditServerButton" to="." method="_on_edit_server_button_toggled"]

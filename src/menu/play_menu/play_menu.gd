@@ -57,6 +57,7 @@ signal connect_to_server(address: String, port: int)
 @onready var saved_servers_container: VBoxContainer = $Body/TabContainer/Multiplayer/ServersContainer/PanelContainer/ScrollContainer/VBoxContainer
 
 var saved_server_list_item_scene: PackedScene = preload("res://src/menu/play_menu/saved_server_list_item.tscn")
+var selected_server_list_item: SavedServerListItem
 
 func load_saved_servers() -> void:
 	for child in saved_servers_container.get_children():
@@ -71,6 +72,7 @@ func load_saved_servers() -> void:
 		var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
 		saved_server_list_item.set_details(server_name, server_address, server_port)
 		saved_servers_container.add_child(saved_server_list_item)
+		saved_server_list_item.just_selected.connect(_on_server_selected)
 
 func _on_add_server_button_pressed() -> void:
 	var server_name: String = new_server_name_input.get_text().strip_edges()
@@ -91,7 +93,13 @@ func _on_add_server_button_pressed() -> void:
 	load_saved_servers()
 
 func _on_multiplayer_play_pressed() -> void:
-	connect_to_server.emit("127.0.0.1", GlobalVariables.DEFAULT_PORT)
+	var server_address: String = selected_server_list_item.server_address
+	var server_port: int = selected_server_list_item.port
+	connect_to_server.emit(server_address, server_port)
+
+func _on_server_selected(server_list_item: SavedServerListItem) -> void:
+	if selected_server_list_item: selected_server_list_item.set_selected(false)
+	selected_server_list_item = server_list_item
 
 
 # Footer Buttons------------------------------------------------------------------------------------
