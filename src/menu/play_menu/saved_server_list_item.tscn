@@ -22,10 +22,12 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ServerNameLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=286386891]
+[node name="ServerSelectButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=60066385]
 layout_mode = 2
 size_flags_horizontal = 3
+toggle_mode = true
 text = "Placeholder World"
+alignment = 0
 
 [node name="EditServerButton" type="TextureButton" parent="VBoxContainer/HBoxContainer" unique_id=211340546]
 custom_minimum_size = Vector2(26, 26)
