@@ -4,10 +4,14 @@
 [ext_resource type="Script" uid="uid://we4aqgelt51b" path="res://src/menu/play_menu/saved_server_list_item.gd" id="2_q2oqb"]
 [ext_resource type="Texture2D" uid="uid://c4eg3w8hxb7c4" path="res://assets/icons/edit-icon.png" id="3_j67f8"]
 
+[sub_resource type="Theme" id="Theme_ordeh"]
+default_font_size = 14
+
 [node name="SavedServerListItem" type="PanelContainer" unique_id=1251372028]
 offset_right = 226.0
 offset_bottom = 48.0
 size_flags_horizontal = 3
+theme = SubResource("Theme_ordeh")
 theme_override_styles/panel = ExtResource("1_otp3r")
 script = ExtResource("2_q2oqb")
 
@@ -24,7 +28,7 @@ size_flags_horizontal = 3
 text = "Placeholder World"
 
 [node name="EditServerButton" type="TextureButton" parent="VBoxContainer/HBoxContainer" unique_id=211340546]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(26, 26)
 layout_mode = 2
 toggle_mode = true
 texture_normal = ExtResource("3_j67f8")
