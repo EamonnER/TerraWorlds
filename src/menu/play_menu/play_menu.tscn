@@ -81,6 +81,8 @@ metadata/_tab_index = 0
 
 [node name="WorldsTitleContainer" type="MarginContainer" parent="Body/TabContainer/Singleplayer" unique_id=70859641]
 layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 6
 
 [node name="SavedWorldsLabel" type="Label" parent="Body/TabContainer/Singleplayer/WorldsTitleContainer" unique_id=2045004946]
 layout_mode = 2

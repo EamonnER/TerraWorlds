@@ -12,6 +12,7 @@
 [ext_resource type="StyleBox" uid="uid://b5pc8fmoqduho" path="res://src/menu/resources/foldable_container/title_collapsed_panel.tres" id="8_qigcs"]
 [ext_resource type="StyleBox" uid="uid://diak6i0s4r8fn" path="res://src/menu/resources/foldable_container/title_hover_panel.tres" id="9_wc1tf"]
 [ext_resource type="StyleBox" uid="uid://btpw7nhoh0afr" path="res://src/menu/resources/foldable_container/title_panel.tres" id="10_wsnmk"]
+[ext_resource type="StyleBox" uid="uid://cq8aai0mcgxdd" path="res://src/menu/resources/tab_container/tab_selected.tres" id="12_0wynh"]
 
 [resource]
 default_font = ExtResource("1_b4wjn")
@@ -34,3 +35,6 @@ Label/constants/shadow_offset_x = 6
 Label/constants/shadow_offset_y = 4
 Label/constants/shadow_outline_size = 16
 PanelContainer/styles/panel = ExtResource("6_w0xxf")
+TabContainer/constants/outline_size = 12
+TabContainer/styles/panel = ExtResource("6_w0xxf")
+TabContainer/styles/tab_selected = ExtResource("12_0wynh")
