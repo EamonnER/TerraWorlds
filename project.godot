@@ -48,6 +48,10 @@ project/assembly_name="TerraWorlds"
 
 enabled=PackedStringArray()
 
+[gui]
+
+theme/custom="uid://3u5406hr44s6"
+
 [importer_defaults]
 
 animation_library={
