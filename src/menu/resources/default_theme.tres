@@ -6,6 +6,7 @@
 [ext_resource type="StyleBox" uid="uid://bfqet1jpi6ean" path="res://src/menu/resources/button/button_hover_pressed.tres" id="3_w0xxf"]
 [ext_resource type="StyleBox" uid="uid://db3okq72buclr" path="res://src/menu/resources/button/button_default.tres" id="4_hklgf"]
 [ext_resource type="StyleBox" uid="uid://b3a586qf7n6cm" path="res://src/menu/resources/button/button_pressed.tres" id="5_bdkko"]
+[ext_resource type="StyleBox" uid="uid://bq13810k1tot1" path="res://src/menu/resources/panel_container/panel.tres" id="6_w0xxf"]
 
 [resource]
 default_font = ExtResource("1_b4wjn")
@@ -20,3 +21,4 @@ Label/constants/outline_size = 8
 Label/constants/shadow_offset_x = 6
 Label/constants/shadow_offset_y = 4
 Label/constants/shadow_outline_size = 16
+PanelContainer/styles/panel = ExtResource("6_w0xxf")
