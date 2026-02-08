@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxf184txuburs"]
+[gd_scene format=3 uid="uid://cxf184txuburs"]
 
 [ext_resource type="Script" uid="uid://bpvf0irv7qm" path="res://src/hover_tooltip.gd" id="1_trkuu"]
 
@@ -17,7 +17,7 @@ corner_radius_bottom_left = 8
 expand_margin_left = 5.0
 expand_margin_right = 5.0
 
-[node name="HoverTooltip" type="Control"]
+[node name="HoverTooltip" type="Control" unique_id=1006313538]
 z_index = 1
 layout_mode = 3
 anchors_preset = 15
@@ -27,17 +27,12 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_trkuu")
 
-[node name="Tooltip" type="RichTextLabel" parent="."]
+[node name="Tooltip" type="Label" parent="." unique_id=1758646829]
 visible = false
-clip_contents = false
 layout_mode = 0
-offset_right = 4.0
+offset_right = 5.0
 offset_bottom = 27.0
-mouse_filter = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_trkuu")
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
