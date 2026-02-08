@@ -29,13 +29,12 @@ toggle_mode = true
 text = "Placeholder World"
 alignment = 0
 
-[node name="EditServerButton" type="TextureButton" parent="VBoxContainer/HBoxContainer" unique_id=211340546]
-custom_minimum_size = Vector2(26, 26)
+[node name="EditServerButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1813768175]
+custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 toggle_mode = true
-texture_normal = ExtResource("3_j67f8")
-ignore_texture_size = true
-stretch_mode = 5
+icon = ExtResource("3_j67f8")
+expand_icon = true
 
 [node name="ServerDetailsContainer" type="PanelContainer" parent="VBoxContainer" unique_id=819538762]
 visible = false
@@ -75,6 +74,11 @@ placeholder_text = "Server Port"
 alignment = 1
 context_menu_enabled = false
 emoji_menu_enabled = false
+
+[node name="DeleteServerButton" type="Button" parent="VBoxContainer/ServerDetailsContainer/VBoxContainer" unique_id=1169751203]
+layout_mode = 2
+text = "Delete"
+expand_icon = true
 
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/ServerSelectButton" to="." method="_on_server_select_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditServerButton" to="." method="_on_edit_server_button_toggled"]
