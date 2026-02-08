@@ -82,3 +82,7 @@ expand_icon = true
 
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/ServerSelectButton" to="." method="_on_server_select_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditServerButton" to="." method="_on_edit_server_button_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/EditServerNameInput" to="." method="_on_edit_server_name_input_editing_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/EditServerAddressInput" to="." method="_on_edit_server_address_input_editing_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/HBoxContainer/EditServerPortInput" to="." method="_on_edit_server_port_input_editing_toggled"]
+[connection signal="pressed" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/DeleteServerButton" to="." method="_on_delete_server_button_pressed"]

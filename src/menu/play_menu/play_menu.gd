@@ -41,6 +41,7 @@ func _on_singleplayer_play_pressed() -> void:
 		if port_str.is_empty(): port_str = str(GlobalVariables.DEFAULT_PORT)
 		elif !port_str.is_valid_int(): return
 		port = port_str.to_int()
+		if port < 1 or port > 65535: return
 
 	var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
 	if selected_item_indexes.is_empty(): return
