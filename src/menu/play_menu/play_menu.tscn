@@ -2,19 +2,6 @@
 
 [ext_resource type="Script" uid="uid://d10pu11wqf63v" path="res://src/menu/play_menu/play_menu.gd" id="1_rnxxs"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10kmq"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.18039216, 0.18039216, 0.18039216, 0.78431374)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0, 0, 0, 1)
-border_blend = true
-
 [sub_resource type="Theme" id="Theme_10kmq"]
 default_font_size = 24
 
@@ -149,6 +136,8 @@ metadata/_tab_index = 1
 
 [node name="SavedServersTitleContainer" type="MarginContainer" parent="Body/TabContainer/Multiplayer" unique_id=1892704889]
 layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 6
 
 [node name="SavedServersLabel" type="Label" parent="Body/TabContainer/Multiplayer/SavedServersTitleContainer" unique_id=2055691578]
 layout_mode = 2
@@ -160,7 +149,6 @@ layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Body/TabContainer/Multiplayer/ServersContainer" unique_id=1715136235]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_10kmq")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Body/TabContainer/Multiplayer/ServersContainer/PanelContainer" unique_id=66667531]
 custom_minimum_size = Vector2(0, 200)
