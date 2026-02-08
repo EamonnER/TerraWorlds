@@ -4,9 +4,14 @@
 [ext_resource type="Script" uid="uid://we4aqgelt51b" path="res://src/menu/play_menu/saved_server_list_item.gd" id="2_q2oqb"]
 [ext_resource type="Texture2D" uid="uid://c4eg3w8hxb7c4" path="res://assets/icons/edit-icon.png" id="3_j67f8"]
 
+[sub_resource type="Theme" id="Theme_ordeh"]
+default_font_size = 14
+
 [node name="SavedServerListItem" type="PanelContainer" unique_id=1251372028]
 offset_right = 226.0
 offset_bottom = 48.0
+size_flags_horizontal = 3
+theme = SubResource("Theme_ordeh")
 theme_override_styles/panel = ExtResource("1_otp3r")
 script = ExtResource("2_q2oqb")
 
@@ -15,21 +20,24 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1060638433]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="ServerNameLabel" type="Label" parent="VBoxContainer/HBoxContainer" unique_id=286386891]
+[node name="ServerSelectButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=60066385]
 layout_mode = 2
 size_flags_horizontal = 3
+toggle_mode = true
 text = "Placeholder World"
+alignment = 0
 
-[node name="EditServerButton" type="TextureButton" parent="VBoxContainer/HBoxContainer" unique_id=211340546]
+[node name="EditServerButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1813768175]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 toggle_mode = true
-texture_normal = ExtResource("3_j67f8")
-ignore_texture_size = true
-stretch_mode = 5
+icon = ExtResource("3_j67f8")
+expand_icon = true
 
 [node name="ServerDetailsContainer" type="PanelContainer" parent="VBoxContainer" unique_id=819538762]
+visible = false
 layout_mode = 2
 theme_override_styles/panel = ExtResource("1_otp3r")
 
@@ -67,4 +75,14 @@ alignment = 1
 context_menu_enabled = false
 emoji_menu_enabled = false
 
+[node name="DeleteServerButton" type="Button" parent="VBoxContainer/ServerDetailsContainer/VBoxContainer" unique_id=1169751203]
+layout_mode = 2
+text = "Delete"
+expand_icon = true
+
+[connection signal="toggled" from="VBoxContainer/HBoxContainer/ServerSelectButton" to="." method="_on_server_select_button_toggled"]
 [connection signal="toggled" from="VBoxContainer/HBoxContainer/EditServerButton" to="." method="_on_edit_server_button_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/EditServerNameInput" to="." method="_on_edit_server_name_input_editing_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/EditServerAddressInput" to="." method="_on_edit_server_address_input_editing_toggled"]
+[connection signal="editing_toggled" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/HBoxContainer/EditServerPortInput" to="." method="_on_edit_server_port_input_editing_toggled"]
+[connection signal="pressed" from="VBoxContainer/ServerDetailsContainer/VBoxContainer/DeleteServerButton" to="." method="_on_delete_server_button_pressed"]

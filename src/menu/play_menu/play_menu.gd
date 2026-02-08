@@ -3,9 +3,12 @@ extends Control
 signal back_button_pressed
 
 # Singleplayer Tab ---------------------------------------------------------------------------------
+signal load_world(world_name: String, port: int)
 signal generate_new_world_button_pressed
 
 @onready var world_list: ItemList = $Body/TabContainer/Singleplayer/WorldsContainer/WorldList
+@onready var host_server_checkbox: CheckBox = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerCheckbox
+@onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HBoxContainer/ServerPortInput
 
 func _on_generate_new_world_button_pressed() -> void:
 	generate_new_world_button_pressed.emit()
@@ -31,15 +34,46 @@ func reload_worlds() -> void:
 		world_list.add_item("No saved worlds...", null, false)
 		world_list.set_item_disabled(0, true)
 
+func _on_singleplayer_play_pressed() -> void:
+	var port: int
+	if host_server_checkbox.is_pressed():
+		var port_str: String = server_port_input.get_text().strip_edges()
+		if port_str.is_empty(): port_str = str(GlobalVariables.DEFAULT_PORT)
+		elif !port_str.is_valid_int(): return
+		port = port_str.to_int()
+		if port < 1 or port > 65535: return
+
+	var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
+	if selected_item_indexes.is_empty(): return
+	var selected_world: String = world_list.get_item_text(selected_item_indexes[0])
+	load_world.emit(selected_world, port)
+
 
 # Multiplayer Tab ----------------------------------------------------------------------------------
+signal connect_to_server(address: String, port: int)
+
 @onready var new_server_name_input: LineEdit = $Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerNameContainer/ServerNameInput
 @onready var new_server_address_input: LineEdit = $Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerAddressContainer/ServerAddressInput
 @onready var new_server_port: LineEdit = $Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerPortContainer/ServerPortInput
 @onready var saved_servers_container: VBoxContainer = $Body/TabContainer/Multiplayer/ServersContainer/PanelContainer/ScrollContainer/VBoxContainer
 
-
 var saved_server_list_item_scene: PackedScene = preload("res://src/menu/play_menu/saved_server_list_item.tscn")
+var selected_server_list_item: SavedServerListItem
+
+func load_saved_servers() -> void:
+	for child in saved_servers_container.get_children():
+		child.queue_free()
+	
+	var saved_servers: Dictionary = SavedServers.load_saved_servers()
+	for server_address in saved_servers.keys():
+		var server_info: Dictionary = saved_servers[server_address]
+		var server_name: String = server_info.get("name", "Unnamed Server")
+		var server_port: int = server_info.get("port", GlobalVariables.DEFAULT_PORT)
+		
+		var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
+		saved_server_list_item.set_details(server_name, server_address, server_port)
+		saved_servers_container.add_child(saved_server_list_item)
+		saved_server_list_item.just_selected.connect(_on_server_selected)
 
 func _on_add_server_button_pressed() -> void:
 	var server_name: String = new_server_name_input.get_text().strip_edges()
@@ -53,31 +87,33 @@ func _on_add_server_button_pressed() -> void:
 	elif !server_port_str.is_valid_int(): return
 	var server_port: int = server_port_str.to_int()
 	
-	var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
-	saved_server_list_item.set_details(server_name, server_address, server_port)
-	saved_servers_container.add_child(saved_server_list_item)
-	
+	SavedServers.add_saved_server(server_address, server_name, server_port)
 	new_server_name_input.clear()
 	new_server_address_input.clear()
 	new_server_port.clear()
+	load_saved_servers()
+
+func _on_multiplayer_play_pressed() -> void:
+	var server_address: String = selected_server_list_item.server_address
+	var server_port: int = selected_server_list_item.port
+	connect_to_server.emit(server_address, server_port)
+
+func _on_server_selected(server_list_item: SavedServerListItem) -> void:
+	if selected_server_list_item: selected_server_list_item.set_selected(false)
+	selected_server_list_item = server_list_item
 
 
 # Footer Buttons------------------------------------------------------------------------------------
-signal connect_to_server(address: String, port: int)
-signal load_world(world_name: String)
-
 func _on_play_button_pressed() -> void:
 	# Singleplayer Tab
 	if $Body/TabContainer.get_current_tab() == 0: 
-		var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
-		if selected_item_indexes.is_empty(): return
-		var selected_world: String = world_list.get_item_text(selected_item_indexes[0])
-		load_world.emit(selected_world)
+		_on_singleplayer_play_pressed()
 		return
 	
 	# Multiplayer Tab Active
 	elif $Body/TabContainer.get_current_tab() == 1:
-		connect_to_server.emit("127.0.0.1", GlobalVariables.DEFAULT_PORT)
+		_on_multiplayer_play_pressed()
+		return
 
 func _on_back_button_pressed() -> void:
 	back_button_pressed.emit()
