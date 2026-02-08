@@ -1,14 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cax1uolgb265w"]
+[gd_scene format=3 uid="uid://cax1uolgb265w"]
 
 [ext_resource type="Script" uid="uid://h2lwnr2nwdlh" path="res://src/menu/main/main_menu.gd" id="1_i7jkh"]
 
 [sub_resource type="Theme" id="Theme_7vrkn"]
 default_font_size = 32
 
-[sub_resource type="LabelSettings" id="LabelSettings_7vrkn"]
-font_size = 64
-
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=1877606801]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +15,7 @@ grow_vertical = 2
 theme = SubResource("Theme_7vrkn")
 script = ExtResource("1_i7jkh")
 
-[node name="MainContainer" type="VBoxContainer" parent="."]
+[node name="MainContainer" type="VBoxContainer" parent="." unique_id=978613245]
 layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
@@ -30,30 +27,30 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="MainContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MainContainer" unique_id=781337296]
 layout_mode = 2
 theme_override_constants/margin_bottom = 125
 
-[node name="TerraWorlds Label" type="Label" parent="MainContainer/MarginContainer"]
+[node name="TerraWorlds Label" type="Label" parent="MainContainer/MarginContainer" unique_id=172106663]
 layout_mode = 2
+theme_override_font_sizes/font_size = 64
 text = "TerraWorlds"
-label_settings = SubResource("LabelSettings_7vrkn")
 
-[node name="ButtonContainer" type="VBoxContainer" parent="MainContainer"]
+[node name="ButtonContainer" type="VBoxContainer" parent="MainContainer" unique_id=484014438]
 layout_mode = 2
 alignment = 1
 
-[node name="PlayButton" type="Button" parent="MainContainer/ButtonContainer"]
+[node name="PlayButton" type="Button" parent="MainContainer/ButtonContainer" unique_id=1130839537]
 layout_mode = 2
 accessibility_name = "Generate new world"
 text = "Play"
 
-[node name="SettingsButton" type="Button" parent="MainContainer/ButtonContainer"]
+[node name="SettingsButton" type="Button" parent="MainContainer/ButtonContainer" unique_id=1784035792]
 layout_mode = 2
 accessibility_name = "Host game button"
 text = "Settings"
 
-[node name="QuitButton" type="Button" parent="MainContainer/ButtonContainer"]
+[node name="QuitButton" type="Button" parent="MainContainer/ButtonContainer" unique_id=974173726]
 layout_mode = 2
 accessibility_name = "Join game button"
 text = "Quit"
