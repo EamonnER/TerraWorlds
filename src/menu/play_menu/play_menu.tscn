@@ -154,6 +154,8 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Body/TabContainer/Multiplayer/ServersContainer/PanelContainer/ScrollContainer" unique_id=930456203]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="AddServerContainer" type="FoldableContainer" parent="Body/TabContainer/Multiplayer" unique_id=1367802793]
 layout_mode = 2
