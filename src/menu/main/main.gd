@@ -43,6 +43,13 @@ func _on_main_menu_play_button_pressed() -> void:
 func _on_play_menu_back_button_pressed() -> void:
 	move_to_menu($Menus/MainMenu)
 
+func _load_world(world_name: String) -> void:
+	world_generator.LoadWorld(world_name)
+
+## Singleplayer
+func _on_load_world_menu_generate_new_world_button_pressed() -> void:
+	move_to_menu($Menus/GenerateWorldMenu)
+
 func load_world(world_name: String, port: int) -> void:
 	add_sibling(game)
 	game.hide()
@@ -54,13 +61,6 @@ func load_world(world_name: String, port: int) -> void:
 	if world_thread.is_started(): world_thread.wait_to_finish()
 	var callable: Callable = Callable(self, "_load_world").bind(world_name)
 	world_thread.start(callable)
-	
-func _load_world(world_name: String) -> void:
-	world_generator.LoadWorld(world_name)
-
-## Singleplayer
-func _on_load_world_menu_generate_new_world_button_pressed() -> void:
-	move_to_menu($Menus/GenerateWorldMenu)
 
 ## Multiplayer
 func connect_to_server(address: String, port: int) -> void:
