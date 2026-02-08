@@ -1,4 +1,4 @@
-extends PanelContainer
+extends MarginContainer
 class_name SavedServerListItem
 
 signal just_selected(server: SavedServerListItem)

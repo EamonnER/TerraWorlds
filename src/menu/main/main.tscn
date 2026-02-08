@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://c61vhp120lotm" path="res://src/menu/generate_world_menu/GenerateWorldMenu.tscn" id="3_4merl"]
 [ext_resource type="PackedScene" uid="uid://nbktg3ox03i" path="res://src/loading/loading_screen.tscn" id="3_rarkj"]
 [ext_resource type="Texture2D" uid="uid://d0nlpiohiv678" path="res://assets/tilesets/sky.png" id="5_qxkgr"]
+[ext_resource type="Texture2D" uid="uid://cdmxpgxq4ll3t" path="res://assets/tilesets/far.png" id="6_1qdue"]
+[ext_resource type="Texture2D" uid="uid://mcxks7o08vmh" path="res://assets/tilesets/near.png" id="7_570tr"]
 
 [node name="Main" type="Control" unique_id=1443584838]
 layout_mode = 3
@@ -56,17 +58,33 @@ offset_bottom = 360.0
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1790001943]
 layer = -1
 
-[node name="LoadingScreen" parent="CanvasLayer" unique_id=1298035323 instance=ExtResource("3_rarkj")]
-visible = false
-z_index = 1
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer" unique_id=67023631]
+[node name="Sky" type="TextureRect" parent="CanvasLayer" unique_id=67023631]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_qxkgr")
+
+[node name="Far" type="TextureRect" parent="CanvasLayer" unique_id=866195066]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_1qdue")
+
+[node name="Near" type="TextureRect" parent="CanvasLayer" unique_id=1768584994]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_570tr")
+
+[node name="LoadingScreen" parent="CanvasLayer" unique_id=1298035323 instance=ExtResource("3_rarkj")]
+visible = false
+z_index = 1
 
 [connection signal="play_button_pressed" from="Menus/MainMenu/MainMenuUI" to="." method="_on_main_menu_play_button_pressed"]
 [connection signal="back_button_pressed" from="Menus/PlayMenu/PlayMenuUI" to="." method="_on_play_menu_back_button_pressed"]

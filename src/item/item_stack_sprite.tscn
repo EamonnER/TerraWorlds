@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://dygll51d2ua07"]
+[gd_scene format=3 uid="uid://dygll51d2ua07"]
 
 [ext_resource type="Script" uid="uid://blvjip6juvqsq" path="res://src/item/item_stack_sprite.gd" id="1_8yr61"]
 [ext_resource type="PackedScene" uid="uid://cxf184txuburs" path="res://src/hover_tooltip.tscn" id="2_58r1o"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8yr61"]
+font_size = 10
 outline_size = 10
 outline_color = Color(0, 0, 0, 1)
 
-[node name="ItemStackSprite" type="Control"]
+[node name="ItemStackSprite" type="Control" unique_id=786973475]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 3
 anchors_preset = 0
@@ -16,10 +17,10 @@ offset_bottom = 32.0
 mouse_filter = 1
 script = ExtResource("1_8yr61")
 
-[node name="ItemSprite" type="AnimatedSprite2D" parent="."]
+[node name="ItemSprite" type="AnimatedSprite2D" parent="." unique_id=2067166842]
 centered = false
 
-[node name="QuantityLabel" type="Label" parent="."]
+[node name="QuantityLabel" type="Label" parent="." unique_id=1977882783]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -33,8 +34,10 @@ offset_right = 0.50001144
 offset_bottom = 7.5
 grow_horizontal = 0
 grow_vertical = 0
+text = "12"
 label_settings = SubResource("LabelSettings_8yr61")
+vertical_alignment = 1
 
-[node name="HoverTooltip" parent="." instance=ExtResource("2_58r1o")]
+[node name="HoverTooltip" parent="." unique_id=1374688609 instance=ExtResource("2_58r1o")]
 z_index = 2
 layout_mode = 1

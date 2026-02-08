@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://chobjrk2tdygd"]
 
-[ext_resource type="StyleBox" uid="uid://pslsimyhvpga" path="res://src/menu/resources/style_box.tres" id="1_10kmq"]
 [ext_resource type="Script" uid="uid://d10pu11wqf63v" path="res://src/menu/play_menu/play_menu.gd" id="1_rnxxs"]
 
 [sub_resource type="Theme" id="Theme_10kmq"]
@@ -59,9 +58,9 @@ offset_right = 120.5
 offset_bottom = 26.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("1_10kmq")
 tab_alignment = 1
 current_tab = 0
+clip_tabs = false
 
 [node name="Singleplayer" type="VBoxContainer" parent="Body/TabContainer" unique_id=711644429]
 layout_mode = 2
@@ -69,6 +68,8 @@ metadata/_tab_index = 0
 
 [node name="WorldsTitleContainer" type="MarginContainer" parent="Body/TabContainer/Singleplayer" unique_id=70859641]
 layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 6
 
 [node name="SavedWorldsLabel" type="Label" parent="Body/TabContainer/Singleplayer/WorldsTitleContainer" unique_id=2045004946]
 layout_mode = 2
@@ -135,6 +136,8 @@ metadata/_tab_index = 1
 
 [node name="SavedServersTitleContainer" type="MarginContainer" parent="Body/TabContainer/Multiplayer" unique_id=1892704889]
 layout_mode = 2
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 6
 
 [node name="SavedServersLabel" type="Label" parent="Body/TabContainer/Multiplayer/SavedServersTitleContainer" unique_id=2055691578]
 layout_mode = 2
@@ -146,7 +149,6 @@ layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Body/TabContainer/Multiplayer/ServersContainer" unique_id=1715136235]
 layout_mode = 2
-theme_override_styles/panel = ExtResource("1_10kmq")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Body/TabContainer/Multiplayer/ServersContainer/PanelContainer" unique_id=66667531]
 custom_minimum_size = Vector2(0, 200)

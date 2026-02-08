@@ -4,7 +4,7 @@ class_name HoverTooltip
 
 @export var offset: Vector2 = Vector2(8, 4)
 
-@onready var tooltip: RichTextLabel = $Tooltip
+@onready var tooltip: Label = $Tooltip
 
 func set_text(text: String) -> void:
 	tooltip.set_text(text)

@@ -1,12 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://c61vhp120lotm"]
+[gd_scene format=3 uid="uid://c61vhp120lotm"]
 
 [ext_resource type="Script" uid="uid://du5erss3ukgtd" path="res://src/menu/generate_world_menu/generate_world_menu.gd" id="1_4mf8y"]
-[ext_resource type="StyleBox" uid="uid://pslsimyhvpga" path="res://src/menu/resources/style_box.tres" id="2_rwln6"]
 
 [sub_resource type="Theme" id="Theme_4mf8y"]
 default_font_size = 24
 
-[node name="GenerateWorldMenu" type="Control"]
+[node name="GenerateWorldMenu" type="Control" unique_id=1985341030]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,7 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4mf8y")
 
-[node name="TitleContainer" type="MarginContainer" parent="."]
+[node name="TitleContainer" type="MarginContainer" parent="." unique_id=1923942974]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -26,13 +25,13 @@ offset_bottom = 50.0
 grow_horizontal = 2
 theme_override_constants/margin_top = 32
 
-[node name="Title" type="Label" parent="TitleContainer"]
+[node name="Title" type="Label" parent="TitleContainer" unique_id=1530199411]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "Generate World"
 horizontal_alignment = 1
 
-[node name="Options" type="Control" parent="."]
+[node name="Options" type="Control" parent="." unique_id=707763420]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -46,7 +45,7 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="OptionsContainer" type="PanelContainer" parent="Options"]
+[node name="OptionsContainer" type="PanelContainer" parent="Options" unique_id=1608007428]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -59,67 +58,66 @@ offset_right = 264.0
 offset_bottom = 136.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_rwln6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer" unique_id=1751723189]
 custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 alignment = 1
 
-[node name="WorldNameContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+[node name="WorldNameContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer" unique_id=241640342]
 layout_mode = 2
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer" unique_id=177767686]
 layout_mode = 2
 
-[node name="WorldNameLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer"]
+[node name="WorldNameLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer" unique_id=947579012]
 layout_mode = 2
 text = "World Name"
 
-[node name="WorldNameInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer"]
+[node name="WorldNameInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/WorldNameContainer/VBoxContainer" unique_id=1064684457]
 layout_mode = 2
 placeholder_text = "My World"
 
-[node name="SeedContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+[node name="SeedContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer" unique_id=1735486878]
 layout_mode = 2
 theme_override_constants/margin_bottom = 18
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/SeedContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/SeedContainer" unique_id=1510801272]
 layout_mode = 2
 
-[node name="SeedLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer"]
+[node name="SeedLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer" unique_id=131935870]
 layout_mode = 2
 text = "Seed"
 
-[node name="SeedInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer"]
+[node name="SeedInput" type="LineEdit" parent="Options/OptionsContainer/VBoxContainer/SeedContainer/VBoxContainer" unique_id=2135642998]
 layout_mode = 2
 placeholder_text = "Random"
 
-[node name="AdvancedOptionsContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer"]
+[node name="AdvancedOptionsContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer" unique_id=1504874055]
 layout_mode = 2
 theme_override_constants/margin_bottom = 18
 
-[node name="AdvancedOptionsContainer" type="FoldableContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer"]
+[node name="AdvancedOptionsContainer" type="FoldableContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer" unique_id=1875747055]
 layout_mode = 2
 folded = true
 title = "Advanced Options"
 
-[node name="WorldSizeContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer"]
+[node name="WorldSizeContainer" type="MarginContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer" unique_id=2026491213]
 visible = false
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer" unique_id=1093955258]
 layout_mode = 2
 
-[node name="WorldSizeLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer"]
+[node name="WorldSizeLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer" unique_id=1905247534]
 layout_mode = 2
 text = "World Size"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer" unique_id=1777698576]
 layout_mode = 2
 
-[node name="WorldSizeSlider" type="HSlider" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer"]
+[node name="WorldSizeSlider" type="HSlider" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer" unique_id=1124332175]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -132,14 +130,14 @@ tick_count = 16
 ticks_on_borders = true
 ticks_position = 3
 
-[node name="WorldSizeValueLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer"]
+[node name="WorldSizeValueLabel" type="Label" parent="Options/OptionsContainer/VBoxContainer/AdvancedOptionsContainer/AdvancedOptionsContainer/WorldSizeContainer/VBoxContainer/HBoxContainer" unique_id=294884124]
 custom_minimum_size = Vector2(28, 0)
 layout_mode = 2
 text = "64"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="Buttons" type="Control" parent="."]
+[node name="Buttons" type="Control" parent="." unique_id=1935520546]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -153,7 +151,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme = SubResource("Theme_4mf8y")
 
-[node name="ButtonsContainer" type="MarginContainer" parent="Buttons"]
+[node name="ButtonsContainer" type="MarginContainer" parent="Buttons" unique_id=553295832]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -167,14 +165,14 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_bottom = 32
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Buttons/ButtonsContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Buttons/ButtonsContainer" unique_id=1456421786]
 layout_mode = 2
 
-[node name="GenerateWorldButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer"]
+[node name="GenerateWorldButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer" unique_id=2141707051]
 layout_mode = 2
 text = "Generate World"
 
-[node name="BackButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer"]
+[node name="BackButton" type="Button" parent="Buttons/ButtonsContainer/HBoxContainer" unique_id=1986164187]
 layout_mode = 2
 text = "Back"
 
