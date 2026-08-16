@@ -15,7 +15,7 @@ func set_details(new_server_name: String, new_address: String, new_port: int = G
 	server_name = new_server_name
 	
 	$VBoxContainer/ServerDetailsContainer/VBoxContainer/EditServerAddressInput.set_text(new_address)
-	server_address = new_server_name
+	server_address = new_address
 	
 	$VBoxContainer/ServerDetailsContainer/VBoxContainer/HBoxContainer/EditServerPortInput.set_text(str(new_port))
 	port = new_port
