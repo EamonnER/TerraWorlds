@@ -60,7 +60,7 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 	Steam.setLobbyData(lobby_id, "connect_port", str(_current_host_port))
 	Steam.setLobbyData(lobby_id, "game_name", "TerraWorlds")
 
-func _on_lobby_joined(lobby_id: int) -> void:
+func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, _response: int) -> void:
 	if not _joining_from_steam_overlay:
 		return
 	
