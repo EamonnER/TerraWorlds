@@ -22,6 +22,7 @@ MultiplayerManager="*res://src/multiplayer/multiplayer_manager.gd"
 ItemOracle="*res://src/item/item_oracle.gd"
 RpcInterface="*res://src/multiplayer/rpc_interface.gd"
 SavedServers="*res://src/menu/play_menu/saved_servers.gd"
+SteamManager="*res://src/steam/steam_manager.gd"
 
 [debug]
 

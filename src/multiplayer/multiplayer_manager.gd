@@ -27,17 +27,24 @@ func host_server(game: Node2D, port: int = DEFAULT_PORT):
 	_game = game
 	RpcInterface._game = game
 	
+	if SteamManager and SteamManager.has_method("host_game"):
+		SteamManager.host_game(LOCALHOST, port)
+
 	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 	
 	if port:
 		peer.create_server(port)
 		multiplayer.multiplayer_peer = peer
-		
+	
 		multiplayer.peer_connected.connect(_peer_connected)
 		multiplayer.peer_disconnected.connect(_peer_disconnected)
 	
 	await _game.world_ready
 	request_player(1)
+
+func open_steam_invite_overlay() -> void:
+	if SteamManager and SteamManager.has_method("open_invite_overlay"):
+		SteamManager.open_invite_overlay()
 
 
 # Joining server -------------------------------------------------------------------------------------------------------
