@@ -26,9 +26,10 @@ func _on_connection_failed():
 func host_server(game: Node2D, port: int = DEFAULT_PORT):
 	_game = game
 	RpcInterface._game = game
+	print("[MultiplayerManager] host_server called on port=%s" % port)
 	
 	if SteamManager and SteamManager.has_method("host_game"):
-		SteamManager.host_game(LOCALHOST, port)
+		SteamManager.host_game("", port)
 
 	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 	
@@ -51,6 +52,7 @@ func open_steam_invite_overlay() -> void:
 func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = DEFAULT_PORT) -> void:
 	_game = game
 	RpcInterface._game = game
+	print("[MultiplayerManager] connect_to_server called target=%s:%s" % [ip, port])
 	
 	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 	peer.create_client(ip, port)
