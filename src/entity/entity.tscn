@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dxjgwg2nq0m2l"]
+[gd_scene format=3 uid="uid://dxjgwg2nq0m2l"]
 
 [ext_resource type="Script" uid="uid://nt3bjqfpg44m" path="res://src/entity/entity.gd" id="1_agdxr"]
 [ext_resource type="Texture2D" uid="uid://b0lsyi7yplcin" path="res://assets/missing-texture.png" id="2_jrrsu"]
@@ -20,16 +20,16 @@ properties/3/path = NodePath(".:scale")
 properties/3/spawn = true
 properties/3/replication_mode = 1
 
-[node name="Entity" type="CharacterBody2D"]
+[node name="Entity" type="CharacterBody2D" unique_id=244568590]
 collision_layer = 64
 collision_mask = 7
 script = ExtResource("1_agdxr")
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1147353867]
 shape = SubResource("RectangleShape2D_p841a")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="." unique_id=397724626]
 texture = ExtResource("2_jrrsu")
 
-[node name="PropertySynchronizer" type="MultiplayerSynchronizer" parent="."]
+[node name="PropertySynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=223214522]
 replication_config = SubResource("SceneReplicationConfig_jrrsu")

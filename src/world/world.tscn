@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ffx1hqubsivi"]
+[gd_scene format=3 uid="uid://ffx1hqubsivi"]
 
 [ext_resource type="Script" uid="uid://tltu3f3qx7mc" path="res://src/world/world.gd" id="1_36xlx"]
 [ext_resource type="Texture2D" uid="uid://c2chqt3jp4iwd" path="res://assets/tilesets/Tileset.png" id="2_28q0k"]
@@ -167,20 +167,20 @@ sources/0 = SubResource("TileSetAtlasSource_rn0e2")
 
 [sub_resource type="Environment" id="Environment_kgesb"]
 
-[node name="World" type="Node2D"]
+[node name="World" type="Node2D" unique_id=1948541783]
 texture_filter = 1
 script = ExtResource("1_36xlx")
 
-[node name="Foreground" type="TileMapLayer" parent="."]
+[node name="Foreground" type="TileMapLayer" parent="." unique_id=241726534]
 tile_set = SubResource("TileSet_1t5jm")
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=570472428]
 environment = SubResource("Environment_kgesb")
 
-[node name="GravityThresholdArea" type="Area2D" parent="."]
+[node name="GravityThresholdArea" type="Area2D" parent="." unique_id=1756554990]
 collision_mask = 448
 
-[node name="GravityThresholdCollision" type="CollisionPolygon2D" parent="GravityThresholdArea"]
+[node name="GravityThresholdCollision" type="CollisionPolygon2D" parent="GravityThresholdArea" unique_id=163300374]
 polygon = PackedVector2Array(11, 11, 11, -12, -11, -12, -11, 11)
 
 [connection signal="body_exited" from="GravityThresholdArea" to="." method="_on_gravity_threshold_area_body_exited"]

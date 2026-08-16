@@ -1,15 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://qt4sn1b8migs"]
+[gd_scene format=3 uid="uid://qt4sn1b8migs"]
 
 [ext_resource type="Texture2D" uid="uid://ikuds4ym37qr" path="res://assets/inventory-slot.png" id="1_je8fr"]
 [ext_resource type="Script" uid="uid://ba6ummrq652ig" path="res://src/inventory/hud/inventory_slot.gd" id="2_tps7r"]
 [ext_resource type="PackedScene" uid="uid://dygll51d2ua07" path="res://src/item/item_stack_sprite.tscn" id="3_tps7r"]
 
-[node name="InventorySlot" type="TextureRect"]
+[node name="InventorySlot" type="TextureRect" unique_id=846504710]
 z_index = 1
 texture = ExtResource("1_je8fr")
 script = ExtResource("2_tps7r")
 
-[node name="ItemStackSprite" parent="." instance=ExtResource("3_tps7r")]
+[node name="ItemStackSprite" parent="." unique_id=1481182287 instance=ExtResource("3_tps7r")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
