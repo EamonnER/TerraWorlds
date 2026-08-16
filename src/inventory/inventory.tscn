@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8w68wmnu80ky"]
+[gd_scene format=3 uid="uid://c8w68wmnu80ky"]
 
 [ext_resource type="Script" uid="uid://cvutlpsv1sup0" path="res://src/inventory/inventory.gd" id="1_dlhv8"]
 
-[node name="Inventory" type="GridContainer"]
+[node name="Inventory" type="GridContainer" unique_id=1482185411]
 script = ExtResource("1_dlhv8")

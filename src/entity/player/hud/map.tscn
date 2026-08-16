@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dqja87137idse"]
+[gd_scene format=3 uid="uid://dqja87137idse"]
 
 [ext_resource type="Script" uid="uid://boxuflbll2qk7" path="res://src/entity/player/hud/map.gd" id="1_mvjuw"]
 
 [sub_resource type="ImageTexture" id="ImageTexture_wqvko"]
 
-[node name="Map" type="ColorRect"]
+[node name="Map" type="ColorRect" unique_id=87735798]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -13,7 +13,7 @@ grow_vertical = 2
 color = Color(0.27450982, 0.27450982, 0.27450982, 0.5019608)
 script = ExtResource("1_mvjuw")
 
-[node name="MapTexture" type="TextureRect" parent="."]
+[node name="MapTexture" type="TextureRect" parent="." unique_id=1442293391]
 z_index = 1
 layout_mode = 1
 anchors_preset = 8

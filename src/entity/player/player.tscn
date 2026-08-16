@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcawu5ccdv1ty"]
+[gd_scene format=3 uid="uid://dcawu5ccdv1ty"]
 
 [ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_5qyn1"]
 [ext_resource type="Script" uid="uid://trx68tpagttj" path="res://src/entity/player/player.gd" id="1_u6ven"]
@@ -28,20 +28,19 @@ properties/5/path = NodePath("InputSynchronizer:secondary_action_pressed")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="Player" instance=ExtResource("1_5qyn1")]
+[node name="Player" unique_id=1280055544 instance=ExtResource("1_5qyn1")]
 collision_layer = 448
 collision_mask = 519
 script = ExtResource("1_u6ven")
-id = 0
 inventory = null
 
-[node name="Collision" parent="." index="0"]
+[node name="Collision" parent="." index="0" unique_id=1147353867]
 shape = SubResource("RectangleShape2D_14xgr")
 
-[node name="Sprite" parent="." index="1"]
+[node name="Sprite" parent="." index="1" unique_id=397724626]
 scale = Vector2(0.25, 0.5)
 texture = ExtResource("1_wpkrl")
 
-[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="3"]
+[node name="InputSynchronizer" type="MultiplayerSynchronizer" parent="." index="3" unique_id=19979414]
 replication_config = SubResource("SceneReplicationConfig_utwn8")
 script = ExtResource("3_utwn8")

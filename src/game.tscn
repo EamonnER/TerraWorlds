@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bmlkin1702tk0"]
+[gd_scene format=3 uid="uid://bmlkin1702tk0"]
 
 [ext_resource type="Script" uid="uid://d1cbeetmusqr" path="res://src/game.gd" id="1_1l5x6"]
 [ext_resource type="Script" uid="uid://bcsrjkokwrrjk" path="res://src/entity/player/camera.gd" id="4_qqgmn"]
@@ -9,28 +9,28 @@
 [ext_resource type="PackedScene" uid="uid://u1scj6fphukm" path="res://src/inventory/hud/inventory_ui.tscn" id="8_cdx1q"]
 [ext_resource type="PackedScene" uid="uid://ffx1hqubsivi" path="res://src/world/world.tscn" id="8_gxbsa"]
 
-[node name="Game" type="Node2D"]
+[node name="Game" type="Node2D" unique_id=647131839]
 texture_filter = 1
 script = ExtResource("1_1l5x6")
 
-[node name="World" parent="." instance=ExtResource("8_gxbsa")]
+[node name="World" parent="." unique_id=1856932014 instance=ExtResource("8_gxbsa")]
 
-[node name="Players" type="MultiplayerSpawner" parent="World"]
+[node name="Players" type="MultiplayerSpawner" parent="World" unique_id=1650478938]
 _spawnable_scenes = PackedStringArray("uid://dcawu5ccdv1ty")
 spawn_path = NodePath(".")
 
-[node name="Items" type="MultiplayerSpawner" parent="World"]
+[node name="Items" type="MultiplayerSpawner" parent="World" unique_id=1482534054]
 _spawnable_scenes = PackedStringArray("uid://bnrb5wdjhgfv7")
 spawn_path = NodePath(".")
 
-[node name="Camera" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="." unique_id=426147984]
 ignore_rotation = false
 process_callback = 0
 script = ExtResource("4_qqgmn")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=829565408]
 
-[node name="HUD" type="Control" parent="CanvasLayer"]
+[node name="HUD" type="Control" parent="CanvasLayer" unique_id=1225216373]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -41,7 +41,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("5_iee2e")
 
-[node name="Health" type="Label" parent="CanvasLayer/HUD"]
+[node name="Health" type="Label" parent="CanvasLayer/HUD" unique_id=343720608]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -61,7 +61,7 @@ size_flags_vertical = 8
 text = "Health"
 script = ExtResource("6_4awlf")
 
-[node name="Minimap" type="TextureRect" parent="CanvasLayer/HUD"]
+[node name="Minimap" type="TextureRect" parent="CanvasLayer/HUD" unique_id=1848518617]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -73,14 +73,14 @@ offset_bottom = 266.0
 grow_horizontal = 0
 script = ExtResource("5_ap3o4")
 
-[node name="Inventory" parent="CanvasLayer/HUD" instance=ExtResource("8_cdx1q")]
+[node name="Inventory" parent="CanvasLayer/HUD" unique_id=1736189 instance=ExtResource("8_cdx1q")]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 16.0
 offset_bottom = 16.0
 
-[node name="Map" parent="CanvasLayer/HUD" instance=ExtResource("8_4bcji")]
+[node name="Map" parent="CanvasLayer/HUD" unique_id=97834896 instance=ExtResource("8_4bcji")]
 visible = false
 layout_mode = 1
 color = Color(0, 0, 0, 0.78431374)

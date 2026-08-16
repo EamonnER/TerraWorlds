@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bnrb5wdjhgfv7"]
+[gd_scene format=3 uid="uid://bnrb5wdjhgfv7"]
 
 [ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_7rf8y"]
 [ext_resource type="Script" uid="uid://dmp5uqlcocv11" path="res://src/item/dropped_item.gd" id="1_etopm"]
@@ -12,23 +12,23 @@ properties/0/path = NodePath(".:quantity")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
-[node name="DroppedItem" instance=ExtResource("1_7rf8y")]
+[node name="DroppedItem" unique_id=1592915749 instance=ExtResource("1_7rf8y")]
 collision_layer = 576
 collision_mask = 263
 script = ExtResource("1_etopm")
 quantity = 1
 
-[node name="Sprite" parent="." index="1"]
+[node name="Sprite" parent="." index="1" unique_id=397724626]
 visible = false
 
-[node name="PickupArea" type="Area2D" parent="." index="3"]
+[node name="PickupArea" type="Area2D" parent="." index="3" unique_id=1487665069]
 collision_layer = 512
 collision_mask = 768
 
-[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea" index="0"]
+[node name="PickupCollision" type="CollisionShape2D" parent="PickupArea" index="0" unique_id=1634065586]
 shape = SubResource("CircleShape2D_yy7x1")
 
-[node name="ItemStackSprite" parent="." index="4" instance=ExtResource("2_7rf8y")]
+[node name="ItemStackSprite" parent="." index="4" unique_id=527013790 instance=ExtResource("2_7rf8y")]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -41,7 +41,7 @@ offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="QuantitySynchronizer" type="MultiplayerSynchronizer" parent="." index="5"]
+[node name="QuantitySynchronizer" type="MultiplayerSynchronizer" parent="." index="5" unique_id=1541883138]
 replication_config = SubResource("SceneReplicationConfig_yy7x1")
 
 [connection signal="body_entered" from="PickupArea" to="." method="_on_pickup_area_body_entered"]
