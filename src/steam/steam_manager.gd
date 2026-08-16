@@ -29,24 +29,18 @@ func host_game(host_ip: String = "", port: int = GlobalVariables.DEFAULT_PORT) -
 		_current_host_ip = _find_advertise_ip()
 	_current_host_port = port
 	_current_lobby_id = 0
-	print("[SteamManager] Creating lobby with connect target %s:%s" % [_current_host_ip, _current_host_port])
 	Steam.createLobby(Steam.LOBBY_TYPE_PUBLIC, 8)
 
 func open_invite_overlay() -> void:
 	if not _steam_initialized or _current_lobby_id == 0:
-		print("[SteamManager] open_invite_overlay ignored: steam_ready=%s lobby_id=%s" % [_steam_initialized, _current_lobby_id])
 		return
-	
-	print("[SteamManager] Opening invite overlay for lobby_id=%s" % _current_lobby_id)
 	Steam.activateGameOverlayInviteDialog(_current_lobby_id)
 
 func connect_to_steam_lobby(lobby_id: int) -> void:
 	if not _steam_initialized or lobby_id == 0:
-		print("[SteamManager] connect_to_steam_lobby ignored: steam_ready=%s lobby_id=%s" % [_steam_initialized, lobby_id])
 		return
 	
 	_joining_from_steam_overlay = true
-	print("[SteamManager] Joining Steam lobby_id=%s" % lobby_id)
 	Steam.joinLobby(lobby_id)
 
 func _initialize_steam() -> void:
@@ -76,18 +70,13 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 		# Some GodotSteam versions expose setLobbyGameServer
 		if Steam.has_method("setLobbyGameServer"):
 			Steam.setLobbyGameServer(lobby_id, _current_host_ip, _current_host_port, 0)
-			print("[SteamManager] setLobbyGameServer called for lobby_id=%s" % lobby_id)
 		else:
 			print("[SteamManager] setLobbyGameServer not available in this GodotSteam build")
-	
-	print("[SteamManager] lobby_created success lobby_id=%s metadata=%s:%s" % [lobby_id, _current_host_ip, _current_host_port])
-	# If we advertised a private/local IP, try to resolve a public IP and update lobby metadata so remote friends can connect
+		
 	if _is_private_ip(_current_host_ip):
-		print("[SteamManager] Advertised IP %s appears private — requesting public IP to update lobby metadata" % _current_host_ip)
 		_request_public_ip(lobby_id)
 
 func _on_lobby_joined(lobby_data: Variant, _permissions: int = 0, _locked: bool = false, _response: int = 0) -> void:
-	print("[SteamManager] lobby_joined callback payload=%s joining_from_overlay=%s" % [lobby_data, _joining_from_steam_overlay])
 	if not _joining_from_steam_overlay:
 		return
 
@@ -98,21 +87,18 @@ func _on_lobby_joined(lobby_data: Variant, _permissions: int = 0, _locked: bool 
 	else:
 		lobby_id = int(lobby_data)
 	if lobby_id == 0:
-		print("[SteamManager] lobby_joined ignored: parsed lobby_id=0")
 		return
 
 	var ip: String = Steam.getLobbyData(lobby_id, "connect_ip")
 	var port_text: String = Steam.getLobbyData(lobby_id, "connect_port")
 	if ip.is_empty() or port_text.is_empty():
-		print("[SteamManager] lobby metadata missing for lobby_id=%s ip='%s' port='%s' - trying getLobbyGameServer()" % [lobby_id, ip, port_text])
 		# Try fetching the lobby game server info as a fallback
 		if Steam.has_method("getLobbyGameServer"):
 			var gs = Steam.getLobbyGameServer(lobby_id)
-			print("[SteamManager] getLobbyGameServer returned: %s" % gs)
 			if gs.has("ret") and gs["ret"]:
 				ip = gs.get("ip", "")
 				port_text = str(gs.get("port", ""))
-				print("[SteamManager] Fallback lobby game server ip=%s port=%s" % [ip, port_text])
+				# fallback successful
 			else:
 				print("[SteamManager] getLobbyGameServer did not return usable server info")
 		else:
@@ -123,7 +109,6 @@ func _on_lobby_joined(lobby_data: Variant, _permissions: int = 0, _locked: bool 
 		return
 
 	var port: int = int(port_text)
-	print("[SteamManager] Emitting steam_join_connect_requested target=%s:%s from lobby_id=%s" % [ip, port, lobby_id])
 	emit_signal("steam_join_connect_requested", ip, port)
 
 func _handle_connect_lobby_arg() -> void:
@@ -131,23 +116,18 @@ func _handle_connect_lobby_arg() -> void:
 		return
 	
 	var args: PackedStringArray = OS.get_cmdline_user_args()
-	if args.size() > 0:
-		print("[SteamManager] Command line user args: %s" % args)
 	for i in range(args.size()):
 		var arg: String = args[i]
 		if arg == "+connect_lobby" and i + 1 < args.size():
-			print("[SteamManager] Detected +connect_lobby argument value=%s" % args[i + 1])
 			call_deferred("connect_to_steam_lobby", int(args[i + 1]))
 			return
 		if arg.begins_with("+connect_lobby="):
 			var lobby_id_text: String = arg.split("=", false, 1)[1]
-			print("[SteamManager] Detected +connect_lobby= argument value=%s" % lobby_id_text)
 			call_deferred("connect_to_steam_lobby", int(lobby_id_text))
 			return
 
 func _on_join_requested(a: Variant, b: Variant = null) -> void:
 	# GodotSteam may call this with either (lobby, steam_id) or (steam_id, lobby) or a dictionary; handle all.
-	print("[SteamManager] join_requested raw payloads a=%s b=%s" % [a, b])
 	var lobby_id: int = 0
 	# If a is a dictionary with 'lobby' key
 	if a is Dictionary and a.has("lobby"):
@@ -162,7 +142,6 @@ func _on_join_requested(a: Variant, b: Variant = null) -> void:
 		elif typeof(b) in [TYPE_INT, TYPE_OBJECT] and str(b) != "":
 			lobby_id = int(b)
 
-	print("[SteamManager] join_requested resolved lobby_id=%s" % lobby_id)
 	if lobby_id == 0:
 		print("[SteamManager] join_requested: could not resolve a lobby id from payloads")
 		return
@@ -212,11 +191,9 @@ func _request_public_ip(lobby_id: int) -> void:
 		return
 	# request_completed will be: result, response_code, headers, body
 	req.connect("request_completed", Callable(self, "_on_public_ip_request_completed").bind(lobby_id, req))
-	print("[SteamManager] Public IP request started for lobby_id=%s" % lobby_id)
 
 func _on_public_ip_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, lobby_id: int, req: HTTPRequest) -> void:
 	# handle the async HTTPRequest completion; args order: signal args, bound args
-	print("[SteamManager] Public IP request completed result=%s code=%s" % [result, response_code])
 	var ip: String = ""
 	if response_code == 200:
 		ip = body.get_string_from_utf8().strip_edges()
