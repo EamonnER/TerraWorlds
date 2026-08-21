@@ -190,9 +190,9 @@ func _request_public_ip(lobby_id: int) -> void:
 		req.queue_free()
 		return
 	# request_completed will be: result, response_code, headers, body
-	req.connect("request_completed", Callable(self, "_on_public_ip_request_completed").bind(lobby_id, req))
+	req.request_completed.connect(Callable(self, "_on_public_ip_request_completed").bind(lobby_id, req))
 
-func _on_public_ip_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, lobby_id: int, req: HTTPRequest) -> void:
+func _on_public_ip_request_completed(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray, lobby_id: int, req: HTTPRequest) -> void:
 	# handle the async HTTPRequest completion; args order: signal args, bound args
 	var ip: String = ""
 	if response_code == 200:
