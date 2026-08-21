@@ -43,7 +43,7 @@ project/assembly_name="TerraWorlds"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/rider-plugin/plugin.cfg")
+enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg", "res://addons/rider-plugin/plugin.cfg")
 
 [gui]
 
