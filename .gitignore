@@ -2,11 +2,11 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,godot,rider,visualstudiocode,visualstudio
 
 ### Godot ###
-# Godot 4+ specific ignores
+# Godot ignores
 .godot/
-
-# Godot-specific ignores
 .import/
+*.old
+*.old.*
 #export.cfg
 #export_presets.cfg
 
