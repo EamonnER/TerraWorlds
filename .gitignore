@@ -581,4 +581,5 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,godot,rider,visualstudiocode,visualstudio
 
-*.csproj.old*
+# General temporary dynamic libraries
+~*.dll

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dygll51d2ua07"]
 
 [ext_resource type="Script" uid="uid://blvjip6juvqsq" path="res://src/item/item_stack_sprite.gd" id="1_8yr61"]
-[ext_resource type="PackedScene" uid="uid://cxf184txuburs" path="res://src/hover_tooltip.tscn" id="2_58r1o"]
+[ext_resource type="PackedScene" uid="uid://cxf184txuburs" path="res://src/item/hover_tooltip.tscn" id="2_58r1o"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8yr61"]
 font_size = 10
