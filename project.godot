@@ -190,6 +190,7 @@ escape={
 [steam]
 
 initialization/app_data/app_id=480
+multiplayer_peer/max_channels=32
 
 [steam_server]
 
