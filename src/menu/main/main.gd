@@ -120,8 +120,8 @@ func _on_world_gen_progress_update(details: String, percent: int) -> void:
 
 func _on_world_gen_completed() -> void:
 	await get_tree().create_timer(1.5).timeout
-	$Menus.call_deferred("show")
-	loading_screen.call_deferred("hide")
+	$Menus.show.call_deferred()
+	loading_screen.hide.call_deferred()
 
 func _on_world_load_completed() -> void:
 	move_to_game = true
