@@ -4,7 +4,6 @@ signal connection_success
 signal connection_failed
 
 const LOCALHOST: String = "127.0.0.1"
-const DEFAULT_PORT: int = GlobalVariables.DEFAULT_PORT
 
 var player_scene: PackedScene = preload("res://src/entity/player/player.tscn")
 var dropped_item_scene: PackedScene = preload("res://src/item/dropped_item.tscn")
@@ -27,11 +26,12 @@ func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> vo
 	_game = game
 	RpcInterface._game = game
 	
-	if SteamManager and SteamManager.has_method("host_game"):
-		SteamManager.host_game("", multiplayer_connection_details["port"])
-	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-	
-	if multiplayer_connection_details["connection_type"] != GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.NONE:
+	if multiplayer_connection_details["connection_type"] != GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.NONE and multiplayer_connection_details["port"]:
+		if multiplayer_connection_details["connection_type"] == GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.STEAM and SteamManager and SteamManager.has_method("host_game"):
+			SteamManager.host_game("", multiplayer_connection_details["port"])
+
+		var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+		
 		peer.create_server(multiplayer_connection_details["port"])
 		multiplayer.multiplayer_peer = peer
 	
@@ -47,7 +47,7 @@ func open_steam_invite_overlay() -> void:
 
 
 # Joining server -------------------------------------------------------------------------------------------------------
-func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = DEFAULT_PORT) -> void:
+func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = GlobalVariables.DEFAULT_PORT) -> void:
 	_game = game
 	RpcInterface._game = game
 	
