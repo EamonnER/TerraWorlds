@@ -1,4 +1,4 @@
-# GodotSteam for GDExtension | Community Edition
+# GodotSteam for Godot Engine 4.x | Community Edition
 An ecosystem of tools for [Godot Engine](https://godotengine.org) and [Valve's Steam](https://store.steampowered.com). For the Windows, Linux, and Mac platforms.
 
 
@@ -14,7 +14,7 @@ Standard Module | Standard Plug-ins | Server Module | Server Plug-ins | Tools | 
 
 Documentation
 ---
-[Documentation is available here](https://godotsteam.com/).  You can also check out the Search Help section inside Godot Engine.  [To start, try checking out our tutorial on initializing Steam.](https://godotsteam.com/tutorials/initializing/)  There are additional tutorials, with more in the works.  You can also [check out additional Godot and Steam related videos, text, additional tools, plug-ins, etc. here.](https://godotsteam.com/resources/external/)
+[Documentation is available here](https://godotsteam.com).  You can also check out the Search Help section inside Godot Engine.  [To start, try checking out our tutorial on initializing Steam.](https://godotsteam.com/tutorials/initializing/)  There are additional tutorials, with more in the works.  You can also [check out additional Godot and Steam related videos, text, additional tools, plug-ins, etc. here.](https://godotsteam.com/resources/external/)
 
 Feel free to chat with us about GodotSteam or ask for assistance on the [Stoat server](https://stt.gg/9DxQ3Dcd) or [IRC on Libera Chat](irc://irc.libera.chat/#godotsteam).
 
@@ -28,25 +28,18 @@ Current Build
 ---
 You can [download pre-compiled versions of this repo here](https://codeberg.org/godotsteam/godotsteam/releases).
 
-**Version 4.21 Changes**
+**Version 4.22.1 Changes**
 
-- Added: new enums for Apps, Inputs, UGC, Utils
-- Added: new functions for Apps, Matchmaking Servers, Utils
-- Added: new callbacks for Matchmaking Servers
-- Changed: `sendMessages()` now has `delete_failed_messages` parameter
-- Changed: updated for Steamworks SDK 1.65
-- Changed: ControllerPad enum changed to SteamControllerPad
-- Changed: updated in-editor docs
-- Changed: k_cchDeveloperMetadataMax now set to 10000 instead of 5000
-- Removed: `isSteamRunningOnSteamDeck()` as new functionality was introduced in SDK 1.65
-- Removed: GameIDType enum GAME_TYPE_P2P
+- Added: link to GodotSteam site in in-editor docs, ***thanks to RTalaro***
+- Fixed: missing ! in singleton check in MultiplayerPeer close function
 
-[You can read more change-logs here](https://godotsteam.com/changelog/gdextension/).
+
+[You can read more change-logs here](https://godotsteam.com/changelog/godot4/).
 
 
 Compatibility
 ---
-While rare, sometimes Steamworks SDK updates will break compatilibity with older GodotSteam versions. Any compatability breaks are noted below.  Newer API files (dll, so, dylib) _should_ still work for older versions.
+While rare, sometimes Steamworks SDK updates will break compatibility with older GodotSteam versions. Any compatibility breaks are noted below. Newer API files (dll, so, dylib) _should_ still work for older versions.
 
 Steamworks SDK Version | GodotSteam Version
 ---|---
@@ -70,30 +63,26 @@ GodotSteam Version | Broken Compatibility
 4.16 | Variety of small break points, refer to [4.16 changelog for details](https://godotsteam.com/changelog/godot4/#version-416)
 4.17 | Windows projects using Steam SDK 1.63 are meant to work with Proton 11 or Experimental on Linux / Steam Deck.
 4.19 | Lots of changes to Voice functions, refer to [4.19 changelog for details](https://godotsteam.com/changelog/godot4/#version-419)
-4.20 | Godot 4.7 changed callable_method_pointer.h to callable_mp.h which will break backwards compatibilty
+4.20 | Godot 4.7 changed callable_method_pointer.h to callable_mp.h which will break backwards compatibility
 4.21 | ControllerPad enum changed to SteamControllerPad enum, SendMessages added new parameter
 
 
 Known Issues
 ---
-- GDExtension for 4.4 is **not** compatible with 4.3.x or lower. Please check the versions you are using.
-- Overlay will not work in the editor but will work in export projects when uploaded to Steam.  This seems to a limitation with Vulkan currently.
+- Steam Overlay ***may not*** work when running your game from Godot but the exported project should work perfectly fine in the Steam client. [Read more.](https://godotsteam.com/issues/common_issues/#steam-overlay)
+- If using the Steam version of Godot on Windows, you may need to manually update Godot's steam_api64.dll or steam_api.dll with GodotSteam's version as it is sometimes outdated and may cause the plug-in to fail to load. [Read more.](https://godotsteam.com/issues/windows_issues/#failure-to-load-steam-version)
 
 
 Quick How-To
 ---
-For complete instructions on how to build the GDExtension version of GodotSteam, [please refer to our documentation's 'How-To GDExtension' section.](https://godotsteam.com/howto/gdextension/) It will have the most up-to-date information.
+For complete instructions on how to build the Godot 4.x version of GodotSteam from scratch as either a custom editor or GDExtension, both apply to this branch:
 
-Alternatively, you can just [download the pre-compiled versions in our Releases section](https://codeberg.org/godotsteam/godotsteam/releases) or [from the Godot Asset Library](https://godotengine.org/asset-library/asset/2445) and skip compiling it yourself!
+- [Custom editor (module)](https://godotsteam.com/howto/modules)
+- [GDExtension](https://godotsteam.com/howto/gdextension)
 
+It will have the most up-to-date information.
 
-Usage
----
-Once the plug-in is added to your project, the Steam class should be available and ready to go. Enabling the plug-in in the ProjectSettings only affects the Steamworks dock and not the actual functionality.
-
-Do not use the GDExtension version of GodotSteam with any of the module versions whether it be our pre-compiled versions or ones you compile.  They are not compatible with each other.
-
-When exporting with the GDExtension version, please use the normal Godot Engine templates instead of our GodotSteam templates or you will have a lot of issues.
+Alternatively, you can skip compiling it and [download the precompiled versions in our Releases section](https://codeberg.org/godotsteam/godotsteam/releases), [the Godot Asset Library](https://godotengine.org/asset-library/asset/2445), or [the Godot Asset Store](https://store.godotengine.org/asset/godotsteam/godotsteam-gdextension/).
 
 
 No LLM Policy / No "AI" Policy
