@@ -3,19 +3,19 @@ extends Control
 signal back_button_pressed
 
 # Singleplayer Tab ---------------------------------------------------------------------------------
-signal load_world(world_name: String, port: int)
+signal load_world(world_name: String, multiplayer_connection_details: Dictionary)
 signal generate_new_world_button_pressed
 
 @onready var world_list: ItemList = $Body/TabContainer/Singleplayer/WorldsContainer/WorldList
-@onready var host_server_checkbox: CheckBox = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerCheckbox
-@onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HBoxContainer/ServerPortInput
+@onready var connection_method_option_button: OptionButton = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer/ConnectionMethodOptionButton
+@onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer/ServerPortInput
 
 func _on_generate_new_world_button_pressed() -> void:
 	generate_new_world_button_pressed.emit()
 
 func reload_worlds() -> void:
 	var worlds_path: String = ProjectSettings.globalize_path("user://worlds/")
-	var dir = DirAccess.open(worlds_path)
+	var dir: DirAccess = DirAccess.open(worlds_path)
 	if dir == null: return  # Directory doesn't exist or cannot be opened
 	
 	world_list.clear()
@@ -36,7 +36,7 @@ func reload_worlds() -> void:
 
 func _on_singleplayer_play_pressed() -> void:
 	var port: int
-	if host_server_checkbox.is_pressed():
+	if connection_method_option_button.selected != GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.NONE:
 		var port_str: String = server_port_input.get_text().strip_edges()
 		if port_str.is_empty(): port_str = str(GlobalVariables.DEFAULT_PORT)
 		elif !port_str.is_valid_int(): return
@@ -46,7 +46,11 @@ func _on_singleplayer_play_pressed() -> void:
 	var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
 	if selected_item_indexes.is_empty(): return
 	var selected_world: String = world_list.get_item_text(selected_item_indexes[0])
-	load_world.emit(selected_world, port)
+	var multiplayer_connection_details: Dictionary = {
+		"connection_type": connection_method_option_button.selected,
+		"port": port
+	}
+	load_world.emit(selected_world, multiplayer_connection_details)
 
 
 # Multiplayer Tab ----------------------------------------------------------------------------------

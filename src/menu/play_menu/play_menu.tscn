@@ -111,18 +111,32 @@ title = "Server Hosting Options"
 visible = false
 layout_mode = 2
 
-[node name="HostServerCheckbox" type="CheckBox" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer" unique_id=1546865903]
-layout_mode = 2
-text = "Host Server"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer" unique_id=301323074]
+[node name="HostServerHBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer" unique_id=114281961]
 layout_mode = 2
 
-[node name="ServerPortLabel" type="Label" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HBoxContainer" unique_id=1210582297]
+[node name="ConnectionMethodLabel" type="Label" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer" unique_id=1191579858]
+layout_mode = 2
+text = "Connection Method"
+
+[node name="ConnectionMethodOptionButton" type="OptionButton" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer" unique_id=2082819651]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "None"
+popup/item_0/id = 0
+popup/item_1/text = "Steam"
+popup/item_1/id = 1
+popup/item_2/text = "Direct IP"
+popup/item_2/id = 2
+
+[node name="ServerPortHBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer" unique_id=301323074]
+layout_mode = 2
+
+[node name="ServerPortLabel" type="Label" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer" unique_id=1210582297]
 layout_mode = 2
 text = "Server Port"
 
-[node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HBoxContainer" unique_id=353913121]
+[node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer" unique_id=353913121]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "55000"

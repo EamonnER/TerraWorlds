@@ -23,17 +23,16 @@ func _on_connection_failed():
 
 
 # Hosting server -------------------------------------------------------------------------------------------------------
-func host_server(game: Node2D, port: int = DEFAULT_PORT):
+func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> void:
 	_game = game
 	RpcInterface._game = game
 	
 	if SteamManager and SteamManager.has_method("host_game"):
-		SteamManager.host_game("", port)
-
+		SteamManager.host_game("", multiplayer_connection_details["port"])
 	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 	
-	if port:
-		peer.create_server(port)
+	if multiplayer_connection_details["connection_type"] != GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.NONE:
+		peer.create_server(multiplayer_connection_details["port"])
 		multiplayer.multiplayer_peer = peer
 	
 		multiplayer.peer_connected.connect(_peer_connected)

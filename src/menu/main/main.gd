@@ -52,10 +52,10 @@ func _load_world(world_name: String) -> void:
 func _on_load_world_menu_generate_new_world_button_pressed() -> void:
 	move_to_menu($Menus/GenerateWorldMenu)
 
-func load_world(world_name: String, port: int) -> void:
+func load_world(world_name: String, multiplayer_connection_details: Dictionary) -> void:
 	add_sibling(game)
 	game.hide()
-	MultiplayerManager.host_server(game, port)
+	MultiplayerManager.host_server(game, multiplayer_connection_details)
 	
 	$Menus.hide()
 	loading_screen.show()
