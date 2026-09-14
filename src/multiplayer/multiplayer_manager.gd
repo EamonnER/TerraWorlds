@@ -38,6 +38,7 @@ func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> vo
 
 			if result != OK:
 				print("[MultiplayerManager] Steam host creation failed: ", result)
+				return
 
 			multiplayer.multiplayer_peer = peer
 			SteamManager.host_game()
