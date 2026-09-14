@@ -1,0 +1,6 @@
+[configuration]
+entry_symbol = "steam_multiplayer_peer_init"
+compatibility_minimum = "4.7"
+
+[libraries]
+windows.debug.x86_64 = "./windows/steam-multiplayer-peer.windows.template_debug.x86_64.dll"

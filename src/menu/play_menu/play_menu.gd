@@ -100,7 +100,7 @@ func _on_add_server_button_pressed() -> void:
 func _on_multiplayer_play_pressed() -> void:
 	var server_address: String = selected_server_list_item.server_address
 	var server_port: int = selected_server_list_item.port
-	connect_to_server.emit(server_address, server_port)
+	connect_to_server.emit({"connection_type": GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.ENET, "ip": server_address, "port": server_port})
 
 func _on_server_selected(server_list_item: SavedServerListItem) -> void:
 	if selected_server_list_item: selected_server_list_item.set_selected(false)

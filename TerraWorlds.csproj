@@ -7,4 +7,7 @@
     <None Include="**/*.tscn" />
     <None Include="**/*.gd" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="addons\steam-multiplayer-peer\windows\" />
+  </ItemGroup>
 </Project>

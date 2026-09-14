@@ -20,8 +20,7 @@ func _ready() -> void:
 	
 	MultiplayerManager.connection_success.connect(_on_connection_success)
 	MultiplayerManager.connection_failed.connect(_on_connection_failed)
-	if SteamManager and SteamManager.has_signal("steam_join_connect_requested"):
-		SteamManager.steam_join_connect_requested.connect(_on_steam_join_connect_requested)
+	SteamManager.steam_lobby_joined.connect(connect_to_server)
 
 
 func _process(_delta: float) -> void:
@@ -65,12 +64,12 @@ func load_world(world_name: String, multiplayer_connection_details: Dictionary) 
 	world_thread.start(callable)
 
 ## Multiplayer
-func connect_to_server(address: String, port: int) -> void:
+func connect_to_server(multiplayer_connection_details: Dictionary) -> void:
 	$Menus.hide()
 	loading_screen.show()
 	loading_screen.call_deferred("update", "Connecting to server…", 0)
 	
-	MultiplayerManager.connect_to_server(game, address, port)
+	MultiplayerManager.connect_to_server(game, multiplayer_connection_details)
 
 func _on_connection_success():
 	loading_screen.call_deferred("update", "Loading world…", 50)
@@ -83,12 +82,9 @@ func _on_connection_success():
 	var callable := Callable(self, "_load_world").bind("World")
 	world_thread.start(callable)
 
-func _on_connection_failed():
+func _on_connection_failed() -> void:
 	loading_screen.hide()
 	$Menus.show()
-
-func _on_steam_join_connect_requested(address: String, port: int) -> void:
-	connect_to_server(address, port)
 
 
 # Generate World Menu ------------------------------------------------------------------------------
