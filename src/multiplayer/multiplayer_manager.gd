@@ -20,12 +20,6 @@ func _on_connected():
 func _on_connection_failed():
 	connection_failed.emit()
 
-func _process(_delta: float) -> void:
-	var peer := multiplayer.multiplayer_peer
-
-	if peer is ExpressoSteamMultiplayerPeer:
-		peer.poll()
-
 
 # Hosting server -------------------------------------------------------------------------------------------------------
 func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> void:
