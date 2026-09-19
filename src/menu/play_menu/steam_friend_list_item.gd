@@ -8,15 +8,19 @@ var steam_id: int
 var steam_name: String
 var status: String
 var lobby_id: int
+var avatar: Texture2D
 
 
-func set_details(new_steam_id: int, new_steam_name: String, new_status: String, new_lobby_id: int) -> void:
+func set_details(new_steam_id: int, new_avatar: Texture2D, new_steam_name: String, new_status: String, new_lobby_id: int) -> void:
 	steam_id = new_steam_id
 	steam_name = new_steam_name
 	status = new_status
 	lobby_id = new_lobby_id
+	avatar = new_avatar
 
 	$SteamFriendButton.set_text(steam_name)
+	if avatar:
+		$SteamFriendButton.set_button_icon(avatar)
 
 
 func set_selected(selected: bool) -> void:

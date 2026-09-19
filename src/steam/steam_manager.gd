@@ -188,6 +188,9 @@ func get_friends_playing_game() -> void:
 
 		if lobby_id == 0:
 			continue
+
+		var avatar_handle := Steam.getSmallFriendAvatar(steam_id)
+		var avatar := get_avatar_texture(avatar_handle)
 		
 		var friend := {
 			"steam_id": steam_id,
@@ -198,11 +201,42 @@ func get_friends_playing_game() -> void:
 			),
 			"game": game,
 			"lobby_id": lobby_id,
+			"avatar": avatar
 			}
 
 		friends.append(friend)
 	
 	friends_updated.emit(friends)
+
+
+func get_avatar_texture(avatar_handle: int) -> Texture2D:
+	if avatar_handle <= 0:
+		return null
+
+	var size: Dictionary = Steam.getImageSize(avatar_handle)
+
+	if size.width <= 0 or size.height <= 0:
+		return null
+
+	var image_data: Dictionary = Steam.getImageRGBA(avatar_handle)
+
+	if not image_data.success:
+		return null
+
+	var buffer: PackedByteArray = image_data.buffer
+
+	if buffer.is_empty():
+		return null
+
+	var image := Image.create_from_data(
+			size.width,
+			size.height,
+			false,
+			Image.FORMAT_RGBA8,
+			buffer
+	)
+
+	return ImageTexture.create_from_image(image)
 
 
 func _on_join_requested(a: Variant, b: Variant = null) -> void:

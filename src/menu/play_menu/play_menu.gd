@@ -87,6 +87,7 @@ func populate_steam_friend_list(friends: Array[Dictionary]) -> void:
 	
 	for friend in friends:
 		var steam_id: int = friend.get("steam_id", 0)
+		var avatar: Texture2D = friend.get("avatar", null)
 		var steam_name: String = friend.get("name", "Unknown")
 		var status: String = friend.get("status", "Unknown")
 		var lobby_id: int = friend.get("lobby_id", 0)
@@ -95,7 +96,7 @@ func populate_steam_friend_list(friends: Array[Dictionary]) -> void:
 			continue  # Skip friends not in a lobby
 		
 		var steam_friend_list_item: SteamFriendListItem = steam_friend_list_item_scene.instantiate()
-		steam_friend_list_item.set_details(steam_id, steam_name, status, lobby_id)
+		steam_friend_list_item.set_details(steam_id, avatar, steam_name, status, lobby_id)
 		steam_friends_container.add_child(steam_friend_list_item)
 		steam_friend_list_item.just_selected.connect(_on_item_selected)
 
