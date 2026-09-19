@@ -82,7 +82,7 @@ func connect_to_server(game: Node2D, multiplayer_connection_details: Dictionary)
 	multiplayer.multiplayer_peer = peer
 
 
-# On peer connection ---------------------------------------------------------------------------------------------------
+# Peer connection ------------------------------------------------------------------------------------------------------
 func _peer_connected(id: int):
 	request_player(id)
 
@@ -99,7 +99,19 @@ func request_player(id: int) -> void:
 	player.update_rotation()
 
 
-# On peer disconnection ------------------------------------------------------------------------------------------------
+# Peer disconnection ---------------------------------------------------------------------------------------------------
+func disconnect_from_server() -> void:
+	if multiplayer.multiplayer_peer == null:
+		return
+
+	multiplayer.multiplayer_peer.close()
+	multiplayer.multiplayer_peer = null
+
+	if SteamManager:
+		SteamManager.leave_lobby()
+
+	print("[MultiplayerManager] Disconnected from server")
+
 func _peer_disconnected(id: int):
 	remove_player(id)
 

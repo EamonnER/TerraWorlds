@@ -129,6 +129,20 @@ func _on_lobby_joined(
 	})
 
 
+func leave_lobby() -> void:
+	if not _steam_initialized:
+		return
+
+	if _current_lobby_id != 0:
+		print("[SteamManager] Leaving lobby: ", _current_lobby_id)
+		Steam.leaveLobby(_current_lobby_id)
+
+	_current_lobby_id = 0
+	_current_host_steam_id = 0
+
+	Steam.clearRichPresence()
+
+
 # --------------------------------------------------------------------
 # Steam launch / invite handling
 # --------------------------------------------------------------------

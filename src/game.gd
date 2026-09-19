@@ -20,5 +20,6 @@ func load_world() -> void:
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("escape"):
+		MultiplayerManager.disconnect_from_server()
 		get_tree().change_scene_to_file("res://src/menu/main/main.tscn")
 		queue_free()
