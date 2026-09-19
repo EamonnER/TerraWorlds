@@ -3,6 +3,8 @@ extends Node
 signal steam_lobby_joined(multiplayer_connection_details: Dictionary)
 signal steam_lobby_created(lobby_id: int)
 
+signal friends_updated(friends: Array[Dictionary])
+
 var _steam_initialized: bool = false
 var _current_lobby_id: int = 0
 var _current_host_steam_id: int = 0
@@ -54,6 +56,11 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 	# The lobby owner is the host.
 	Steam.setLobbyData(lobby_id, "host_steam_id", str(_current_host_steam_id))
 	Steam.setLobbyData(lobby_id, "game_name", "TerraWorlds")
+
+	Steam.setRichPresence("status", "Playing TerraWorlds")
+	Steam.setRichPresence("lobby_id", str(lobby_id))
+	Steam.setRichPresence("game", "TerraWorlds")
+	Steam.setRichPresence("connect", "+connect_lobby " + str(lobby_id))
 
 	print("[SteamManager] Lobby created: ", lobby_id)
 	print("[SteamManager] Host SteamID: ", _current_host_steam_id)
@@ -146,6 +153,57 @@ func _handle_connect_lobby_arg() -> void:
 
 			call_deferred("join_lobby", lobby_id)
 			return
+
+
+func get_friends_playing_game() -> void:
+	var friends: Array[Dictionary] = []
+
+	var friend_count := Steam.getFriendCount(
+			Steam.FRIEND_FLAG_IMMEDIATE
+	)
+
+	for i in range(friend_count):
+		var steam_id := Steam.getFriendByIndex(
+				i,
+				Steam.FRIEND_FLAG_IMMEDIATE
+		)
+
+		if steam_id == 0:
+			continue
+
+		var game := Steam.getFriendRichPresence(
+				steam_id,
+				"game"
+		)
+
+		if game != "TerraWorlds":
+			continue
+
+		var lobby_id := int(
+				Steam.getFriendRichPresence(
+						steam_id,
+						"lobby_id"
+				)
+		)
+
+		if lobby_id == 0:
+			continue
+		
+		var friend := {
+			"steam_id": steam_id,
+			"name": Steam.getFriendPersonaName(steam_id),
+			"status": Steam.getFriendRichPresence(
+					steam_id,
+					"status"
+			),
+			"game": game,
+			"lobby_id": lobby_id,
+			}
+		print("[SteamManager] Friend playing TerraWorlds: ", friend)
+
+		friends.append(friend)
+	
+	friends_updated.emit(friends)
 
 
 func _on_join_requested(a: Variant, b: Variant = null) -> void:

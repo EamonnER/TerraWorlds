@@ -36,6 +36,7 @@ func _process(_delta: float) -> void:
 # Main Menu ----------------------------------------------------------------------------------------
 func _on_main_menu_play_button_pressed() -> void:
 	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
+	SteamManager.get_friends_playing_game()
 	$Menus/PlayMenu/PlayMenuUI.load_saved_servers()
 	move_to_menu($Menus/PlayMenu)
 
