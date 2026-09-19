@@ -2,6 +2,7 @@ extends Node
 
 signal connection_success
 signal connection_failed
+signal disconnected_from_server
 
 const LOCALHOST: String = "127.0.0.1"
 
@@ -111,6 +112,7 @@ func disconnect_from_server() -> void:
 		SteamManager.leave_lobby()
 
 	print("[MultiplayerManager] Disconnected from server")
+	disconnected_from_server.emit()
 
 func _peer_disconnected(id: int):
 	remove_player(id)

@@ -18,8 +18,13 @@ func load_world() -> void:
 	
 	emit_signal("world_ready")
 
+func _ready() -> void:
+	MultiplayerManager.disconnected_from_server.connect(_on_disconnected_from_server)
+
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("escape"):
 		MultiplayerManager.disconnect_from_server()
-		get_tree().change_scene_to_file("res://src/menu/main/main.tscn")
-		queue_free()
+
+func _on_disconnected_from_server() -> void:
+	get_tree().change_scene_to_file("res://src/menu/main/main.tscn")
+	queue_free()
