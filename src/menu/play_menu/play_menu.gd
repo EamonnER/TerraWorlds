@@ -12,6 +12,7 @@ signal generate_new_world_button_pressed
 @onready var world_list: ItemList = $Body/TabContainer/Singleplayer/WorldsContainer/WorldList
 @onready var connection_method_option_button: OptionButton = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer/ConnectionMethodOptionButton
 @onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer/ServerPortInput
+@onready var server_port_hbox: HBoxContainer = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer
 
 func _on_generate_new_world_button_pressed() -> void:
 	generate_new_world_button_pressed.emit()
@@ -54,6 +55,15 @@ func _on_singleplayer_play_pressed() -> void:
 		"port": port
 	}
 	load_world.emit(selected_world, multiplayer_connection_details)
+
+
+func _on_connection_method_option_button_item_selected(index: int) -> void:
+	if index == 0:  # None
+		server_port_hbox.hide()
+	elif index == 1:  # Steam
+		server_port_hbox.hide()
+	elif index == 2:  # ENet
+		server_port_hbox.show()
 
 
 # Multiplayer Tab ----------------------------------------------------------------------------------

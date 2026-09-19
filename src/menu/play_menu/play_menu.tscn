@@ -130,6 +130,7 @@ popup/item_2/text = "Direct IP"
 popup/item_2/id = 2
 
 [node name="ServerPortHBoxContainer" type="HBoxContainer" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer" unique_id=301323074]
+visible = false
 layout_mode = 2
 
 [node name="ServerPortLabel" type="Label" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer" unique_id=1210582297]
@@ -288,6 +289,7 @@ text = "Back"
 
 [connection signal="pressed" from="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer/GenerateNewWorldButton" to="." method="_on_generate_new_world_button_pressed"]
 [connection signal="pressed" from="Body/TabContainer/Singleplayer/MarginContainer/HBoxContainer/ReloadButton" to="." method="reload_worlds"]
+[connection signal="item_selected" from="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer/ConnectionMethodOptionButton" to="." method="_on_connection_method_option_button_item_selected"]
 [connection signal="pressed" from="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/AddServerButton" to="." method="_on_add_server_button_pressed"]
 [connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="Footer/ButtonContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
