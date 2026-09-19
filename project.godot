@@ -22,6 +22,7 @@ MultiplayerManager="*res://src/multiplayer/multiplayer_manager.gd"
 ItemOracle="*res://src/item/item_oracle.gd"
 RpcInterface="*res://src/multiplayer/rpc_interface.gd"
 SavedServers="*res://src/menu/play_menu/saved_servers.gd"
+SteamManager="*res://src/steam/steam_manager.gd"
 
 [debug]
 
@@ -42,7 +43,7 @@ project/assembly_name="TerraWorlds"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/rider-plugin/plugin.cfg")
+enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg", "res://addons/rider-plugin/plugin.cfg")
 
 [gui]
 
@@ -188,10 +189,8 @@ escape={
 
 [steam]
 
-initialization/app_id=0
-initialization/initialize_on_startup=false
-initialization/embed_callbacks=false
-multiplayer_peer/max_channels=4
+initialization/app_data/app_id=480
+multiplayer_peer/max_channels=32
 
 [steam_server]
 

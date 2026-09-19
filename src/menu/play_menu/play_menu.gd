@@ -2,20 +2,24 @@ extends Control
 
 signal back_button_pressed
 
+func _ready() -> void:
+	SteamManager.friends_updated.connect(populate_steam_friend_list)
+
 # Singleplayer Tab ---------------------------------------------------------------------------------
-signal load_world(world_name: String, port: int)
+signal load_world(world_name: String, multiplayer_connection_details: Dictionary)
 signal generate_new_world_button_pressed
 
 @onready var world_list: ItemList = $Body/TabContainer/Singleplayer/WorldsContainer/WorldList
-@onready var host_server_checkbox: CheckBox = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerCheckbox
-@onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HBoxContainer/ServerPortInput
+@onready var connection_method_option_button: OptionButton = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/HostServerHBoxContainer/ConnectionMethodOptionButton
+@onready var server_port_input: LineEdit = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer/ServerPortInput
+@onready var server_port_hbox: HBoxContainer = $Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer
 
 func _on_generate_new_world_button_pressed() -> void:
 	generate_new_world_button_pressed.emit()
 
 func reload_worlds() -> void:
 	var worlds_path: String = ProjectSettings.globalize_path("user://worlds/")
-	var dir = DirAccess.open(worlds_path)
+	var dir: DirAccess = DirAccess.open(worlds_path)
 	if dir == null: return  # Directory doesn't exist or cannot be opened
 	
 	world_list.clear()
@@ -36,7 +40,7 @@ func reload_worlds() -> void:
 
 func _on_singleplayer_play_pressed() -> void:
 	var port: int
-	if host_server_checkbox.is_pressed():
+	if connection_method_option_button.selected != GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.NONE:
 		var port_str: String = server_port_input.get_text().strip_edges()
 		if port_str.is_empty(): port_str = str(GlobalVariables.DEFAULT_PORT)
 		elif !port_str.is_valid_int(): return
@@ -46,10 +50,67 @@ func _on_singleplayer_play_pressed() -> void:
 	var selected_item_indexes: PackedInt32Array = world_list.get_selected_items()
 	if selected_item_indexes.is_empty(): return
 	var selected_world: String = world_list.get_item_text(selected_item_indexes[0])
-	load_world.emit(selected_world, port)
+	var multiplayer_connection_details: Dictionary = {
+		"connection_type": connection_method_option_button.selected,
+		"port": port
+	}
+	load_world.emit(selected_world, multiplayer_connection_details)
+
+
+func _on_connection_method_option_button_item_selected(index: int) -> void:
+	if index == 0:  # None
+		server_port_hbox.hide()
+	elif index == 1:  # Steam
+		server_port_hbox.hide()
+	elif index == 2:  # ENet
+		server_port_hbox.show()
 
 
 # Multiplayer Tab ----------------------------------------------------------------------------------
+var selected_item: MarginContainer
+
+func _on_item_selected(item: MarginContainer) -> void:
+	if selected_item: selected_item.set_selected(false)
+	selected_item = item
+
+func _on_multiplayer_play_pressed() -> void:
+	if not selected_item: return
+	
+	elif selected_item is SteamFriendListItem:
+		var lobby_id: int = selected_item.lobby_id
+		var host_steam_id: int = selected_item.steam_id
+		connect_to_server.emit({"connection_type": GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.STEAM, "lobby_id": lobby_id, "host_steam_id": host_steam_id})
+	
+	elif selected_item is SavedServerListItem:
+		var server_address: String = selected_item.server_address
+		var server_port: int = selected_item.port
+		connect_to_server.emit({"connection_type": GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.ENET, "ip": server_address, "port": server_port})
+
+# Steam Connections
+@onready var steam_friends_container: VBoxContainer = $Body/TabContainer/Multiplayer/JoinFriendsContainer/PanelContainer/ScrollContainer/VBoxContainer
+
+var steam_friend_list_item_scene: PackedScene = preload("res://src/menu/play_menu/steam_friend_list_item.tscn")
+
+func populate_steam_friend_list(friends: Array[Dictionary]) -> void:
+	for child in steam_friends_container.get_children():
+		child.queue_free()
+	
+	for friend in friends:
+		var steam_id: int = friend.get("steam_id", 0)
+		var avatar: Texture2D = friend.get("avatar", null)
+		var steam_name: String = friend.get("name", "Unknown")
+		var status: String = friend.get("status", "Unknown")
+		var lobby_id: int = friend.get("lobby_id", 0)
+		
+		if lobby_id == 0:
+			continue  # Skip friends not in a lobby
+		
+		var steam_friend_list_item: SteamFriendListItem = steam_friend_list_item_scene.instantiate()
+		steam_friend_list_item.set_details(steam_id, avatar, steam_name, status, lobby_id)
+		steam_friends_container.add_child(steam_friend_list_item)
+		steam_friend_list_item.just_selected.connect(_on_item_selected)
+
+# ENET / Server Connections
 signal connect_to_server(address: String, port: int)
 
 @onready var new_server_name_input: LineEdit = $Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerNameContainer/ServerNameInput
@@ -58,7 +119,6 @@ signal connect_to_server(address: String, port: int)
 @onready var saved_servers_container: VBoxContainer = $Body/TabContainer/Multiplayer/ServersContainer/PanelContainer/ScrollContainer/VBoxContainer
 
 var saved_server_list_item_scene: PackedScene = preload("res://src/menu/play_menu/saved_server_list_item.tscn")
-var selected_server_list_item: SavedServerListItem
 
 func load_saved_servers() -> void:
 	for child in saved_servers_container.get_children():
@@ -73,7 +133,7 @@ func load_saved_servers() -> void:
 		var saved_server_list_item: SavedServerListItem = saved_server_list_item_scene.instantiate()
 		saved_server_list_item.set_details(server_name, server_address, server_port)
 		saved_servers_container.add_child(saved_server_list_item)
-		saved_server_list_item.just_selected.connect(_on_server_selected)
+		saved_server_list_item.just_selected.connect(_on_item_selected)
 
 func _on_add_server_button_pressed() -> void:
 	var server_name: String = new_server_name_input.get_text().strip_edges()
@@ -92,15 +152,6 @@ func _on_add_server_button_pressed() -> void:
 	new_server_address_input.clear()
 	new_server_port.clear()
 	load_saved_servers()
-
-func _on_multiplayer_play_pressed() -> void:
-	var server_address: String = selected_server_list_item.server_address
-	var server_port: int = selected_server_list_item.port
-	connect_to_server.emit(server_address, server_port)
-
-func _on_server_selected(server_list_item: SavedServerListItem) -> void:
-	if selected_server_list_item: selected_server_list_item.set_selected(false)
-	selected_server_list_item = server_list_item
 
 
 # Footer Buttons------------------------------------------------------------------------------------

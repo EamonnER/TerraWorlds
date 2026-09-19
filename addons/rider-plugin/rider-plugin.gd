@@ -3,9 +3,7 @@ extends EditorPlugin
 
 var editor_settings: EditorSettings
 var checkbutton: CheckButton
-var rider_button: Button
 var _preset_applier: PresetApplier
-var _settings_service: EditorSettingsService
 var _locator_service: RiderLocatorService
 var _plugin_cfg_path: String
 var _presets_json_path: String
@@ -15,12 +13,16 @@ func _enter_tree() -> void:
 	var script_path := (get_script() as Script).resource_path
 	var plugin_dir := script_path.get_base_dir()
 	_plugin_cfg_path = plugin_dir + "/plugin.cfg"
+
+	_write_godot_editor_cfg()
+
 	var cfg := ConfigFile.new()
 	var err := cfg.load(_plugin_cfg_path)
 	if err != OK:
 		push_warning("Failed to load plugin.cfg: %s" % [err])
 		return
-	var active := str(cfg.get_value("presets", "active", "on"))
+	var active_str := str(cfg.get_value("presets", "active", "on"))
+	var is_active := active_str == "on"
 	var presets_rel_path := str(cfg.get_value("presets", "presets", "presets.json"))
 	_presets_json_path = plugin_dir + "/" + presets_rel_path
 
@@ -28,40 +30,49 @@ func _enter_tree() -> void:
 	checkbutton = CheckButton.new()
 	checkbutton.text = "Use Rider"
 	checkbutton.tooltip_text = "Shortcut for setting recommended settings"
-	checkbutton.button_pressed = active == "on"
+	checkbutton.button_pressed = is_active
 	checkbutton.pressed.connect(_on_checkbutton_pressed)
 	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, checkbutton)
 
 	# Initialize services and panel
-	_settings_service = EditorSettingsService.new()
 	_locator_service = RiderLocatorService.new()
 	_preset_applier = PresetApplier.new(_presets_json_path)
 
-	_locator_service.add_selector_in_editor_interface(_settings_service)
+	_locator_service.start_search()
 
 	# Ensure settings reflect current state on startup
-	_apply_preset(active)
+	_preset_applier.apply_preset(editor_settings, is_active)
 
 func _on_checkbutton_pressed() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load(_plugin_cfg_path) != OK:
 		push_warning("Failed to load plugin.cfg to update state")
 		return
-	var new_active: String = "off"
-	if checkbutton.button_pressed:
-		new_active = "on"
-	cfg.set_value("presets", "active", new_active)
+	var is_active := checkbutton.button_pressed
+	var key := _preset_applier.get_preset_key(is_active)
+	cfg.set_value("presets", "active", key)
 	var save_err := cfg.save(_plugin_cfg_path)
 	if save_err != OK:
 		push_warning("Failed to save plugin.cfg: %s" % [save_err])
 	# Apply selected preset to editor settings
-	_apply_preset(new_active)
-
-func _apply_preset(active: String) -> void:
-	_preset_applier.apply_preset(editor_settings, active)
+	_preset_applier.apply_preset(editor_settings, is_active)
 
 func _exit_tree() -> void:
-	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, checkbutton)
-	remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, rider_button)
-	checkbutton.free()
-	rider_button.free()
+	EditorSettingsUtil.erase_rider_external_editor_setting()
+	if checkbutton != null:
+		remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, checkbutton)
+		checkbutton.queue_free()
+		
+	var args := OS.get_cmdline_args()
+	if "--rider-addon-tests" in args:
+		print("==== rider-addon-tests finished ====")
+
+func _write_godot_editor_cfg() -> void:
+	var settings_dir := EditorInterface.get_editor_paths().get_project_settings_dir()
+	var cfg_path := settings_dir.path_join("rider_addon_godot_editor.cfg")
+	var cfg := ConfigFile.new()
+	cfg.set_value("editor_metadata", "process_id", OS.get_process_id())
+	cfg.set_value("editor_metadata", "executable_path", OS.get_executable_path())
+	var err := cfg.save(cfg_path)
+	if err != OK:
+		push_warning("Failed to save rider_addon_godot_editor.cfg: %s" % [err])

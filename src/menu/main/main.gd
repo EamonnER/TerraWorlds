@@ -20,6 +20,7 @@ func _ready() -> void:
 	
 	MultiplayerManager.connection_success.connect(_on_connection_success)
 	MultiplayerManager.connection_failed.connect(_on_connection_failed)
+	SteamManager.steam_lobby_joined.connect(connect_to_server)
 
 
 func _process(_delta: float) -> void:
@@ -35,6 +36,7 @@ func _process(_delta: float) -> void:
 # Main Menu ----------------------------------------------------------------------------------------
 func _on_main_menu_play_button_pressed() -> void:
 	$Menus/PlayMenu/PlayMenuUI.reload_worlds()
+	SteamManager.get_friends_playing_game()
 	$Menus/PlayMenu/PlayMenuUI.load_saved_servers()
 	move_to_menu($Menus/PlayMenu)
 
@@ -50,10 +52,10 @@ func _load_world(world_name: String) -> void:
 func _on_load_world_menu_generate_new_world_button_pressed() -> void:
 	move_to_menu($Menus/GenerateWorldMenu)
 
-func load_world(world_name: String, port: int) -> void:
+func load_world(world_name: String, multiplayer_connection_details: Dictionary) -> void:
 	add_sibling(game)
 	game.hide()
-	MultiplayerManager.host_server(game, port)
+	MultiplayerManager.host_server(game, multiplayer_connection_details)
 	
 	$Menus.hide()
 	loading_screen.show()
@@ -63,12 +65,12 @@ func load_world(world_name: String, port: int) -> void:
 	world_thread.start(callable)
 
 ## Multiplayer
-func connect_to_server(address: String, port: int) -> void:
+func connect_to_server(multiplayer_connection_details: Dictionary) -> void:
 	$Menus.hide()
 	loading_screen.show()
 	loading_screen.call_deferred("update", "Connecting to server…", 0)
 	
-	MultiplayerManager.connect_to_server(game, address, port)
+	MultiplayerManager.connect_to_server(game, multiplayer_connection_details)
 
 func _on_connection_success():
 	loading_screen.call_deferred("update", "Loading world…", 50)
@@ -81,7 +83,7 @@ func _on_connection_success():
 	var callable := Callable(self, "_load_world").bind("World")
 	world_thread.start(callable)
 
-func _on_connection_failed():
+func _on_connection_failed() -> void:
 	loading_screen.hide()
 	$Menus.show()
 
@@ -115,8 +117,8 @@ func _on_world_gen_progress_update(details: String, percent: int) -> void:
 
 func _on_world_gen_completed() -> void:
 	await get_tree().create_timer(1.5).timeout
-	$Menus.call_deferred("show")
-	loading_screen.call_deferred("hide")
+	$Menus.show.call_deferred()
+	loading_screen.hide.call_deferred()
 
 func _on_world_load_completed() -> void:
 	move_to_game = true
