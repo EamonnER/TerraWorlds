@@ -199,7 +199,6 @@ func get_friends_playing_game() -> void:
 			"game": game,
 			"lobby_id": lobby_id,
 			}
-		print("[SteamManager] Friend playing TerraWorlds: ", friend)
 
 		friends.append(friend)
 	
