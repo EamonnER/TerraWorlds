@@ -22,11 +22,46 @@ theme_override_constants/margin_bottom = 2
 script = ExtResource("3_88uuu")
 
 [node name="SteamFriendButton" type="Button" parent="." unique_id=60066385]
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
-text = "Placeholder Friend"
-icon = ExtResource("4_rvjvg")
 alignment = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SteamFriendButton" unique_id=2090415199]
+layout_mode = 0
+offset_right = 302.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SteamFriendButton/HBoxContainer" unique_id=1325596261]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 4
+
+[node name="SteamAvatarTextureRect" type="TextureRect" parent="SteamFriendButton/HBoxContainer/MarginContainer" unique_id=1734184701]
+custom_minimum_size = Vector2(32, 32)
+custom_maximum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+texture = ExtResource("4_rvjvg")
+expand_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SteamFriendButton/HBoxContainer" unique_id=1054128145]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="SteamNameLabel" type="Label" parent="SteamFriendButton/HBoxContainer/VBoxContainer" unique_id=2070641066]
+layout_mode = 2
+text = "Placeholder Name"
+
+[node name="SteamStatusLabel" type="Label" parent="SteamFriendButton/HBoxContainer/VBoxContainer" unique_id=1554348141]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_font_sizes/font_size = 8
+text = "Placeholder Status"
 
 [connection signal="toggled" from="SteamFriendButton" to="." method="_on_steam_friend_select_button_toggled"]

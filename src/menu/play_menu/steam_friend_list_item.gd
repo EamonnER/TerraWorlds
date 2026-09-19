@@ -18,9 +18,14 @@ func set_details(new_steam_id: int, new_avatar: Texture2D, new_steam_name: Strin
 	lobby_id = new_lobby_id
 	avatar = new_avatar
 
-	$SteamFriendButton.set_text(steam_name)
+	var avatar_texture_rect: TextureRect = $SteamFriendButton/HBoxContainer/MarginContainer/SteamAvatarTextureRect
+	var steam_name_label: Label = $SteamFriendButton/HBoxContainer/VBoxContainer/SteamNameLabel
+	var status_label: Label = $SteamFriendButton/HBoxContainer/VBoxContainer/SteamStatusLabel
+
+	steam_name_label.set_text(steam_name)
+	status_label.set_text(status)
 	if avatar:
-		$SteamFriendButton.set_button_icon(avatar)
+		avatar_texture_rect.set_texture(avatar)
 
 
 func set_selected(selected: bool) -> void:
