@@ -2,9 +2,9 @@ extends Node
 
 signal connection_success
 signal connection_failed
+signal disconnected_from_server
 
 const LOCALHOST: String = "127.0.0.1"
-const DEFAULT_PORT: int = GlobalVariables.DEFAULT_PORT
 
 var player_scene: PackedScene = preload("res://src/entity/player/player.tscn")
 var dropped_item_scene: PackedScene = preload("res://src/item/dropped_item.tscn")
@@ -16,42 +16,74 @@ func _ready() -> void:
 	multiplayer.connection_failed.connect(_on_connection_failed)
 
 func _on_connected():
-	emit_signal("connection_success")
+	connection_success.emit()
 
 func _on_connection_failed():
-	emit_signal("connection_failed")
+	connection_failed.emit()
 
 
 # Hosting server -------------------------------------------------------------------------------------------------------
-func host_server(game: Node2D, port: int = DEFAULT_PORT):
-	_game = game
-	RpcInterface._game = game
+func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> void:
+	assign_game(game)
 	
-	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-	
-	if port:
-		peer.create_server(port)
-		multiplayer.multiplayer_peer = peer
+	match multiplayer_connection_details["connection_type"]:
+		GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.STEAM:
+			var peer := ExpressoSteamMultiplayerPeer.new()
+			var result := peer.create_host(0)
+
+			if result != OK:
+				print("[MultiplayerManager] Steam host creation failed: ", result)
+				return
+
+			multiplayer.multiplayer_peer = peer
+			SteamManager.host_game()
+			
+		GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.ENET:
+			var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
+			peer.create_server(multiplayer_connection_details["port"])
+			multiplayer.multiplayer_peer = peer
 		
-		multiplayer.peer_connected.connect(_peer_connected)
-		multiplayer.peer_disconnected.connect(_peer_disconnected)
+	multiplayer.peer_connected.connect(_peer_connected)
+	multiplayer.peer_disconnected.connect(_peer_disconnected)
 	
 	await _game.world_ready
 	request_player(1)
 
+func open_steam_invite_overlay() -> void:
+	if SteamManager and SteamManager.has_method("open_invite_overlay"):
+		SteamManager.open_invite_overlay()
 
-# Joining server -------------------------------------------------------------------------------------------------------
-func connect_to_server(game: Node2D, ip: String = LOCALHOST, port: int = DEFAULT_PORT) -> void:
+func assign_game(game: Node2D) -> void:
 	_game = game
 	RpcInterface._game = game
+
+
+# Joining server -------------------------------------------------------------------------------------------------------
+func connect_to_server(game: Node2D, multiplayer_connection_details: Dictionary) -> void:
+	assign_game(game)
 	
-	var peer: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-	peer.create_client(ip, port)
+	var peer
+	match multiplayer_connection_details["connection_type"]:
+		GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.STEAM:
+			print("[MultiplayerManager] Steam lobby joined")
+			print("[MultiplayerManager] Connecting to host SteamID: ", multiplayer_connection_details["host_steam_id"])
+		
+			peer = ExpressoSteamMultiplayerPeer.new()
+		
+			var result = peer.create_client(multiplayer_connection_details["host_steam_id"], 0)
+		
+			if result != OK:
+				print("[MultiplayerManager] Steam peer creation failed: ", result)
+				return
+			
+		GlobalVariables.MULTIPLAYER_CONNECTION_TYPE.ENET:
+			peer = ENetMultiplayerPeer.new()
+			peer.create_client(multiplayer_connection_details["ip"], multiplayer_connection_details["port"])
 	
 	multiplayer.multiplayer_peer = peer
 
 
-# On peer connection ---------------------------------------------------------------------------------------------------
+# Peer connection ------------------------------------------------------------------------------------------------------
 func _peer_connected(id: int):
 	request_player(id)
 
@@ -68,7 +100,20 @@ func request_player(id: int) -> void:
 	player.update_rotation()
 
 
-# On peer disconnection ------------------------------------------------------------------------------------------------
+# Peer disconnection ---------------------------------------------------------------------------------------------------
+func disconnect_from_server() -> void:
+	if multiplayer.multiplayer_peer == null:
+		return
+
+	multiplayer.multiplayer_peer.close()
+	multiplayer.multiplayer_peer = null
+
+	if SteamManager:
+		SteamManager.leave_lobby()
+
+	print("[MultiplayerManager] Disconnected from server")
+	disconnected_from_server.emit()
+
 func _peer_disconnected(id: int):
 	remove_player(id)
 

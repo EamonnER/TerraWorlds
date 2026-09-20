@@ -1,13 +1,13 @@
 extends CharacterBody2D
 class_name Entity
 
-const SPEED = 300.0
-const SPRINT_MOD = 1.5
-const ACCELERATION = 1000.0
-const DECELERATION = 1500.0
-const TERMINAL_VELOCITY = 8000.0
-const JUMP_VELOCITY = 400.0
-const ROTATION_SPEED = 10 * PI/4
+const SPEED: float = 300.0
+const SPRINT_MOD: float = 1.5
+const ACCELERATION: float = 1000.0
+const DECELERATION: float = 1500.0
+const TERMINAL_VELOCITY: float = 8000.0
+const JUMP_VELOCITY: float = 400.0
+const ROTATION_SPEED: float = 10 * PI/4
 
 # World reference
 var world: World
@@ -15,20 +15,20 @@ var world: World
 # Gravity attributes
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var gravity_vector = ProjectSettings.get_setting("physics/2d/default_gravity_vector")
-var is_rotating = false  # True if up_direction has just been changed in the current frame
+var is_rotating: bool = false  # True if up_direction has just been changed in the current frame
 
 @export var id: int = 0
 var health: float = 100.0
 
 func update_rotation():
 	var coords: Vector2 = self.global_position
-	var old_up_direction = up_direction
+	var old_up_direction: Vector2 = up_direction
 	
 	# Checks player position relative to two lines; y=x and y=-x
 	# l1 = (y=x), l2 = (y=-x)
 	# Remember that y is negative when it goes upward
-	var above_l1 = true if -coords.y > coords.x else false
-	var above_l2 = true if -coords.y > -coords.x else false
+	var above_l1: bool = true if -coords.y > coords.x else false
+	var above_l2: bool = true if -coords.y > -coords.x else false
 	if above_l1 and above_l2:  # Top quadrant
 		up_direction = Vector2.UP
 		gravity_vector = Vector2.DOWN
@@ -60,25 +60,25 @@ func rotate_vector_relative_to_up_direction(vector: Vector2) -> Vector2:
 			return vector
 
 func get_relative_velocity() -> Vector2:
-	var rotated_velocity = rotate_vector_relative_to_up_direction(get_velocity())
+	var rotated_velocity: Vector2 = rotate_vector_relative_to_up_direction(get_velocity())
 	return rotated_velocity if up_direction in [Vector2.UP, Vector2.DOWN] else -rotated_velocity 
 		
 func set_relative_velocity(new_velocity: Vector2) -> void:
 	set_velocity(rotate_vector_relative_to_up_direction(new_velocity))
 
 func set_relative_horizontal_speed(speed: float):
-	var current_velocity = get_relative_velocity()
+	var current_velocity: Vector2 = get_relative_velocity()
 	set_relative_velocity(Vector2(speed, current_velocity.y))
 
 func set_relative_vertical_speed(speed: float):
-	var current_velocity = get_relative_velocity()
+	var current_velocity: Vector2 = get_relative_velocity()
 	set_relative_velocity(Vector2(current_velocity.x, speed))
 
 func _on_rotate() -> void:
 	set_relative_horizontal_speed(SPEED * 2.5 * sign(get_relative_velocity().x))
 
 func _rotate_entity(delta: float) -> void:
-	var old_rotation = rotation
+	var old_rotation: float = rotation
 	match up_direction:
 		Vector2.RIGHT:
 			rotation = rotate_toward(rotation, PI/2, ROTATION_SPEED*delta)
@@ -94,10 +94,10 @@ func _rotate_entity(delta: float) -> void:
 
 func _apply_gravity(delta: float) -> void:
 	if motion_mode == MotionMode.MOTION_MODE_GROUNDED and not is_on_floor():
-		var old_vertical_velocity = get_relative_velocity().y
-		var target_vertical_veloctiy = TERMINAL_VELOCITY
+		var old_vertical_velocity: float = get_relative_velocity().y
+		var target_vertical_velocity: float = TERMINAL_VELOCITY
 		set_relative_vertical_speed(
-			move_toward(old_vertical_velocity, target_vertical_veloctiy, gravity*delta)
+			move_toward(old_vertical_velocity, target_vertical_velocity, gravity*delta)
 		)
 
 func jump() -> void:
