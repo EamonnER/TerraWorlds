@@ -187,6 +187,10 @@ escape={
 
 2d/default_gravity=1200.0
 
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
+
 [steam]
 
 initialization/app_data/app_id=480
