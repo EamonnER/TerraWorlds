@@ -28,6 +28,25 @@ func _remove_tile(tile: Vector2i):
 	var world = _game.get_node("World")
 	world.remove_tile(tile)
 
+# Combat ---------------------------------------------------------------------------------------------------------------
+@rpc("any_peer", "call_local", "reliable")
+func request_attack(attacker_id: int):
+	if !multiplayer.is_server(): return
+
+	var players_node = _game.get_node("World/Players")
+	var player_name = "Player#%s" % attacker_id
+	if !players_node.has_node(player_name): return
+
+	var player: Player = players_node.get_node(player_name)
+	var attack_range: float = 60.0
+	var attack_damage: float = 25.0
+
+	for node in _game.get_node("World").get_children():
+		if node is Enemy and !node.is_dead:
+			if player.global_position.distance_to(node.global_position) <= attack_range:
+				node.take_damage(attack_damage)
+
+
 # Inventory Management -------------------------------------------------------------------------------------------------
 func initialise_ui_inventory(player_id: int, rows: int, columns: int) -> void:
 	var hud = _game.get_node("CanvasLayer/HUD")

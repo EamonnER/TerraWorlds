@@ -15,11 +15,12 @@ func get_tile_pos_at_mouse_pos() -> Vector2i:
 
 func _ready() -> void:
 	super._ready()
+	add_to_group("players")
 	hud = world.get_parent().get_node("CanvasLayer/HUD")
 	inventory_ui = hud.get_node("Inventory")
 	inventory = Inventory.new()
 	inventory.initialise(id)
-	
+
 	health = 100.0
 
 func _handle_server_authoratitive_inputs(delta: float) -> void:
@@ -65,12 +66,26 @@ func _handle_local_inputs() -> void:
 	# Primary action input (LMB)
 	if $InputSynchronizer.primary_action_pressed:
 		RpcInterface.request_remove_tile.rpc_id(1, get_tile_pos_at_mouse_pos())
+		RpcInterface.request_attack.rpc_id(1, id)
 	# Secondary action input (RMB)
 	if $InputSynchronizer.secondary_action_pressed:
 		RpcInterface.request_place_tile.rpc_id(1, get_tile_pos_at_mouse_pos(), 0)
 
 
+func die() -> void:
+	super.die()
+	if multiplayer.is_server():
+		respawn()
+
+func respawn() -> void:
+	health = max_health
+	is_dead = false
+	set_position(world.get_spawn_position())
+	update_rotation()
+
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		return
 	super._physics_process(delta)
 	if multiplayer.is_server(): _handle_server_authoratitive_inputs(delta)
 	if id == multiplayer.get_unique_id(): _handle_local_inputs()

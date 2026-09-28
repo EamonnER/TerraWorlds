@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://dxjgwg2nq0m2l" path="res://src/entity/entity.tscn" id="1_entity"]
+[ext_resource type="Script" path="res://src/entity/enemy/enemy.gd" id="2_enemy"]
+[ext_resource type="Texture2D" path="res://assets/enemies/slime.png" id="3_slime"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enemy"]
+size = Vector2(28, 28)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hitbox"]
+radius = 20.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_enemy"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Enemy" instance=ExtResource("1_entity")]
+collision_layer = 64
+collision_mask = 7
+script = ExtResource("2_enemy")
+
+[node name="Collision" parent="." index="0"]
+shape = SubResource("RectangleShape2D_enemy")
+
+[node name="Sprite" parent="." index="1"]
+scale = Vector2(1, 1)
+texture = ExtResource("3_slime")
+
+[node name="HitboxArea" type="Area2D" parent="." index="3"]
+collision_layer = 0
+collision_mask = 448
+
+[node name="HitboxCollision" type="CollisionShape2D" parent="HitboxArea" index="0"]
+shape = SubResource("CircleShape2D_hitbox")
+
+[node name="EnemySynchronizer" type="MultiplayerSynchronizer" parent="." index="4"]
+replication_config = SubResource("SceneReplicationConfig_enemy")
+
+[connection signal="body_entered" from="HitboxArea" to="." method="deal_contact_damage"]

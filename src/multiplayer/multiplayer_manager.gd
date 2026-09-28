@@ -8,6 +8,10 @@ const LOCALHOST: String = "127.0.0.1"
 
 var player_scene: PackedScene = preload("res://src/entity/player/player.tscn")
 var dropped_item_scene: PackedScene = preload("res://src/item/dropped_item.tscn")
+var enemy_scene: PackedScene = preload("res://src/entity/enemy/enemy.tscn")
+
+const ENEMY_SPAWN_COUNT: int = 8
+var _enemy_counter: int = 0
 
 var _game: Node2D
 
@@ -48,6 +52,7 @@ func host_server(game: Node2D, multiplayer_connection_details: Dictionary) -> vo
 	
 	await _game.world_ready
 	request_player(1)
+	spawn_enemies()
 
 func open_steam_invite_overlay() -> void:
 	if SteamManager and SteamManager.has_method("open_invite_overlay"):
@@ -121,6 +126,32 @@ func remove_player(id: int) -> void:
 	var players_spawn_node: MultiplayerSpawner = _game.get_node("World/Players")
 	var player_name: String = "Player#%s" % id
 	players_spawn_node.get_node(player_name).queue_free()
+
+
+# Enemy spawning -------------------------------------------------------------------------------------------------------
+func spawn_enemies() -> void:
+	var world: World = _game.get_node("World")
+	var enemies_spawn_node: MultiplayerSpawner = world.get_node("Enemies")
+	var top_of_map = world.map_size / 2
+
+	for i in range(ENEMY_SPAWN_COUNT):
+		var enemy: Enemy = enemy_scene.instantiate()
+		_enemy_counter += 1
+		enemy.id = _enemy_counter
+		enemy.set_name("Enemy#%s" % _enemy_counter)
+		enemies_spawn_node.add_child(enemy, true)
+
+		var spawn_x = randi_range(-top_of_map / 4, top_of_map / 4)
+		var spawn_pos = _find_surface_position(world, spawn_x)
+		enemy.set_position(spawn_pos)
+		enemy.update_rotation()
+
+func _find_surface_position(world: World, x: int) -> Vector2:
+	var top_of_map = world.map_size / 2
+	for y in range(-top_of_map, top_of_map):
+		if world.get_tile_at_position(Vector2i(x, y)):
+			return Vector2(x, y - 2) * GlobalVariables.TILE_SIZE
+	return Vector2(x, top_of_map) * GlobalVariables.TILE_SIZE
 
 
 # Item spawning --------------------------------------------------------------------------------------------------------

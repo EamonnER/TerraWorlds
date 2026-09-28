@@ -19,6 +19,10 @@ var is_rotating: bool = false  # True if up_direction has just been changed in t
 
 @export var id: int = 0
 var health: float = 100.0
+var max_health: float = 100.0
+var is_dead: bool = false
+
+signal died
 
 func update_rotation():
 	var coords: Vector2 = self.global_position
@@ -111,6 +115,18 @@ func _physics_process(delta: float) -> void:
 	_apply_gravity(delta)
 	
 	move_and_slide()
+
+func take_damage(amount: float) -> void:
+	if is_dead:
+		return
+	health -= amount
+	if health <= 0:
+		health = 0
+		die()
+
+func die() -> void:
+	is_dead = true
+	died.emit()
 
 func _ready() -> void:
 	world = get_tree().root.get_node("Game/World")

@@ -23,6 +23,10 @@ spawn_path = NodePath(".")
 _spawnable_scenes = PackedStringArray("uid://bnrb5wdjhgfv7")
 spawn_path = NodePath(".")
 
+[node name="Enemies" type="MultiplayerSpawner" parent="World"]
+_spawnable_scenes = PackedStringArray("res://src/entity/enemy/enemy.tscn")
+spawn_path = NodePath(".")
+
 [node name="Camera" type="Camera2D" parent="." unique_id=426147984]
 ignore_rotation = false
 process_callback = 0
@@ -42,7 +46,6 @@ size_flags_vertical = 4
 script = ExtResource("5_iee2e")
 
 [node name="Health" type="Label" parent="CanvasLayer/HUD" unique_id=343720608]
-visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
