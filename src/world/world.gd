@@ -16,6 +16,10 @@ const STONE_ID: Vector2i = Vector2i(0, 1)
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	var engine: Node = load("res://src/world/LightingEngine.cs").new()
+	engine.name = "LightingEngine"
+	add_child(engine)
+	engine.Initialize(foreground)
 	var overlay := Node2D.new()
 	overlay.name = "LightOverlay"
 	overlay.set_script(load("res://src/world/light_overlay.gd"))
@@ -86,9 +90,15 @@ func get_tile_at_position(vector: Vector2i) -> TileData:
 
 func place_tile(vector: Vector2i, terrain_id: int):
 	foreground.set_cells_terrain_connect([vector], 0, terrain_id, false)
-	
+	var overlay: Node2D = get_node_or_null("LightOverlay")
+	if overlay:
+		overlay.mark_dirty()
+
 func remove_tile(vector: Vector2i):
 	foreground.set_cells_terrain_connect([vector], 0, -1, false)
+	var overlay: Node2D = get_node_or_null("LightOverlay")
+	if overlay:
+		overlay.mark_dirty()
 
 func _on_gravity_threshold_area_body_exited(body: Node2D) -> void:
 	if body is Entity:
