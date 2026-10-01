@@ -13,6 +13,14 @@ const STONE_ID: Vector2i = Vector2i(0, 1)
 
 @onready var gravity_threshold_collision: CollisionPolygon2D = $GravityThresholdArea/GravityThresholdCollision
 
+func _ready() -> void:
+	if Engine.is_editor_hint():
+		return
+	var overlay := Node2D.new()
+	overlay.name = "LightOverlay"
+	overlay.set_script(load("res://src/world/light_overlay.gd"))
+	add_child(overlay)
+
 func local_to_map(local_position: Vector2) -> Vector2i:
 	return foreground.local_to_map(local_position)
 

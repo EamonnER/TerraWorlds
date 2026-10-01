@@ -20,6 +20,10 @@ func load_world() -> void:
 
 func _ready() -> void:
 	MultiplayerManager.disconnected_from_server.connect(_on_disconnected_from_server)
+	var day_night := Node.new()
+	day_night.name = "DayNightCycle"
+	day_night.set_script(load("res://src/world/day_night_cycle.gd"))
+	add_child(day_night)
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("escape"):
