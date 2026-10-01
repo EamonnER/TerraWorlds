@@ -140,7 +140,7 @@ text = "Server Port"
 [node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Singleplayer/FoldableContainer/ServerHostingOptionsContainer/ServerPortHBoxContainer" unique_id=353913121]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "55000"
+text = "18080"
 placeholder_text = "Server Port"
 alignment = 1
 
@@ -240,7 +240,7 @@ text = "Server Port"
 [node name="ServerPortInput" type="LineEdit" parent="Body/TabContainer/Multiplayer/AddServerContainer/VBoxContainer/ServerPortContainer" unique_id=1223121375]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "55000"
+text = "18080"
 placeholder_text = "Server Port"
 alignment = 1
 
