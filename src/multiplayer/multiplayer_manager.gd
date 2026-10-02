@@ -99,6 +99,10 @@ func request_player(id: int) -> void:
 	player.set_position(world.get_spawn_position())
 	player.update_rotation()
 
+	var day_night = _game.get_node_or_null("DayNightCycle")
+	if day_night and id != 1:
+		RpcInterface._sync_time_of_day.rpc_id(id, day_night.time_of_day)
+
 
 # Peer disconnection ---------------------------------------------------------------------------------------------------
 func disconnect_from_server() -> void:

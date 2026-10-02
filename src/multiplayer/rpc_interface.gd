@@ -38,3 +38,10 @@ func set_ui_inventory_slot(player_id: int, item_stack: ItemStack, row: int, colu
 	var hud = _game.get_node("CanvasLayer/HUD")
 	var inventory_ui = hud.get_node("Inventory")
 	inventory_ui.set_slot.rpc_id(player_id, row, column, item_stack.get_item_id(), item_stack.quantity)
+
+# Day/Night Sync -------------------------------------------------------------------------------------------------------
+@rpc("authority", "call_remote", "reliable")
+func _sync_time_of_day(time: float):
+	var day_night = _game.get_node("DayNightCycle")
+	if day_night:
+		day_night.time_of_day = time
