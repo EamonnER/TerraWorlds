@@ -11,6 +11,12 @@ var map_size: int = CHUNK_SIZE*32  # Must be divisible by CHUNK_SIZE
 const DIRT_ID: Vector2i = Vector2i(0, 0)
 const STONE_ID: Vector2i = Vector2i(0, 1)
 
+const TILE_NULL: String = "Null"
+const TILE_INVISIBLE: String = "Invisible"
+
+var _tile_to_terrain: Dictionary[int, int] = {}  # Maps TilesEnum values to terrain indices in the Terrain TileSet
+var _null_value: int  # TilesEnum value of Null
+
 @onready var gravity_threshold_collision: CollisionPolygon2D = $GravityThresholdArea/GravityThresholdCollision
 
 func _ready() -> void:
@@ -34,14 +40,30 @@ func map_to_local(map_position: Vector2i) -> Vector2:
 func clear() -> void:
 	terrain.clear()
 
+func _build_tile_to_terrain() -> void:
+	var name_to_value: Dictionary = Tiles.new().GetNameToValue()
+	_null_value = name_to_value[TILE_NULL]
+	var tile_set: TileSet = terrain.tile_set
+	for terrain_index in tile_set.get_terrains_count(0):
+		var terrain_name: String = tile_set.get_terrain_name(0, terrain_index)
+		if name_to_value.has(terrain_name):
+			_tile_to_terrain[name_to_value[terrain_name]] = terrain_index
+		else:
+			push_warning("Terrain '%s' has no matching entry in TileEnum.cs" % terrain_name)
+	for tile_name in name_to_value.keys():
+		var tile_value: int = name_to_value[tile_name]
+		# Invisible has no terrain by design
+		if not _tile_to_terrain.has(tile_value) and tile_name != TILE_NULL and tile_name != TILE_INVISIBLE:
+			push_warning("Tile '%s' has no matching terrain in the Terrain TileSet" % tile_name)
+
 func draw_chunk(chunk: Dictionary[int, Array]) -> void:
-	for terrain_id in chunk.keys():
-		if terrain_id == 0:
-			terrain.set_cells_terrain_connect(chunk[terrain_id], 0, -1)
-		if terrain_id == 2:
-			terrain.set_cells_terrain_connect(chunk[terrain_id], 0, 0)
-		elif terrain_id == 3:
-			terrain.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
+	if _tile_to_terrain.is_empty():
+		_build_tile_to_terrain()
+	for tile_id in chunk.keys():
+		if tile_id == _null_value:
+			terrain.set_cells_terrain_connect(chunk[tile_id], 0, -1)
+		else:
+			terrain.set_cells_terrain_connect(chunk[tile_id], 0, _tile_to_terrain[tile_id])
 
 func draw_chunks(chunks: Array[Dictionary]) -> void:
 	for chunk in chunks:
