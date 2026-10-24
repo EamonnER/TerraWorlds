@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://c2chqt3jp4iwd" path="res://assets/tilesets/Tileset.png" id="2_28q0k"]
 [ext_resource type="Texture2D" uid="uid://dnei0o5hwgkqj" path="res://assets/tilesets/terrain/grass.png" id="3_jte2u"]
 [ext_resource type="Texture2D" uid="uid://btvooblcy8q7m" path="res://assets/tilesets/terrain/dirt.png" id="4_bsf3i"]
+[ext_resource type="Script" uid="uid://bphcw2bvf8wn4" path="res://src/world/terrain_layer.gd" id="5_terlay"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rn0e2"]
 resource_name = "Natural Tiles"
@@ -906,6 +907,7 @@ script = ExtResource("1_36xlx")
 
 [node name="Terrain" type="TileMapLayer" parent="." unique_id=241726534]
 tile_set = SubResource("TileSet_1t5jm")
+script = ExtResource("5_terlay")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=570472428]
 environment = SubResource("Environment_kgesb")
