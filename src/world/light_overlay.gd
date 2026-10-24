@@ -3,7 +3,7 @@ extends Node2D
 const TILE_SIZE: int = GlobalVariables.TILE_SIZE
 const MARGIN: int = 30
 
-var _foreground: TileMapLayer
+var _terrain: TileMapLayer
 var _engine: Node
 var _image: Image
 var _texture: ImageTexture
@@ -18,14 +18,14 @@ var _last_sky_light: float = -1.0
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	z_index = 100
-	_foreground = get_parent().get_node("Foreground") as TileMapLayer
+	_terrain = get_parent().get_node("Terrain") as TileMapLayer
 	_engine = get_parent().get_node_or_null("LightingEngine")
 
 func mark_dirty() -> void:
 	_dirty = true
 
 func _process(_delta: float) -> void:
-	if _engine == null or _foreground == null:
+	if _engine == null or _terrain == null:
 		return
 
 	var camera: Camera2D = get_viewport().get_camera_2d()
@@ -46,8 +46,8 @@ func _process(_delta: float) -> void:
 	var min_y: float = minf(minf(c0.y, c1.y), minf(c2.y, c3.y))
 	var max_y: float = maxf(maxf(c0.y, c1.y), maxf(c2.y, c3.y))
 
-	var tile_min: Vector2i = _foreground.local_to_map(Vector2(min_x, min_y)) - Vector2i(MARGIN, MARGIN)
-	var tile_max: Vector2i = _foreground.local_to_map(Vector2(max_x, max_y)) + Vector2i(MARGIN, MARGIN)
+	var tile_min: Vector2i = _terrain.local_to_map(Vector2(min_x, min_y)) - Vector2i(MARGIN, MARGIN)
+	var tile_max: Vector2i = _terrain.local_to_map(Vector2(max_x, max_y)) + Vector2i(MARGIN, MARGIN)
 
 	_region_origin = tile_min
 	_region_width = tile_max.x - tile_min.x + 1
@@ -78,9 +78,9 @@ func _process(_delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
-	if _texture == null or _foreground == null:
+	if _texture == null or _terrain == null:
 		return
-	var world_pos: Vector2 = Vector2(_foreground.map_to_local(_region_origin))
+	var world_pos: Vector2 = Vector2(_terrain.map_to_local(_region_origin))
 	var corner: Vector2 = world_pos - Vector2(TILE_SIZE / 2.0, TILE_SIZE / 2.0)
 	var rect_size: Vector2 = Vector2(_region_width * TILE_SIZE, _region_height * TILE_SIZE)
 	draw_texture_rect(_texture, Rect2(corner, rect_size), false)

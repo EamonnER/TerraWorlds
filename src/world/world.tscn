@@ -171,7 +171,7 @@ sources/0 = SubResource("TileSetAtlasSource_rn0e2")
 texture_filter = 1
 script = ExtResource("1_36xlx")
 
-[node name="Foreground" type="TileMapLayer" parent="." unique_id=241726534]
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=241726534]
 tile_set = SubResource("TileSet_1t5jm")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=570472428]

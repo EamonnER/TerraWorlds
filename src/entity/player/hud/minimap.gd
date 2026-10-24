@@ -7,19 +7,19 @@ class_name Minimap
 
 var player: Player
 
-var foreground: TileMapLayer
+var terrain: TileMapLayer
 var map_size: int
 var map_image: Image
 
-func draw(new_foreground: TileMapLayer):
-	foreground = new_foreground
+func draw(new_terrain: TileMapLayer):
+	terrain = new_terrain
 
-	var tilemap_size = foreground.get_used_rect().size
+	var tilemap_size = terrain.get_used_rect().size
 	var img = Image.create(tilemap_size.x, tilemap_size.y, false, Image.FORMAT_RGB8)
 
 	for x in range(tilemap_size.x):
 		for y in range(tilemap_size.y):
-			var tile = foreground.get_cell_tile_data(
+			var tile = terrain.get_cell_tile_data(
 				Vector2i(x-(tilemap_size.x/2), y-(tilemap_size.y/2))
 			)
 			var colour = Color.WHITE if tile else Color.BLACK
@@ -34,7 +34,7 @@ func draw_player(pos: Vector2):
 	if not map_image:
 		return
 	
-	pos = foreground.local_to_map(pos)
+	pos = terrain.local_to_map(pos)
 	var img = map_image.duplicate()
 	
 	# Convert world position to minimap position

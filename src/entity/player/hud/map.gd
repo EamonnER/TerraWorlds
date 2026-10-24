@@ -35,10 +35,10 @@ func toggle() -> void:
 	
 	if !visible: return
 	
-	var world = get_tree().root.get_node("Game/World")
+	var world: World = get_tree().root.get_node("Game/World")
 	if not world: return
 
-	var tilemap = world.foreground
+	var tilemap: TileMapLayer = world.terrain
 	set_texture_from_tilemap(tilemap)
 
 func _process(_delta: float) -> void:
