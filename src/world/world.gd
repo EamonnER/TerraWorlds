@@ -2,7 +2,7 @@
 extends Node2D
 class_name World
 
-@onready var foreground: TileMapLayer = $Foreground
+@onready var terrain: TerrainLayer = $Terrain
 
 const CHUNK_SIZE: int = GlobalVariables.CHUNK_SIZE
 # Total width / height of playable / explorable area
@@ -19,33 +19,23 @@ func _ready() -> void:
 	var engine: Node = load("res://src/world/LightingEngine.cs").new()
 	engine.name = "LightingEngine"
 	add_child(engine)
-	engine.Initialize(foreground)
+	engine.Initialize(terrain)
 	var overlay := Node2D.new()
 	overlay.name = "LightOverlay"
 	overlay.set_script(load("res://src/world/light_overlay.gd"))
 	add_child(overlay)
 
 func local_to_map(local_position: Vector2) -> Vector2i:
-	return foreground.local_to_map(local_position)
+	return terrain.local_to_map(local_position)
 
 func map_to_local(map_position: Vector2i) -> Vector2:
-	return foreground.map_to_local(map_position)
+	return terrain.map_to_local(map_position)
 
 func clear() -> void:
-	foreground.clear()
-
-func draw_chunk(chunk: Dictionary[int, Array]) -> void:
-	for terrain_id in chunk.keys():
-		if terrain_id == 0:
-			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, -1)
-		if terrain_id == 2:
-			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 0)
-		elif terrain_id == 3:
-			foreground.set_cells_terrain_connect(chunk[terrain_id], 0, 1)
+	terrain.clear()
 
 func draw_chunks(chunks: Array[Dictionary]) -> void:
-	for chunk in chunks:
-		draw_chunk(chunk)
+	terrain.draw_chunks(chunks)
 
 func draw_gravity_collision() -> void:
 	var width = 1.0
@@ -86,16 +76,16 @@ func get_spawn_position() -> Vector2i:
 	return Vector2i(x, top_of_map) * GlobalVariables.TILE_SIZE
 
 func get_tile_at_position(vector: Vector2i) -> TileData:
-	return foreground.get_cell_tile_data(vector)
+	return terrain.get_cell_tile_data(vector)
 
 func place_tile(vector: Vector2i, terrain_id: int):
-	foreground.set_cells_terrain_connect([vector], 0, terrain_id, false)
+	terrain.set_cells_autotiled({vector: terrain_id})
 	var overlay: Node2D = get_node_or_null("LightOverlay")
 	if overlay:
 		overlay.mark_dirty()
 
 func remove_tile(vector: Vector2i):
-	foreground.set_cells_terrain_connect([vector], 0, -1, false)
+	terrain.set_cells_autotiled({vector: -1})
 	var overlay: Node2D = get_node_or_null("LightOverlay")
 	if overlay:
 		overlay.mark_dirty()

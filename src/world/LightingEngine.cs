@@ -6,16 +6,16 @@ namespace TerraWorlds.world;
 [GlobalClass]
 public partial class LightingEngine : Node
 {
-    private TileMapLayer _foreground;
+    private TileMapLayer _terrain;
 
     private const float AirDecay = 0.04f;
     private const float SolidDecay = 0.18f;
 
     private readonly Dictionary<Vector2I, float> _pointLights = new();
 
-    public void Initialize(TileMapLayer foreground)
+    public void Initialize(TileMapLayer terrain)
     {
-        _foreground = foreground;
+        _terrain = terrain;
     }
 
     public void AddPointLight(Vector2I position, float intensity)
@@ -48,7 +48,7 @@ public partial class LightingEngine : Node
             {
                 var tx = regionOrigin.X + lx;
                 isSolid[ly * width + lx] =
-                    _foreground.GetCellTileData(new Vector2I(tx, ty)) != null;
+                    _terrain.GetCellTileData(new Vector2I(tx, ty)) != null;
             }
         }
 

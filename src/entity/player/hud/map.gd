@@ -3,12 +3,12 @@ extends ColorRect
 var player: Player
 
 func tilemap_to_texture(tilemap: TileMapLayer) -> ImageTexture:
-	var tilemap_size = tilemap.get_used_rect().size
-	var img = Image.create(tilemap_size.x, tilemap_size.y, false, Image.FORMAT_RGBA8)
+	var tilemap_size: Vector2i = tilemap.get_used_rect().size
+	var img: Image = Image.create(tilemap_size.x, tilemap_size.y, false, Image.FORMAT_RGBA8)
 
 	for x in range(tilemap_size.x):
 		for y in range(tilemap_size.y):
-			var tile = tilemap.get_cell_tile_data(
+			var tile: TileData = tilemap.get_cell_tile_data(
 				Vector2i(x-(tilemap_size.x/2), y-(tilemap_size.y/2))
 			)
 			var colour: Color
@@ -35,10 +35,10 @@ func toggle() -> void:
 	
 	if !visible: return
 	
-	var world = get_tree().root.get_node("Game/World")
+	var world: World = get_tree().root.get_node("Game/World")
 	if not world: return
 
-	var tilemap = world.foreground
+	var tilemap: TileMapLayer = world.terrain
 	set_texture_from_tilemap(tilemap)
 
 func _process(_delta: float) -> void:

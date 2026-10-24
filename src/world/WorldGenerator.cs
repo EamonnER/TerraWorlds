@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using static TerraWorlds.world.TilesEnum;
 using System.IO;
@@ -61,6 +62,7 @@ public partial class WorldGenerator : Node
 		_drawCaves();
 		_addTunnels();
 		_drawDirt();
+		_drawGrass();
 		
 		_worldToChunks();
 		
@@ -395,6 +397,105 @@ public partial class WorldGenerator : Node
 		}
 	}
 
+	private void _drawGrass()
+	{
+		/*
+		 * Turns dirt with direct line of sight to the sky into grass.
+		 * Each side of the world has its sky in a different direction (e.g. the left side's sky is to the left), so each
+		 * side is scanned from the edge of the world inwards to the centre, the same as _drawDirt. The first non Null
+		 * tile on each line is the surface, and becomes grass if it is dirt.
+		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating grass...", 92);
+		
+		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
+		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
+		var undersides = new List<(int, int)>();
+		
+		// Top side
+		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
+		{
+			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
+			{
+				if (GrowGrassAt(x, y, 0, 1)) break;
+			}
+		}
+		
+		// Right side
+		for (var y = closeSideOfWorld; y <= farSideOfWorld; y++)
+		{
+			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
+			{
+				if (GrowGrassAt(x, y, -1, 0)) break;
+			}
+		}
+		
+		// Bottom side
+		for (var x = farSideOfWorld; x >= closeSideOfWorld; x--)
+		{
+			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
+			{
+				if (GrowGrassAt(x, y, 0, -1)) break;
+			}
+		}
+		
+		// Left side
+		for (var y = farSideOfWorld; y >= closeSideOfWorld; y--)
+		{
+			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
+			{
+				if (GrowGrassAt(x, y, 1, 0)) break;
+			}
+		}
+		
+		foreach (var (x, y) in undersides)
+		{
+			_rawWorld[x, y] = (ushort) Grass;
+		}
+		return;
+		
+		bool GrowGrassAt(int x, int y, int inwardX, int inwardY)
+		{
+			/*
+			 * Returns true if the tile blocks line of sight to the sky. Dirt surface tiles become grass.
+			 * (inwardX, inwardY) points away from the sky. If the tile below the surface is dirt with at
+			 * least one of its 8 neighbours being Null, it is queued in undersides to become grass too.
+			 */
+			var currentTile = _rawWorld[x, y];
+			switch (currentTile)
+			{
+				case (ushort) Null:
+					return false;
+				case (ushort) Dirt:
+					_rawWorld[x, y] = (ushort) Grass;
+					break;
+			}
+
+			var belowX = x + inwardX;
+			var belowY = y + inwardY;
+			if (_rawWorld[belowX, belowY] == (ushort) Dirt && HasAirNeighbour(belowX, belowY))
+			{
+				undersides.Add((belowX, belowY));
+			}
+			return true;
+		}
+
+		bool HasAirNeighbour(int x, int y)
+		{
+			for (var dx = -1; dx <= 1; dx++)
+			{
+				for (var dy = -1; dy <= 1; dy++)
+				{
+					if (dx == 0 && dy == 0) continue;
+					var nx = x + dx;
+					var ny = y + dy;
+					if (nx < 0 || ny < 0 || nx >= _mapSize || ny >= _mapSize) continue;
+					if (_rawWorld[nx, ny] == (ushort) Null) return true;
+				}
+			}
+			return false;
+		}
+	}
+
 	private void _worldToChunks()
 	{
 		EmitSignal(nameof(ProgressUpdate), "Converting world to chunks...", 95);
@@ -521,7 +622,7 @@ public partial class WorldGenerator : Node
 				}
 				_chunks[x, y] = chunk;
 				
-				EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", (int) ((x * _mapSize / ChunkSize + y) / (_mapSize / ChunkSize * _mapSize / ChunkSize) * 100));
+				EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", ((x * _mapSize / ChunkSize + y) / (_mapSize / ChunkSize * _mapSize / ChunkSize) * 100));
 			}
 		}
 		EmitSignal(nameof(ProgressUpdate), "World loaded from file!", 100);
