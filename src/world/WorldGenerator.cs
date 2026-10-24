@@ -61,6 +61,7 @@ public partial class WorldGenerator : Node
 		_drawCaves();
 		_addTunnels();
 		_drawDirt();
+		_drawGrass();
 		
 		_worldToChunks();
 		
@@ -392,6 +393,70 @@ public partial class WorldGenerator : Node
 				} 
 				distance++;
 			}
+		}
+	}
+
+	private void _drawGrass()
+	{
+		/*
+		 * Turns dirt with direct line of sight to the sky into grass.
+		 * Each side of the world has its sky in a different direction (e.g. the left side's sky is to the left), so each
+		 * side is scanned from the edge of the world inwards to the centre, the same as _drawDirt. The first non Null
+		 * tile on each line is the surface, and becomes grass if it is dirt.
+		 */
+		EmitSignal(nameof(ProgressUpdate), "Generating grass...", 92);
+		
+		var closeSideOfWorld = (_mapSize / 2) - _halfWorldSize;  // Represents either the top or left side of the world
+		var farSideOfWorld = (_mapSize / 2) + _halfWorldSize;  // Represents either the bottom or right side of the world
+		
+		// Top side
+		for (var x = closeSideOfWorld; x <= farSideOfWorld; x++)
+		{
+			for (var y = closeSideOfWorld; y <= _mapSize / 2; y++)
+			{
+				if (GrowGrassAt(x, y)) break;
+			}
+		}
+		
+		// Right side
+		for (var y = closeSideOfWorld; y <= farSideOfWorld; y++)
+		{
+			for (var x = farSideOfWorld; x >= _mapSize / 2; x--)
+			{
+				if (GrowGrassAt(x, y)) break;
+			}
+		}
+		
+		// Bottom side
+		for (var x = farSideOfWorld; x >= closeSideOfWorld; x--)
+		{
+			for (var y = farSideOfWorld; y >= _mapSize / 2; y--)
+			{
+				if (GrowGrassAt(x, y)) break;
+			}
+		}
+		
+		// Left side
+		for (var y = farSideOfWorld; y >= closeSideOfWorld; y--)
+		{
+			for (var x = closeSideOfWorld; x <= _mapSize / 2; x++)
+			{
+				if (GrowGrassAt(x, y)) break;
+			}
+		}
+		return;
+		
+		bool GrowGrassAt(int x, int y)
+		{
+			/*
+			 * Returns true if the tile blocks line of sight to the sky (i.e. it is the surface). Dirt and grass surface tiles
+			 * become grass. Grass counts as a surface so that corner tiles already grown by another side still block the view.
+			 */
+			var currentTile = _rawWorld[x, y];
+			if (currentTile == (ushort) Null) return false;
+		
+			if (currentTile == (ushort) Dirt) _rawWorld[x, y] = (ushort) Grass;
+			return true;
 		}
 	}
 
