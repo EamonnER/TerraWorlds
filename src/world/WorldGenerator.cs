@@ -622,7 +622,7 @@ public partial class WorldGenerator : Node
 				}
 				_chunks[x, y] = chunk;
 				
-				EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", (int) ((x * _mapSize / ChunkSize + y) / (_mapSize / ChunkSize * _mapSize / ChunkSize) * 100));
+				EmitSignal(nameof(ProgressUpdate), "Loading chunks from file...", ((x * _mapSize / ChunkSize + y) / (_mapSize / ChunkSize * _mapSize / ChunkSize) * 100));
 			}
 		}
 		EmitSignal(nameof(ProgressUpdate), "World loaded from file!", 100);
